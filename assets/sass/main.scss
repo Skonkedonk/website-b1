@@ -758,17 +758,13 @@
 				background-position: center center;
 			}
 
-			&.outer {
-				background-color: #81918E;
-				background-image: url('../../images/outer_wilds.jpg');
-			}
-
 			&.one {
 				background-color: #81918E;
 				background-image: url('../../images/banner.jpg');
 			}
 
 			&.two {
+				background-image: url('../../images/outer_wilds.jpg');
 				background-color: #f5fafa;
 			}
 
