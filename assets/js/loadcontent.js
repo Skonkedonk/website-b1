@@ -1,7 +1,3 @@
-document.addEventListener("DOMContentLoaded", function() {
-    loadHTML('assets/reusable/header.html', 'header');
-});
-
 function loadHTML(file, elementId) {
     fetch(file)
         .then(response => response.text())
