@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function() {
-    loadHTML('header.html', 'header');
+    loadHTML('../reusable/header.html', 'header');
 });
 
 function loadHTML(file, elementId) {
