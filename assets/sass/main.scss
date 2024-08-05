@@ -757,6 +757,10 @@
 				background-size: cover;
 				background-position: center center;
 			}
+			
+			&.outer {
+				background-image: url('../../images/outer_wilds.jpg');
+			}
 
 			&.one {
 				background-color: #81918E;
@@ -764,7 +768,6 @@
 			}
 
 			&.two {
-				background-image: url('../../images/outer_wilds.jpg');
 				background-color: #f5fafa;
 			}
 
