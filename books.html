@@ -1,35 +1,34 @@
 <!DOCTYPE HTML>
 <html>
 
-	<head>
-		<title>Books</title>
-		<meta charset="utf-8" />
-		<meta name="viewport"
-			content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="assets/css/main.css" />
-	</head>
+<head>
+	<title>Books</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<link rel="stylesheet" href="assets/css/main.css" />
+</head>
 
-	<body class="is-preload">
-		<div id="header"></div>
+<body class="is-preload">
+	<div id="header"></div>
 
-		<div class="layout-container">
-			<div class="main-content grid">
-				<a href="#" class="clickable-card">
-					<div class="image-placeholder">IMAGE</div>
-					<div class="caption">Previously added entry</div>
-				</a>
-			</div>
-			<div class="add-button">
-				<button onclick="addEntry()">+</button>
-			</div>
+	<div class="layout-container">
+		<div class="main-content grid">
+			<a href="#" class="clickable-card">
+				<div class="image-placeholder">IMAGE</div>
+				<div class="caption">Previously added entry</div>
+			</a>
 		</div>
-		<script src="assets/js/loadcontent.js"></script>
-		<script> loadHTML('assets/reusable/header.html', 'header');</script>
-		<script>
+		<div class="add-button">
+			<button onclick="addEntry()">+</button>
+		</div>
+	</div>
+	<script src="assets/js/loadcontent.js"></script>
+	<script> loadHTML('assets/reusable/header.html', 'header');</script>
+	<script>
 		function addEntry() {
-			<a href="assets/reusable/entry_adder.html"></a>
+			window.location.href = 'assets/reusable/entry_adder.html';
 		}
 	</script>
-	</body>
+</body>
 
 </html>
