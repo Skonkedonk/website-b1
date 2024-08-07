@@ -11,23 +11,17 @@
 <body class="is-preload">
 	<div id="main">
 	<div id="header"></div>
+	<div id="entryForm"></div>
 		<div class="main-content grid">
 			<a href="#" class="clickable-card">
 				<div class="image-placeholder">IMAGE</div>
 				<div class="caption">Previously added entry</div>
 			</a>
 		</div>
-		<div class="add-button">
-			<button onclick="addEntry()">+</button>
-		</div>
 	</div>
 	<script src="../assets/js/loadcontent.js"></script>
 	<script> loadHTML('header.html', 'header');</script>
-	<script>
-		function addEntry() {
-			window.location.href = 'entryForm.html';
-		}
-	</script>
+	<script> loadHTML('entryForm.html', 'entryForm');</script>
 </body>
 
 </html>
