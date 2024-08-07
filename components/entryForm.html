@@ -1,4 +1,4 @@
-    <div id="entryForm"> 
+<div id="entryForm">
     <!-- Form Modal -->
     <button onclick="addEntry()">Open Form</button>
 
@@ -28,21 +28,19 @@
         </div>
     </div>
 </div>
-    <script>
-        function addEntry() {
-            document.getElementById('formModal').style.display = 'block';
-        }
+<script>
+    function addEntry() {
+        document.getElementById('formModal').style.display = 'block';
+    }
 
-        function closeForm() {
+    function closeForm() {
+        document.getElementById('formModal').style.display = 'none';
+    }
+
+    // Close the modal when clicking outside of it
+    window.onclick = function (event) {
+        if (event.target == document.getElementById('formModal')) {
             document.getElementById('formModal').style.display = 'none';
         }
-
-        // Close the modal when clicking outside of it
-        window.onclick = function (event) {
-            if (event.target == document.getElementById('formModal')) {
-                document.getElementById('formModal').style.display = 'none';
-            }
-        }
-    </script>
-
-    
+    }
+</script>
