@@ -1,32 +1,36 @@
 <!DOCTYPE HTML>
 <html>
+
 	<head>
 		<title>Books</title>
 		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<meta name="viewport"
+			content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
 	</head>
+
 	<body class="is-preload">
 		<div class="layout-container">
-	<!-- Header -->
-    <div id="header"></div>
+			<!-- Header -->
+			<div id="header"></div>
 
-	<div class="main-content grid">
-		<a href="#" class="clickable-card">
-			<div class="image-placeholder">IMAGE</div>
-			<div class="caption">Previously added entry</div>
-		</a>
-	</div>
-	<div class="add-button">
-		<button onclick="addEntry()">+</button>
-	</div>
-</div>
-    <script src="assets/js/loadcontent.js"></script>
-    <script> loadHTML('assets/reusable/header.html', 'header');</script>
-	<script>
-        function addEntry() {
-    loadHTML('assets/reusable/entry_adder.html', 'formModal');
-        }
-    </script>
-    </body>
+			<div class="main-content grid">
+				<a href="#" class="clickable-card">
+					<div class="image-placeholder">IMAGE</div>
+					<div class="caption">Previously added entry</div>
+				</a>
+			</div>
+			<div class="add-button">
+				<button onclick="addEntry()">+</button>
+			</div>
+		</div>
+		<script src="assets/js/loadcontent.js"></script>
+		<script> loadHTML('assets/reusable/header.html', 'header');</script>
+		<script>
+		function addEntry() {
+			loadHTML('assets/reusable/entry_adder.html', 'formModal');
+		}
+	</script>
+	</body>
+
 </html>
