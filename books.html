@@ -10,9 +10,23 @@
 	<!-- Header -->
     <div id="header"></div>
 
-
+	<div class="content">
+		<a href="#" class="card">
+			<div class="image-placeholder">IMAGE</div>
+			<div class="caption">Previously added entry</div>
+		</a>
+		<div class="add-button">
+			<button onclick="addEntry()">+</button>
+		</div>
+	</div>
     
     <script src="assets/js/loadcontent.js"></script>
     <script> loadHTML('assets/reusable/header.html', 'header');</script>
+	<script>
+        function addEntry() {
+            // Function to handle adding a new entry
+            alert('Add new entry functionality goes here');
+        }
+    </script>
     </body>
 </html>
