@@ -2091,13 +2091,6 @@ button:active,
     margin-top: 0;
   }
 }
-
-/*# sourceMappingURL=main.css.map */
-
-
-
-/* Card CSS */
-
 body {
   margin: 0;
   font-family: Arial, sans-serif;
@@ -2109,9 +2102,9 @@ body {
 }
 
 .navbar {
-  width: 200px; /* Adjust width as needed */
-  background-color: #000; /* Black background */
-  color: #fff; /* White text */
+  width: 200px;
+  background-color: #000;
+  color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2125,8 +2118,7 @@ body {
   padding: 20px;
   position: relative;
 }
-
-.card {
+.content .card {
   text-align: center;
   text-decoration: none;
   color: inherit;
@@ -2135,35 +2127,30 @@ body {
   border-radius: 10px;
   transition: box-shadow 0.3s ease;
 }
-
-.card:hover {
+.content .card:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
-
-.image-placeholder {
+.content .card .image-placeholder {
   width: 200px;
   height: 200px;
-  background-color: #999; /* Grey background for placeholder */
+  background-color: #999;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 24px;
-  color: #fff; /* White text */
+  color: #fff;
   margin-bottom: 10px;
 }
-
-.caption {
+.content .card .caption {
   font-size: 16px;
 }
-
-.add-button {
+.content .add-button {
   position: absolute;
   top: 50%;
   right: 10%;
   transform: translate(50%, -50%);
 }
-
-.add-button button {
+.content .add-button button {
   width: 60px;
   height: 60px;
   border-radius: 50%;
@@ -2172,7 +2159,8 @@ body {
   background-color: transparent;
   cursor: pointer;
 }
-
-.add-button button:hover {
-  background-color: #eee; /* Light grey background on hover */
+.content .add-button button:hover {
+  background-color: #eee;
 }
+
+/*# sourceMappingURL=main.css.map */

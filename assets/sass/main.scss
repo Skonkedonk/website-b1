@@ -1147,3 +1147,83 @@
 			}
 
 	}
+
+	body {
+		margin: 0;
+		font-family: Arial, sans-serif;
+	}
+	
+	.container {
+		display: flex;
+		height: 100vh;
+	}
+	
+	.navbar {
+		width: 200px; // Adjust width as needed
+		background-color: #000; // Black background
+		color: #fff; // White text
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	
+	.content {
+		flex: 1;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 20px;
+		position: relative;
+	
+		.card {
+			text-align: center;
+			text-decoration: none;
+			color: inherit;
+			border: 1px solid #ccc;
+			padding: 20px;
+			border-radius: 10px;
+			transition: box-shadow 0.3s ease;
+	
+			&:hover {
+				box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+			}
+	
+			.image-placeholder {
+				width: 200px;
+				height: 200px;
+				background-color: #999; // Grey background for placeholder
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 24px;
+				color: #fff; // White text
+				margin-bottom: 10px;
+			}
+	
+			.caption {
+				font-size: 16px;
+			}
+		}
+	
+		.add-button {
+			position: absolute;
+			top: 50%;
+			right: 10%;
+			transform: translate(50%, -50%);
+	
+			button {
+				width: 60px;
+				height: 60px;
+				border-radius: 50%;
+				font-size: 24px;
+				border: 2px solid #000;
+				background-color: transparent;
+				cursor: pointer;
+	
+				&:hover {
+					background-color: #eee; // Light grey background on hover
+				}
+			}
+		}
+	}
+	
