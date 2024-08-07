@@ -1,43 +1,57 @@
-<!-- Form Modal -->
-<div id="formModal" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="closeForm()">&times;</span>
-        <form id="entryForm">
-            <label for="title">Title:</label>
-            <input type="text" id="title" name="title" required>
+<!DOCTYPE HTML>
+<html>
 
-            <label for="category">Category:</label>
-            <select id="category" name="category" required>
-                <option value="">Select a category</option>
-                <option value="Category1">Category1</option>
-                <option value="Category2">Category2</option>
-                <option value="Category3">Category3</option>
-            </select>
+<head>
+    <title>Entry Adder</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="../css/main.css" />
+</head>
 
-            <label for="description">Description:</label>
-            <textarea id="description" name="description" rows="4" required></textarea>
+<body class="is-preload">
+    <!-- Form Modal -->
+    <div id="formModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeForm()">&times;</span>
+            <form id="entryForm">
+                <label for="title">Title:</label>
+                <input type="text" id="title" name="title" required>
 
-            <label for="image">Upload Image:</label>
-            <input type="file" id="image" name="image" accept="image/*" required>
+                <label for="category">Category:</label>
+                <select id="category" name="category" required>
+                    <option value="">Select a category</option>
+                    <option value="Category1">Category1</option>
+                    <option value="Category2">Category2</option>
+                    <option value="Category3">Category3</option>
+                </select>
 
-            <button type="submit">Submit</button>
-        </form>
+                <label for="description">Description:</label>
+                <textarea id="description" name="description" rows="4" required></textarea>
+
+                <label for="image">Upload Image:</label>
+                <input type="file" id="image" name="image" accept="image/*" required>
+
+                <button type="submit">Submit</button>
+            </form>
+        </div>
     </div>
-</div>
 
-<script>
-    function addEntry() {
-        document.getElementById('formModal').style.display = 'block';
-    }
+    <script>
+        function addEntry() {
+            document.getElementById('formModal').style.display = 'block';
+        }
 
-    function closeForm() {
-        document.getElementById('formModal').style.display = 'none';
-    }
-
-    // Close the modal when clicking outside of it
-    window.onclick = function(event) {
-        if (event.target == document.getElementById('formModal')) {
+        function closeForm() {
             document.getElementById('formModal').style.display = 'none';
         }
-    }
-</script>
+
+        // Close the modal when clicking outside of it
+        window.onclick = function (event) {
+            if (event.target == document.getElementById('formModal')) {
+                document.getElementById('formModal').style.display = 'none';
+            }
+        }
+    </script>
+</body>
+
+</html>
