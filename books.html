@@ -10,8 +10,6 @@
 
 <body class="is-preload">
 	<div id="header"></div>
-
-	<div class="layout-container">
 		<div class="main-content grid">
 			<a href="#" class="clickable-card">
 				<div class="image-placeholder">IMAGE</div>
@@ -21,12 +19,12 @@
 		<div class="add-button">
 			<button onclick="addEntry()">+</button>
 		</div>
-	</div>
+		
 	<script src="assets/js/loadcontent.js"></script>
 	<script> loadHTML('assets/reusable/header.html', 'header');</script>
 	<script>
 		function addEntry() {
-			window.location.href = 'assets/reusable/entry_adder.html';
+			window.location.href = 'entry_adder.html';
 		}
 	</script>
 </body>
