@@ -1814,15 +1814,15 @@ button:active,
   }
   /* Header */
   #header {
-    width: 200px;
+    width: 250px;
   }
   /* Footer */
   #footer {
-    margin-left: 300px;
+    margin-left: 250px;
   }
   /* Main */
   #main {
-    margin-left: 300px;
+    margin-left: 250px;
   }
 }
 /* Normal */
@@ -1854,7 +1854,7 @@ button:active,
   }
   /* Header */
   #header {
-    width: 15%;
+    width: 18%;
   }
   #logo .image {
     position: relative;
@@ -1879,7 +1879,7 @@ button:active,
   }
   /* Main */
   #main {
-    margin-left: 20%;
+    margin-left: 18%;
   }
 }
 /* Narrower */
