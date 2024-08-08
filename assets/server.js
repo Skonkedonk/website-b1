@@ -3,7 +3,11 @@ const { startStandaloneServer } = require('@apollo/server/standalone');
 const mongoose = require('mongoose');
 
 // Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/graphql');
+mongoose.connect('mongodb://localhost:27017/graphql', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+}).then(() => console.log('MongoDB connected'))
+  .catch(err => console.error('MongoDB connection error:', err));
 
 // Define a Mongoose model for User
 const User = mongoose.model('User', {
@@ -41,15 +45,19 @@ const resolvers = {
   }
 };
 
-// Create and start the Apollo Server
+// Create the Apollo Server
 const server = new ApolloServer({
   typeDefs,
   resolvers
 });
 
+// Read port from environment variable or use default
+const PORT = process.env.PORT || 4000;
+
 startStandaloneServer(server, {
-  listen: { port: 5000, host: 'localhost' }
+  listen: { port: PORT, host: '0.0.0.0' }
 }).then(({ url }) => {
   console.log(`Server is running on ${url}`);
+}).catch(err => {
+  console.error('Failed to start the server:', err);
 });
-
