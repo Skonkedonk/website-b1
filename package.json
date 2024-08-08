@@ -12,5 +12,12 @@
   "description": "",
   "devDependencies": {
     "sass": "^1.77.8"
+  },
+  "dependencies": {
+    "@apollo/server": "^4.11.0",
+    "express": "^4.19.2",
+    "graphql": "^16.9.0",
+    "graphql-yoga": "^5.6.3",
+    "mongoose": "^8.5.2"
   }
 }

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GraphQL Example</title>
+</head>
+<body>
+    <h1>GraphQL Example</h1>
+
+    <h2>Create User</h2>
+    <form id="createUserForm">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+        <button type="submit">Create User</button>
+    </form>
+
+    <h2>Users</h2>
+    <ul id="userList"></ul>
+
+    <script>
+        const form = document.getElementById('createUserForm');
+        const userList = document.getElementById('userList');
+
+        // Function to fetch users
+        async function fetchUsers() {
+            const response = await fetch('http://localhost:4000', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    query: `
+                        query {
+                            users {
+                                id
+                                name
+                            }
+                        }
+                    `
+                })
+            });
+            const result = await response.json();
+            return result.data.users;
+        }
+
+        // Function to create a new user
+        async function createUser(name) {
+            const response = await fetch('http://localhost:4000', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    query: `
+                        mutation {
+                            createUser(name: "${name}") {
+                                id
+                                name
+                            }
+                        }
+                    `
+                })
+            });
+            const result = await response.json();
+            return result.data.createUser;
+        }
+
+        // Form submit event handler
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const name = form.name.value;
+            await createUser(name);
+            form.reset();
+            renderUsers();
+        });
+
+        // Function to render users
+        async function renderUsers() {
+            const users = await fetchUsers();
+            userList.innerHTML = '';
+            users.forEach(user => {
+                const li = document.createElement('li');
+                li.textContent = user.name;
+                userList.appendChild(li);
+            });
+        }
+
+        // Initial render
+        renderUsers();
+    </script>
+</body>
+</html>

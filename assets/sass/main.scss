@@ -794,19 +794,19 @@
 		/* Header */
 
 			#header {
-				width: 250px;
+				width: 350px;
 			}
 
 		/* Footer */
 
 			#footer {
-				margin-left: 250px;
+				margin-left: 350px;
 			}
 
 		/* Main */
 
 			#main {
-				margin-left: 250px;
+				margin-left: 350px;
 			}
 
 	}
@@ -899,13 +899,13 @@
 		/* Footer */
 
 			#footer {
-				margin-left: 20%;
+				margin-left: 22%;
 			}
 
 		/* Main */
 
 			#main {
-				margin-left: 18%;
+				margin-left: 22%;
 			}
 
 	}
@@ -1266,6 +1266,7 @@ form {
     flex-direction: column;
 
     label {
+		color: #000;
         margin-top: 10px;
     }
 
