@@ -3,8 +3,8 @@ const { startStandaloneServer } = require('@apollo/server/standalone');
 const mongoose = require('mongoose');
 
 // Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/graphql', {
-}).then(() => console.log('MongoDB connected'))
+mongoose.connect('mongodb://localhost:27017/graphql')
+  .then(() => console.log('MongoDB connected'))
   .catch(err => console.error('MongoDB connection error:', err));
 
 // Define a Mongoose model for User
