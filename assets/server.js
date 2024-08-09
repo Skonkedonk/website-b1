@@ -17,6 +17,7 @@ const typeDefs = `
   type User {
     id: ID!
     name: String!
+    second: String!
   }
 
   type Query {
@@ -25,7 +26,7 @@ const typeDefs = `
   }
 
   type Mutation {
-    createUser(name: String!): User
+    createUser(name: String!, second: String!): User
   }
 `;
 
@@ -37,7 +38,7 @@ const resolvers = {
   },
   Mutation: {
     createUser: async (parent, args) => {
-      const user = new User({ name: args.name });
+      const user = new User({ name: args.name }, { second: args.second});
       return user.save();
     }
   }
