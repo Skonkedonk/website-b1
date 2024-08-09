@@ -9,8 +9,10 @@ mongoose.connect('mongodb://localhost:27017/graphql')
 
 // Define a Mongoose model for User
 const User = mongoose.model('User', {
-  name: String
+  name: { type: String, required: true }, // Make sure name is required
+  second: { type: String, required: false } // Allow second to be nullable
 });
+
 
 // Define GraphQL type definitions
 const typeDefs = `
@@ -30,25 +32,20 @@ const typeDefs = `
   }
 `;
 
-
-// Define GraphQL resolvers
 const resolvers = {
   Mutation: {
     createUser: async (parent, args) => {
-      try {
-        const user = new User({
-          name: args.name,
-          second: args.second // Ensure the `second` field is properly handled
-        });
-        return await user.save();
-      } catch (error) {
-        console.error('Error creating user:', error);
-        throw new Error('Error creating user');
-      }
+      console.log('Received createUser mutation with args:', args); // Debugging log
+      const user = new User({
+        name: args.name,
+        second: args.second || null  // Ensure the second field is handled correctly
+      });
+      const savedUser = await user.save();
+      console.log('User saved:', savedUser); // Debugging log
+      return savedUser;
     }
   }
 };
-
 
 // Create the Apollo Server
 const server = new ApolloServer({
