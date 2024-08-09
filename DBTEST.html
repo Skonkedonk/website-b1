@@ -90,8 +90,7 @@
             userList.innerHTML = '';
             users.forEach(user => {
                 const li = document.createElement('li');
-                li.textContent = user.name;
-                li.textContent = user.second;
+                li.textContent = `${user.name} - ${user.second}`;
                 userList.appendChild(li);
             });
         }
