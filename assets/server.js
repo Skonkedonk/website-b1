@@ -17,7 +17,7 @@ const typeDefs = `
   type User {
     id: ID!
     name: String!
-    second: String!
+    second: String  # Nullable field
   }
 
   type Query {
@@ -26,9 +26,10 @@ const typeDefs = `
   }
 
   type Mutation {
-    createUser(name: String!, second: String!): User
+    createUser(name: String!, second: String): User  # Make second optional
   }
 `;
+
 
 // Define GraphQL resolvers
 const resolvers = {
