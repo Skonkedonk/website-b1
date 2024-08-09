@@ -33,6 +33,17 @@ const typeDefs = `
 `;
 
 const resolvers = {
+  Query: {
+    users: async () => {
+      try {
+        const users = await User.find();
+        return users;
+      } catch (error) {
+        console.error('Error fetching users:', error);
+        return null;
+      }
+    },
+  },
   Mutation: {
     createUser: async (parent, args) => {
       console.log('Received createUser mutation with args:', args); // Debugging log
