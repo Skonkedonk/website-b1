@@ -86,14 +86,21 @@
 
         // Function to render users
         async function renderUsers() {
-            const users = await fetchUsers();
-            userList.innerHTML = '';
-            users.forEach(user => {
-                const li = document.createElement('li');
-                li.textContent = `${user.name} - ${user.second}`;
-                userList.appendChild(li);
-            });
+    const users = await fetchUsers();
+    console.log('Users fetched for rendering:', users); // Log the users array
+    userList.innerHTML = '';
+
+    users.forEach(user => {
+        if (user && user.name && user.second) {  // Check that user has the expected properties
+            const li = document.createElement('li');
+            li.textContent = `${user.name} - ${user.second}`;
+            userList.appendChild(li);
+        } else {
+            console.error('User data is missing expected properties:', user); // Log any unexpected user data
         }
+    });
+}
+
 
         // Initial render
         renderUsers();
