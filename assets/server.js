@@ -33,13 +33,21 @@ const typeDefs = `
 // Define GraphQL resolvers
 const resolvers = {
   Query: {
-    user: async (parent, args) => User.findById(args.id),
-    users: async () => User.find()
+    users: async () => User.find(),
+    user: async (parent, args) => User.findById(args.id)    
   },
   Mutation: {
     createUser: async (parent, args) => {
-      const user = new User({ name: args.name }, { second: args.second});
-      return user.save();
+      try {
+        const user = new User({
+          name: args.name,
+          second: args.second
+        });
+        return await user.save();
+      } catch (error) {
+        console.error('Error creating user:', error);
+        throw new Error('Error creating user');
+      }
     }
   }
 };
