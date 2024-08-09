@@ -49,30 +49,31 @@
             return result.data.users;
         }
 
-        // Function to create a new user
         async function createUser(name, second) {
-            console.log('Creating user:', name, ' & ', second);
-            const response = await fetch('http://localhost:4000', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    query: `
-                        mutation {
-                            createUser(name: "${name}", second: "${second}") {
-                                id
-                                name
-                                second
-                            }
-                        }
-                    `
-                })
-            });
-            const result = await response.json();
-            console.log('Created user:', result.data.createUser);
-            return result.data.createUser;
-        }
+    console.log('Creating user:', name, ' & ', second);
+    const response = await fetch('http://localhost:4000', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            query: `
+                mutation {
+                    createUser(name: "${name}", second: "${second}") {
+                        id
+                        name
+                        second
+                    }
+                }
+            `
+        })
+    });
+
+    const result = await response.json();
+    console.log('Created user:', result.data.createUser);
+    return result.data.createUser;
+}
+
 
         // Form submit event handler
         form.addEventListener('submit', async (event) => {
@@ -84,23 +85,25 @@
             renderUsers();
         });
 
-        // Function to render users
         async function renderUsers() {
     const users = await fetchUsers();
     console.log('Users fetched for rendering:', users); // Log the users array
-    userList.innerHTML = '';
+    userList.innerHTML = ''; // Clear the list before rendering
 
     users.forEach(user => {
-        if (user && user.name && user.second) {  // Check that user has the expected properties
+        if (user && user.name && user.second) {
             const li = document.createElement('li');
             li.textContent = `${user.name} - ${user.second}`;
             userList.appendChild(li);
+        } else if (user && user.name) {
+            const li = document.createElement('li');
+            li.textContent = `${user.name}`;
+            userList.appendChild(li);
         } else {
-            console.error('User data is missing expected properties:', user); // Log any unexpected user data
+            console.error('User data is missing expected properties:', user);
         }
     });
 }
-
 
         // Initial render
         renderUsers();

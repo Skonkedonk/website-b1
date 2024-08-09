@@ -32,16 +32,12 @@ const typeDefs = `
 
 // Define GraphQL resolvers
 const resolvers = {
-  Query: {
-    users: async () => User.find(),
-    user: async (parent, args) => User.findById(args.id)    
-  },
   Mutation: {
     createUser: async (parent, args) => {
       try {
         const user = new User({
           name: args.name,
-          second: args.second
+          second: args.second // Ensure the `second` field is properly handled
         });
         return await user.save();
       } catch (error) {
@@ -51,6 +47,7 @@ const resolvers = {
     }
   }
 };
+
 
 // Create the Apollo Server
 const server = new ApolloServer({
