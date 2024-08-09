@@ -12,6 +12,9 @@
     <form id="createUserForm">
         <label for="name">Name:</label>
         <input type="text" id="name" name="name" required>
+        
+        <label for="name">secondthing:</label>
+        <input type="text" id="second" name="second" required>
         <button type="submit">Create User</button>
     </form>
 
@@ -35,6 +38,7 @@
                             users {
                                 id
                                 name
+                                second
                             }
                         }
                     `
@@ -46,8 +50,8 @@
         }
 
         // Function to create a new user
-        async function createUser(name) {
-            console.log('Creating user:', name);
+        async function createUser(name, second) {
+            console.log('Creating user:', name, ' & ', second);
             const response = await fetch('http://localhost:4000', {
                 method: 'POST',
                 headers: {
@@ -56,9 +60,10 @@
                 body: JSON.stringify({
                     query: `
                         mutation {
-                            createUser(name: "${name}") {
+                            createUser(name: "${name}", second. "${second}") {
                                 id
                                 name
+                                second
                             }
                         }
                     `
@@ -73,7 +78,8 @@
         form.addEventListener('submit', async (event) => {
             event.preventDefault();
             const name = form.name.value;
-            await createUser(name);
+            const second = form.second.value;
+            await createUser(name, second);
             form.reset();
             renderUsers();
         });
@@ -85,6 +91,7 @@
             users.forEach(user => {
                 const li = document.createElement('li');
                 li.textContent = user.name;
+                li.textContent = user.second;
                 userList.appendChild(li);
             });
         }
