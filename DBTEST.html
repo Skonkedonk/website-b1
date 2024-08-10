@@ -37,7 +37,7 @@
 
         // Function to fetch entries
         async function fetchEntries() {
-            const response = await fetch('http://localhost:4000/graphql', {
+            const response = await fetch('http://127.0.0.1:4000/graphql', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -89,7 +89,7 @@
             formData.append('map', JSON.stringify({ "0": ["variables.file"] }));
             formData.append('0', file);
 
-            const response = await fetch('http://localhost:4000/graphql', {
+            const response = await fetch('http://127.0.0.1:4000/graphql', {
                 method: 'POST',
                 body: formData
             });
