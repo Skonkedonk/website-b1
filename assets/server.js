@@ -105,13 +105,14 @@ const resolvers = {
           const resolvedFile = await file.promise;
           const { createReadStream, filename, mimetype } = resolvedFile;
 
+          // Ensure the uploads directory inside assets exists
           const uploadsDir = path.join(__dirname, 'assets', 'uploads');
           if (!fs.existsSync(uploadsDir)) {
             fs.mkdirSync(uploadsDir, { recursive: true });
           }
 
+          // Save the file in the correct path
           const outputPath = path.join(uploadsDir, filename);
-
           await new Promise((resolve, reject) => {
             const out = fs.createWriteStream(outputPath);
             stream.pipe(out);
@@ -119,6 +120,7 @@ const resolvers = {
             out.on('error', reject);
           });
 
+          // Set the correct file path to be saved in the database
           filePath = `/assets/uploads/${filename}`;
           fileType = mimetype;
           fileSize = fs.statSync(outputPath).size;
@@ -134,7 +136,7 @@ const resolvers = {
         title,
         description,
         category,
-        filePath, // These fields will be null if no file was uploaded
+        filePath, // This path will be '/assets/uploads/filename'
         fileType,
         fileSize,
         rating,
@@ -149,7 +151,6 @@ const resolvers = {
     },
   },
 };
-
 
 
 async function startServer() {
