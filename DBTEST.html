@@ -35,7 +35,7 @@
         async function uploadFile(title, description, category, rating, file) {
             const formData = new FormData();
 
-            // Adding the operations field
+            // Add the operations field with the GraphQL mutation and variables
             formData.append('operations', JSON.stringify({
                 query: `
                     mutation uploadFile($title: String!, $description: String!, $category: String!, $rating: Int!, $file: Upload) {
@@ -60,30 +60,22 @@
                 }
             }));
 
-            // Adding the map field
+            // Add the map field to indicate which field in the GraphQL variables corresponds to the file
             formData.append('map', JSON.stringify({ '0': ['variables.file'] }));
 
-            // Adding the actual file to FormData
+            // Add the actual file to FormData
             if (file) {
-                formData.append('0', file);
+                formData.append('0', file);  // File itself goes here
             } else {
                 console.warn('No file selected!');
             }
 
             try {
-                // Debug: Check the formData content before sending
-                for (var pair of formData.entries()) {
-                    console.log(pair[0]+ ', ' + pair[1]);
-                }
-
-                // Sending the POST request via fetch
+                // Send the POST request via fetch
                 const response = await fetch('http://127.0.0.1:4000/graphql', {
                     method: 'POST',
                     body: formData,
                 });
-
-                // Debug: Check the Content-Type header
-                console.log(response.headers.get('Content-Type'));
 
                 const result = await response.json();
 
@@ -146,7 +138,7 @@
             return result.data.entries;
         }
 
-        // Render entries (not directly related to current issue)
+        // Render entries (not directly related to the current issue)
         async function renderEntries() {
             const entries = await fetchEntries();
             const entryList = document.getElementById('entryList');
