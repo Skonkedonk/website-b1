@@ -83,7 +83,7 @@ const typeDefs = gql`
 `;
 
 const resolvers = {
-  Upload, // Add the Upload scalar to your resolvers
+  Upload, // Make sure this scalar type is properly defined and used
 
   Query: {
     entries: async () => await Entry.find(),
@@ -115,6 +115,8 @@ const resolvers = {
           console.error("Error processing file upload:", error);
           throw new Error("File upload failed");
         }
+      } else {
+        console.warn('No file received');
       }
 
       // Save metadata (and optionally the file path) to MongoDB
@@ -137,6 +139,7 @@ const resolvers = {
     },
   },
 };
+
 
 async function startServer() {
   const server = new ApolloServer({
