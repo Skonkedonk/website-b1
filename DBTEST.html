@@ -8,26 +8,36 @@
 <body>
     <h1>GraphQL Example</h1>
 
-    <h2>Create User</h2>
-    <form id="createUserForm">
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name" required>
-        
-        <label for="name">secondthing:</label>
-        <input type="text" id="second" name="second" required>
-        <button type="submit">Create User</button>
+    <h2>Create Entry</h2>
+    <form id="createEntryForm" enctype="multipart/form-data">
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title" required><br/>
+
+        <label for="description">Description:</label>
+        <input type="text" id="description" name="description" required><br/>
+
+        <label for="category">Category:</label>
+        <input type="text" id="category" name="category" required><br/>
+
+        <label for="rating">Rating:</label>
+        <input type="number" id="rating" name="rating" required><br/>
+
+        <label for="file">File:</label>
+        <input type="file" id="file" name="file"><br/><br/>
+
+        <button type="submit">Create Entry</button>
     </form>
 
-    <h2>Users</h2>
-    <ul id="userList"></ul>
+    <h2>Entries</h2>
+    <ul id="entryList"></ul>
 
     <script>
-        const form = document.getElementById('createUserForm');
-        const userList = document.getElementById('userList');
+        const form = document.getElementById('createEntryForm');
+        const entryList = document.getElementById('entryList');
 
-        // Function to fetch users
-        async function fetchUsers() {
-            const response = await fetch('http://localhost:4000', {
+        // Function to fetch entries
+        async function fetchEntries() {
+            const response = await fetch('http://localhost:4000/graphql', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -35,78 +45,80 @@
                 body: JSON.stringify({
                     query: `
                         query {
-                            users {
+                            entries {
                                 id
-                                name
-                                second
+                                title
+                                description
+                                category
+                                rating
+                                file
                             }
                         }
                     `
                 })
             });
             const result = await response.json();
-            console.log('Fetched users:', result.data.users);
-            return result.data.users;
+            return result.data.entries;
         }
 
-        async function createUser(name, second) {
-    console.log('Creating user:', name, ' & ', second);
-    const response = await fetch('http://localhost:4000', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            query: `
-                mutation {
-                    createUser(name: "${name}", second: "${second}") {
-                        id
-                        name
-                        second
+        async function createEntry(title, description, category, rating, file) {
+            const formData = new FormData();
+            formData.append('operations', JSON.stringify({
+                query: `
+                    mutation {
+                        createEntry(
+                            title: "${title}", 
+                            description: "${description}", 
+                            category: "${category}", 
+                            rating: ${rating}, 
+                            file: "${file}"
+                        ) {
+                            id
+                            title
+                            description
+                            category
+                            rating
+                            file
+                        }
                     }
-                }
-            `
-        })
-    });
+                `
+            }));
+            formData.append('file', file);
 
-    const result = await response.json();
-    console.log('Created user:', result.data.createUser);
-    return result.data.createUser;
-}
+            const response = await fetch('http://localhost:4000/graphql', {
+                method: 'POST',
+                body: formData
+            });
 
+            const result = await response.json();
+            return result.data.createEntry;
+        }
 
-        // Form submit event handler
         form.addEventListener('submit', async (event) => {
             event.preventDefault();
-            const name = form.name.value;
-            const second = form.second.value;
-            await createUser(name, second);
+            const title = form.title.value;
+            const description = form.description.value;
+            const category = form.category.value;
+            const rating = form.rating.value;
+            const file = form.file.files[0];
+
+            await createEntry(title, description, category, rating, file);
             form.reset();
-            renderUsers();
+            renderEntries();
         });
 
-        async function renderUsers() {
-    const users = await fetchUsers();
-    console.log('Users fetched for rendering:', users); // Log the users array
-    userList.innerHTML = ''; // Clear the list before rendering
+        async function renderEntries() {
+            const entries = await fetchEntries();
+            entryList.innerHTML = '';
 
-    users.forEach(user => {
-        if (user && user.name && user.second) {
-            const li = document.createElement('li');
-            li.textContent = `${user.name} - ${user.second}`;
-            userList.appendChild(li);
-        } else if (user && user.name) {
-            const li = document.createElement('li');
-            li.textContent = `${user.name}`;
-            userList.appendChild(li);
-        } else {
-            console.error('User data is missing expected properties:', user);
+            entries.forEach(entry => {
+                const li = document.createElement('li');
+                li.textContent = `${entry.title} - ${entry.description} - ${entry.category} - ${entry.rating}`;
+                entryList.appendChild(li);
+            });
         }
-    });
-}
 
-        // Initial render
-        renderUsers();
+        renderEntries();
     </script>
 </body>
 </html>
