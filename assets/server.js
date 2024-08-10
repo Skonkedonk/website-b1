@@ -105,14 +105,14 @@ const resolvers = {
           const resolvedFile = await file.promise;
           const { createReadStream, filename, mimetype } = resolvedFile;
 
-          // Ensure the uploads directory inside assets exists
           const uploadsDir = path.join(__dirname, 'assets', 'uploads');
           if (!fs.existsSync(uploadsDir)) {
             fs.mkdirSync(uploadsDir, { recursive: true });
           }
 
-          // Save the file in the correct path
           const outputPath = path.join(uploadsDir, filename);
+
+          const stream = createReadStream();
           await new Promise((resolve, reject) => {
             const out = fs.createWriteStream(outputPath);
             stream.pipe(out);
@@ -120,7 +120,6 @@ const resolvers = {
             out.on('error', reject);
           });
 
-          // Set the correct file path to be saved in the database
           filePath = `/assets/uploads/${filename}`;
           fileType = mimetype;
           fileSize = fs.statSync(outputPath).size;
@@ -129,14 +128,18 @@ const resolvers = {
           throw new Error("File upload failed");
         }
       } else {
-        console.log('No file uploaded.');
+        // Use the default file when no file is uploaded
+        console.log('No file uploaded. Using default file.');
+        filePath = `/assets/uploads/placeholder_pika.jpg`;  // Path to the default file
+        fileType = 'image/jpeg';  // Adjust based on your default file type
+        fileSize = fs.statSync(path.join(__dirname, 'assets', 'uploads', 'default.jpg')).size;
       }
 
       const entry = new Entry({
         title,
         description,
         category,
-        filePath, // This path will be '/assets/uploads/filename'
+        filePath,
         fileType,
         fileSize,
         rating,
