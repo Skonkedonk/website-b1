@@ -102,8 +102,12 @@ const resolvers = {
 
       if (file) {
         try {
-          // Await the file promise to correctly destructure the properties
-          const { createReadStream, filename, mimetype } = await file;
+          // Resolve the file promise explicitly
+          const resolvedFile = await file;
+          console.log('Resolved File:', resolvedFile);
+
+          // Now destructure the resolved file
+          const { createReadStream, filename, mimetype } = resolvedFile;
           console.log('Filename:', filename);
           console.log('MIME Type:', mimetype);
 
@@ -153,6 +157,7 @@ const resolvers = {
     },
   },
 };
+
 
 
 
