@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GraphQL Example</title>
+    <title>GraphQL File Upload Example</title>
 </head>
 <body>
-    <h1>GraphQL Example</h1>
+    <h1>GraphQL File Upload Example</h1>
 
     <h2>Create Entry</h2>
     <form id="createEntryForm" enctype="multipart/form-data">
@@ -32,10 +32,7 @@
     <ul id="entryList"></ul>
 
     <script>
-        // Declare form variable only once
-        const form = document.getElementById('createEntryForm');
-
-        // Function to fetch entries (not relevant to the current issue, but included for completeness)
+        // Function to fetch entries (not directly relevant to the current issue, but included for completeness)
         async function fetchEntries() {
             const response = await fetch('http://127.0.0.1:4000/graphql', {
                 method: 'POST',
@@ -61,7 +58,7 @@
             return result.data.entries;
         }
 
-        // Correctly declare and use the uploadFile function
+        // Function to upload a file and create an entry
         async function uploadFile(title, description, category, rating, file) {
             const formData = new FormData();
 
@@ -93,20 +90,23 @@
             // Adding the map field
             formData.append('map', JSON.stringify({ '0': ['variables.file'] }));
 
-            // Adding the actual file
-            formData.append('0', file);  // File itself goes here
+            // Adding the actual file to FormData
+            if (file) {
+                formData.append('0', file);  // File itself goes here
+            } else {
+                console.warn('No file selected!');
+            }
 
             try {
                 // Sending the POST request via fetch
                 const response = await fetch('http://127.0.0.1:4000/graphql', {
                     method: 'POST',
-                    body: formData
+                    body: formData,
                 });
 
-                // Parsing the response
                 const result = await response.json();
 
-                // Log the response to see what's returned
+                // Log the entire response to inspect it
                 console.log('GraphQL response:', result);
 
                 if (result && result.data && result.data.uploadFile) {
@@ -120,6 +120,7 @@
         }
 
         // Handle form submission
+        const form = document.getElementById('createEntryForm');
         form.addEventListener('submit', async (event) => {
             event.preventDefault();  // Prevent traditional form submission
 
@@ -127,7 +128,7 @@
             const description = form.description.value;
             const category = form.category.value;
             const rating = parseInt(form.rating.value);
-            const file = form.file.files[0];
+            const file = form.file.files[0];  // Get the selected file
 
             try {
                 await uploadFile(title, description, category, rating, file);
@@ -151,6 +152,7 @@
             });
         }
 
+        // Initial render of entries
         renderEntries();
     </script>
 </body>
