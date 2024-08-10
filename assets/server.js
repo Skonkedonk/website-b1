@@ -100,39 +100,26 @@ const resolvers = {
       let fileType = null;
       let fileSize = null;
 
-      console.log('Received file:', file);
-
       if (file) {
         try {
-          // Resolve the file promise manually
-          const resolvedFile = await file.promise; // Access the promise field directly
-          console.log('Resolved File:', resolvedFile);
-
-          // Destructure the resolved file
+          const resolvedFile = await file.promise;
           const { createReadStream, filename, mimetype } = resolvedFile;
-          console.log('Filename:', filename);
-          console.log('MIME Type:', mimetype);
 
-          if (!createReadStream || !filename || !mimetype) {
-            throw new Error('File upload failed: Missing file properties.');
+          const uploadsDir = path.join(__dirname, 'assets', 'uploads');
+          if (!fs.existsSync(uploadsDir)) {
+            fs.mkdirSync(uploadsDir, { recursive: true });
           }
 
-          const stream = createReadStream();
-          const outputPath = path.join(__dirname, 'uploads', filename);
-          console.log('Output Path:', outputPath);
+          const outputPath = path.join(uploadsDir, filename);
 
-          // Save file to disk
           await new Promise((resolve, reject) => {
             const out = fs.createWriteStream(outputPath);
             stream.pipe(out);
             out.on('finish', resolve);
-            out.on('error', (error) => {
-              console.error('Stream error:', error);
-              reject(error);
-            });
+            out.on('error', reject);
           });
 
-          filePath = `/uploads/${filename}`;
+          filePath = `/assets/uploads/${filename}`;
           fileType = mimetype;
           fileSize = fs.statSync(outputPath).size;
         } catch (error) {
@@ -140,15 +127,14 @@ const resolvers = {
           throw new Error("File upload failed");
         }
       } else {
-        console.warn('No file received');
+        console.log('No file uploaded.');
       }
 
-      // Save metadata (and optionally the file path) to MongoDB
       const entry = new Entry({
         title,
         description,
         category,
-        filePath,
+        filePath, // These fields will be null if no file was uploaded
         fileType,
         fileSize,
         rating,
