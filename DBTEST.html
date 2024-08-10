@@ -33,72 +33,70 @@
 
     <script>
         async function uploadFile(title, description, category, rating, file) {
-            const formData = new FormData();
+    const formData = new FormData();
 
-            // Add the operations field with the GraphQL mutation and variables
-            formData.append('operations', JSON.stringify({
-                query: `
-                    mutation uploadFile($title: String!, $description: String!, $category: String!, $rating: Int!, $file: Upload) {
-                        uploadFile(title: $title, description: $description, category: $category, rating: $rating, file: $file) {
-                            id
-                            title
-                            description
-                            category
-                            rating
-                            filePath
-                            fileType
-                            fileSize
-                        }
-                    }
-                `,
-                variables: {
-                    title: title,
-                    description: description,
-                    category: category,
-                    rating: rating,
-                    file: null
+    // Add the operations field with the GraphQL mutation and variables
+    formData.append('operations', JSON.stringify({
+        query: `
+            mutation uploadFile($title: String!, $description: String!, $category: String!, $rating: Int!, $file: Upload) {
+                uploadFile(title: $title, description: $description, category: $category, rating: $rating, file: $file) {
+                    id
+                    title
+                    description
+                    category
+                    rating
+                    filePath
+                    fileType
+                    fileSize
                 }
-            }));
-
-            // Add the map field to indicate which field in the GraphQL variables corresponds to the file
-            formData.append('map', JSON.stringify({ '0': ['variables.file'] }));
-
-            // Add the actual file to FormData
-            if (file) {
-                formData.append('0', file);  // File itself goes here
-            } else {
-                console.warn('No file selected!');
             }
-
-            try {
-                // Debug: Log FormData content
-                for (let [key, value] of formData.entries()) {
-                    console.log(`${key}: ${value}`);
-                }
-
-                // Sending the POST request via fetch
-                const response = await fetch('http://127.0.0.1:4000/graphql', {
-                    method: 'POST',
-                    body: formData,
-                });
-
-                // Debug: Check the Content-Type header
-                console.log('Response Content-Type:', response.headers.get('Content-Type'));
-
-                const result = await response.json();
-
-                // Log the entire response to inspect it
-                console.log('GraphQL response:', result);
-
-                if (result && result.data && result.data.uploadFile) {
-                    return result.data.uploadFile;
-                } else {
-                    throw new Error('Failed to create entry');
-                }
-            } catch (error) {
-                console.error('Error during upload:', error);
-            }
+        `,
+        variables: {
+            title: title,
+            description: description,
+            category: category,
+            rating: rating,
+            file: null
         }
+    }));
+
+    // Add the map field to indicate which field in the GraphQL variables corresponds to the file
+    formData.append('map', JSON.stringify({ '0': ['variables.file'] }));
+
+    // Add the actual file to FormData
+    if (file) {
+        formData.append('0', file);  // File itself goes here
+    } else {
+        console.warn('No file selected!');
+    }
+
+    try {
+        const response = await fetch('http://127.0.0.1:4000/graphql', {
+            method: 'POST',
+            body: formData,
+        });
+
+        const result = await response.json();
+
+        // Log the entire response to inspect it
+        console.log('GraphQL response:', result);
+
+        // Check if there are errors in the response
+        if (result.errors) {
+            console.error('GraphQL errors:', result.errors);
+            throw new Error('Failed to create entry');
+        }
+
+        if (result && result.data && result.data.uploadFile) {
+            return result.data.uploadFile;
+        } else {
+            throw new Error('Failed to create entry');
+        }
+    } catch (error) {
+        console.error('Error during upload:', error);
+    }
+}
+
 
         // Handle form submission
         const form = document.getElementById('createEntryForm');
