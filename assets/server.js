@@ -6,7 +6,7 @@ const path = require('path');
 const fs = require('fs');
 const { GraphQLScalarType } = require('graphql');
 const { Kind } = require('graphql/language');
-const cors = require('cors'); // Import the cors package
+const { graphqlUploadExpress } = require('graphql-upload'); // Import graphql-upload
 const Entry = require('./models/Entry');
 
 // Define the Upload scalar type
@@ -33,9 +33,13 @@ const upload = multer({ dest: 'uploads/' });
 // Set up Express app
 const app = express();
 
+// Apply the graphql-upload middleware BEFORE graphql or express-graphql middlewares
+app.use(graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 })); // Adjust the file size and file limits as needed
+
 // Enable CORS for all origins or restrict it to specific origins
+const cors = require('cors');
 app.use(cors({
-    origin: 'https://skonkedonk.github.io', // Replace with your frontend origin
+  origin: 'https://skonkedonk.github.io', // Replace with your frontend origin
 }));
 
 // Connect to MongoDB
@@ -83,7 +87,7 @@ const typeDefs = gql`
 `;
 
 const resolvers = {
-  Upload, // Make sure this scalar type is properly defined and used
+  Upload, // Add the Upload scalar to your resolvers
 
   Query: {
     entries: async () => await Entry.find(),
@@ -139,7 +143,6 @@ const resolvers = {
     },
   },
 };
-
 
 async function startServer() {
   const server = new ApolloServer({
