@@ -4,12 +4,10 @@ const mongoose = require('mongoose');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const { graphqlUploadExpress } = require('graphql-upload'); // Ensure correct import
 const Entry = require('./models/Entry');
 
-
 // Set up Multer for file uploads
-const upload = multer({ dest: 'uploads/' }); // 'uploads/' is the directory where files will be stored
+const upload = multer({ dest: 'uploads/' });
 
 // Set up Express app
 const app = express();
@@ -21,8 +19,6 @@ mongoose.connect('mongodb://127.0.0.1:27017/fileuploads', { useNewUrlParser: tru
 
 // Define GraphQL schema
 const typeDefs = gql`
-  scalar Upload
-
   type Entry {
     id: ID!
     title: String!
@@ -44,7 +40,7 @@ const typeDefs = gql`
       description: String!,
       category: String!,
       rating: Int!,
-      file: Upload!
+      file: String!
     ): Entry!
   }
 `;
@@ -56,26 +52,17 @@ const resolvers = {
   },
   Mutation: {
     uploadFile: async (parent, { title, description, category, rating, file }) => {
-      const { createReadStream, filename, mimetype } = await file;
-      const stream = createReadStream();
-      const filePath = path.join(__dirname, 'uploads', filename);
+      const filePath = path.join(__dirname, 'uploads', file);
 
-      // Save file to disk
-      const out = fs.createWriteStream(filePath);
-      await new Promise((resolve, reject) => {
-        stream.pipe(out);
-        out.on('finish', resolve);
-        out.on('error', reject);
-      });
-
+      // Simulate saving the file to disk (already handled by multer in a real app)
       // Save file metadata to MongoDB
       const entry = new Entry({
         title,
         description,
         category,
-        filePath: `/uploads/${filename}`, // Store relative path to file
-        fileType: mimetype,
-        fileSize: fs.statSync(filePath).size, // Get the file size in bytes
+        filePath: `/uploads/${file}`, // Store relative path to file
+        fileType: 'unknown', // Assuming fileType not handled by multer in this simplified example
+        fileSize: 0, // Placeholder since we don't handle file size here
         rating,
       });
 
@@ -85,17 +72,22 @@ const resolvers = {
 };
 
 // Set up Apollo Server
-const server = new ApolloServer({
-  typeDefs,
-  resolvers,
-});
+async function startServer() {
+  const server = new ApolloServer({
+    typeDefs,
+    resolvers,
+  });
 
-server.applyMiddleware({ app });
+  await server.start(); // Await the server start before applying middleware
+  server.applyMiddleware({ app });
 
-// Serve uploaded files statically
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+  // Serve uploaded files statically
+  app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Start the server
-app.listen(4000, () => {
-  console.log('Server running at http://localhost:4000');
-});
+  // Start the server
+  app.listen(4000, () => {
+    console.log('Server running at http://localhost:4000');
+  });
+}
+
+startServer();
