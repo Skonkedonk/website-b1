@@ -81,21 +81,26 @@ const resolvers = {
       let fileSize = null;
 
       if (file) {
-        const { createReadStream, filename, mimetype } = await file;
-        const stream = createReadStream();
-        filePath = path.join(__dirname, 'uploads', filename);
+        try {
+          const { createReadStream, filename, mimetype } = await file;
+          const stream = createReadStream();
+          const outputPath = path.join(__dirname, 'uploads', filename);
 
-        // Save file to disk
-        const out = fs.createWriteStream(filePath);
-        await new Promise((resolve, reject) => {
-          stream.pipe(out);
-          out.on('finish', resolve);
-          out.on('error', reject);
-        });
+          // Save file to disk
+          await new Promise((resolve, reject) => {
+            const out = fs.createWriteStream(outputPath);
+            stream.pipe(out);
+            out.on('finish', resolve);
+            out.on('error', reject);
+          });
 
-        filePath = `/uploads/${filename}`;
-        fileType = mimetype;
-        fileSize = fs.statSync(filePath).size;
+          filePath = `/uploads/${filename}`;
+          fileType = mimetype;
+          fileSize = fs.statSync(outputPath).size;
+        } catch (error) {
+          console.error("Error processing file upload:", error);
+          throw new Error("File upload failed");
+        }
       }
 
       // Save metadata (and optionally the file path) to MongoDB
@@ -109,10 +114,16 @@ const resolvers = {
         rating,
       });
 
-      return await entry.save();
+      try {
+        return await entry.save();
+      } catch (error) {
+        console.error("Error saving entry to MongoDB:", error);
+        throw new Error("Failed to save entry");
+      }
     },
   },
 };
+
 
 
 // Set up Apollo Server
