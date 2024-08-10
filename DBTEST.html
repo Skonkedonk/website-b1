@@ -71,11 +71,19 @@
             }
 
             try {
-                // Send the POST request via fetch
+                // Debug: Log FormData content
+                for (let [key, value] of formData.entries()) {
+                    console.log(`${key}: ${value}`);
+                }
+
+                // Sending the POST request via fetch
                 const response = await fetch('http://127.0.0.1:4000/graphql', {
                     method: 'POST',
                     body: formData,
                 });
+
+                // Debug: Check the Content-Type header
+                console.log('Response Content-Type:', response.headers.get('Content-Type'));
 
                 const result = await response.json();
 
@@ -138,7 +146,7 @@
             return result.data.entries;
         }
 
-        // Render entries (not directly related to the current issue)
+        // Render entries (not directly related to current issue)
         async function renderEntries() {
             const entries = await fetchEntries();
             const entryList = document.getElementById('entryList');
