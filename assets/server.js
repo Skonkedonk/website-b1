@@ -1,24 +1,23 @@
 const express = require('express');
 const { ApolloServer, gql } = require('apollo-server-express');
-const { graphqlUploadExpress } = require('graphql-upload');
 const mongoose = require('mongoose');
+const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-
-// Import the Entry model
 const Entry = require('./models/Entry');
 
+// Set up Multer for file uploads
+const upload = multer({ dest: 'uploads/' }); // 'uploads/' is the directory where files will be stored
+
+// Set up Express app
 const app = express();
 
-// Apply the middleware to handle file uploads
-app.use(graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }));
-
 // Connect to MongoDB
-mongoose.connect('mongodb://127.0.0.1:27017/graphql')
+mongoose.connect('mongodb://127.0.0.1:27017/fileuploads', { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.error('MongoDB connection error:', err));
 
-// GraphQL type definitions
+// Define GraphQL schema
 const typeDefs = gql`
   scalar Upload
 
@@ -26,8 +25,10 @@ const typeDefs = gql`
     id: ID!
     title: String!
     description: String!
-    file: String
     category: String!
+    filePath: String!
+    fileType: String!
+    fileSize: Int!
     rating: Int!
   }
 
@@ -36,63 +37,63 @@ const typeDefs = gql`
   }
 
   type Mutation {
-    createEntry(
+    uploadFile(
       title: String!,
       description: String!,
       category: String!,
       rating: Int!,
-      file: Upload
+      file: Upload!
     ): Entry!
   }
 `;
 
-// GraphQL resolvers
+// Define GraphQL resolvers
 const resolvers = {
   Query: {
     entries: async () => await Entry.find(),
   },
   Mutation: {
-    createEntry: async (parent, { title, description, category, rating, file }) => {
-      let filePath = '';
+    uploadFile: async (parent, { title, description, category, rating, file }) => {
+      const { createReadStream, filename, mimetype } = await file;
+      const stream = createReadStream();
+      const filePath = path.join(__dirname, 'uploads', filename);
 
-      if (file) {
-        const { createReadStream, filename } = await file;
-        const stream = createReadStream();
-        const out = path.join(__dirname, 'uploads', filename);
-        await stream.pipe(fs.createWriteStream(out));
-        filePath = `/uploads/${filename}`;
-      }
+      // Save file to disk
+      const out = fs.createWriteStream(filePath);
+      await new Promise((resolve, reject) => {
+        stream.pipe(out);
+        out.on('finish', resolve);
+        out.on('error', reject);
+      });
 
+      // Save file metadata to MongoDB
       const entry = new Entry({
         title,
         description,
-        file: filePath,
         category,
-        rating: parseInt(rating),
+        filePath: `/uploads/${filename}`, // Store relative path to file
+        fileType: mimetype,
+        fileSize: fs.statSync(filePath).size, // Get the file size in bytes
+        rating,
       });
 
       return await entry.save();
-    }
-  }
+    },
+  },
 };
 
-// Set up Apollo Server with Express
-async function startServer() {
-  const server = new ApolloServer({
-    typeDefs,
-    resolvers,
-    uploads: false, // Disable default upload handling in Apollo Server
-  });
+// Set up Apollo Server
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+});
 
-  await server.start();
-  server.applyMiddleware({ app });
+server.applyMiddleware({ app });
 
-  app.listen({ port: 4000 }, () =>
-    console.log(`Server ready at http://localhost:4000${server.graphqlPath}`)
-  );
-}
+// Serve uploaded files statically
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-startServer();
-
-// Serve static files
-app.use('/uploads', express.static('uploads'));
+// Start the server
+app.listen(4000, () => {
+  console.log('Server running at http://localhost:4000');
+});

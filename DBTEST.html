@@ -46,79 +46,74 @@
                 },
                 body: JSON.stringify({
                     query: `
-                query {
-                    entries {
-                        id
-                        title
-                        description
-                        category
-                        rating
-                        file
-                    }
-                }
-            `
+                        query {
+                            entries {
+                                id
+                                title
+                                description
+                                category
+                                rating
+                                filePath
+                            }
+                        }
+                    `
                 })
             });
             const result = await response.json();
             return result.data.entries;
         }
 
-        async function createEntry(title, description, category, rating, file) {
-    const formData = new FormData();
-    
-    const operations = {
-        query: `
-            mutation($title: String!, $description: String!, $category: String!, $rating: Int!, $file: Upload) {
-                createEntry(title: $title, description: $description, category: $category, rating: $rating, file: $file) {
-                    id
-                    title
-                    description
-                    category
-                    rating
-                    file
+        // Updated function to upload the file and create the entry
+        async function uploadFile(title, description, category, rating, file) {
+            const formData = new FormData();
+            formData.append('operations', JSON.stringify({
+                query: `
+                    mutation($file: Upload!, $title: String!, $description: String!, $category: String!, $rating: Int!) {
+                        uploadFile(file: $file, title: $title, description: $description, category: $category, rating: $rating) {
+                            id
+                            title
+                            description
+                            category
+                            filePath
+                            rating
+                        }
+                    }
+                `,
+                variables: {
+                    file: null,
+                    title: title,
+                    description: description,
+                    category: category,
+                    rating: rating,
                 }
+            }));
+            formData.append('map', JSON.stringify({ '0': ['variables.file'] }));
+            formData.append('0', file);
+
+            const response = await fetch('http://localhost:4000/graphql', {
+                method: 'POST',
+                body: formData,
+            });
+
+            const result = await response.json();
+            console.log(result);
+
+            if (result && result.data && result.data.uploadFile) {
+                return result.data.uploadFile;
+            } else {
+                throw new Error('Failed to create entry');
             }
-        `,
-        variables: {
-            title: title,
-            description: description,
-            category: category,
-            rating: parseInt(rating),
-            file: null
         }
-    };
-
-    formData.append('operations', JSON.stringify(operations));
-    formData.append('map', JSON.stringify({ "0": ["variables.file"] }));
-    formData.append('0', file);
-
-    const response = await fetch('http://localhost:4000/graphql', {
-        method: 'POST',
-        body: formData
-    });
-
-    const result = await response.json();
-
-    // Log the entire response to inspect it
-    console.log('GraphQL response:', result);
-
-    if (result && result.data && result.data.createEntry) {
-        return result.data.createEntry;
-    } else {
-        throw new Error('Failed to create entry');
-    }
-}
-
 
         form.addEventListener('submit', async (event) => {
             event.preventDefault();
             const title = form.title.value;
             const description = form.description.value;
             const category = form.category.value;
-            const rating = form.rating.value;
+            const rating = parseInt(form.rating.value);
             const file = form.file.files[0]; // Get the selected file
 
-            await createEntry(title, description, category, rating, file);
+            await uploadFile(title, description, category, rating, file);
             form.reset();
             renderEntries();
         });
