@@ -1,26 +1,39 @@
-const { ApolloServer } = require('apollo-server');
-const { GraphQLUpload } = require('graphql-upload');
+const express = require('express');
+const { ApolloServer, gql } = require('apollo-server-express');
+const multer = require('multer');
 const mongoose = require('mongoose');
-const fs = require('fs');
 const path = require('path');
+const fs = require('fs');
+
+// Import the Entry model
+const Entry = require('./models/Entry'); // Adjust the path as necessary
+
+const app = express();
 
 // Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/graphql', { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect('mongodb://127.0.0.1:27017/graphql')
   .then(() => console.log('MongoDB connected'))
-  .catch(err => console.error('MongoDB connection error:', err));
+  .catch(err => console.error('MongoDB connection error:', err)); 
 
-// Define your Mongoose model
-const Entry = require('./entry');  // Assuming entry.js is set up as discussed
+// Set up multer for file uploads
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/');
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname));
+  }
+});
 
-// Define GraphQL type definitions
-const typeDefs = `
-  scalar Upload
+const upload = multer({ storage });
 
+// GraphQL type definitions
+const typeDefs = gql`
   type Entry {
     id: ID!
     title: String!
     description: String!
-    file: String  # URL to the image file
+    file: String
     category: String!
     rating: Int!
   }
@@ -31,61 +44,87 @@ const typeDefs = `
 
   type Mutation {
     createEntry(
-      title: String!,
-      description: String,
-      file: Upload!,
-      category: String!,
-      rating: Int
-    ): Entry
+      title: String!, 
+      description: String!, 
+      category: String!, 
+      rating: Int!, 
+      file: String
+    ): Entry!
   }
 `;
 
-// Define your resolvers
+// GraphQL resolvers
 const resolvers = {
-  Upload: GraphQLUpload,
-
   Query: {
-    entries: async () => {
-      return await Entry.find();
-    }
+    entries: async () => await Entry.find(),
   },
-  
   Mutation: {
-    createEntry: async (parent, { title, description, file, category, rating }) => {
-      // Handle file upload
-      const { createReadStream, filename, mimetype } = await file;
-      const stream = createReadStream();
-      const filePath = path.join(__dirname, 'uploads', `${Date.now()}-${filename}`);
-      
-      // Store the file in the server's filesystem
-      await new Promise((resolve, reject) => {
-        const writeStream = fs.createWriteStream(filePath);
-        stream.pipe(writeStream);
-        writeStream.on('finish', resolve);
-        writeStream.on('error', reject);
-      });
-
-      // Create the database entry
+    createEntry: async (parent, { title, description, category, rating, file }) => {
       const entry = new Entry({
         title,
-        description: description || 'N/A',
-        file: filePath,  // Save the file path to the database
+        description,
+        file,
         category,
-        rating: rating || 0
+        rating: parseInt(rating), // Ensure rating is stored as an integer
       });
-      
       return await entry.save();
     }
   }
 };
 
-// Start the Apollo Server
-const server = new ApolloServer({
-  typeDefs,
-  resolvers,
-  uploads: false  // Disable built-in uploads, use graphql-upload instead
+// Set up Apollo Server with Express
+async function startServer() {
+  const server = new ApolloServer({
+    typeDefs,
+    resolvers,
+  });
+
+  await server.start();
+  server.applyMiddleware({ app });
+
+  app.listen({ port: 4000 }, () =>
+    console.log(`Server ready at http://localhost:4000${server.graphqlPath}`)
+  );
+}
+
+startServer();
+
+// Serve the upload form
+app.get('/', (req, res) => {
+  res.send(`
+    <h2>Upload File</h2>
+    <form action="/upload" enctype="multipart/form-data" method="POST">
+      <input type="text" name="title" placeholder="Title" required/><br/>
+      <input type="text" name="description" placeholder="Description" /><br/>
+      <input type="text" name="category" placeholder="Category" required/><br/>
+      <input type="number" name="rating" placeholder="Rating" required/><br/>
+      <input type="file" name="file" required/><br/><br/>
+      <input type="submit" value="Upload File"/>
+    </form>
+  `);
 });
 
-server.listen().then(({ url }) => {
-  console.log(`🚀 Server ready at ${url}`);
+// Handle file uploads
+app.post('/upload', upload.single('file'), async (req, res) => {
+  try {
+    const { title, description, category, rating } = req.body;
+    const file = path.join('/uploads/', req.file.filename); // Store the file path as a string
+
+    const entry = new Entry({
+      title,
+      description,
+      file, // Save the URL or path in the database
+      category,
+      rating: parseInt(rating), // Ensure rating is stored as an integer
+    });
+
+    await entry.save();
+    res.send('File uploaded and metadata saved.');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('An error occurred while uploading the file.');
+  }
 });
+
+// Serve static files
+app.use('/uploads', express.static('uploads'));
