@@ -104,17 +104,18 @@ const resolvers = {
 
       if (file) {
         try {
-          // Resolve the file promise
-          const resolvedFile = await file;
+          // Resolve the file promise manually
+          const resolvedFile = await file.promise; // Access the promise field directly
           console.log('Resolved File:', resolvedFile);
 
-          // Access file properties directly from the resolved file
-          const createReadStream = resolvedFile.createReadStream;
-          const filename = resolvedFile.filename;
-          const mimetype = resolvedFile.mimetype;
-
+          // Destructure the resolved file
+          const { createReadStream, filename, mimetype } = resolvedFile;
           console.log('Filename:', filename);
           console.log('MIME Type:', mimetype);
+
+          if (!createReadStream || !filename || !mimetype) {
+            throw new Error('File upload failed: Missing file properties.');
+          }
 
           const stream = createReadStream();
           const outputPath = path.join(__dirname, 'uploads', filename);
@@ -162,8 +163,6 @@ const resolvers = {
     },
   },
 };
-
-
 
 
 
