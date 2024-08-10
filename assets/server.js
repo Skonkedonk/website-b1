@@ -87,7 +87,7 @@ const typeDefs = gql`
 `;
 
 const resolvers = {
-  Upload, // Add the Upload scalar to your resolvers
+  Upload, // Ensure the Upload scalar is properly configured
 
   Query: {
     entries: async () => await Entry.find(),
@@ -98,18 +98,28 @@ const resolvers = {
       let fileType = null;
       let fileSize = null;
 
+      console.log('Received file:', file);
+
       if (file) {
         try {
+          // Await the file promise to correctly destructure the properties
           const { createReadStream, filename, mimetype } = await file;
+          console.log('Filename:', filename);
+          console.log('MIME Type:', mimetype);
+
           const stream = createReadStream();
           const outputPath = path.join(__dirname, 'uploads', filename);
+          console.log('Output Path:', outputPath);
 
           // Save file to disk
           await new Promise((resolve, reject) => {
             const out = fs.createWriteStream(outputPath);
             stream.pipe(out);
             out.on('finish', resolve);
-            out.on('error', reject);
+            out.on('error', (error) => {
+              console.error('Stream error:', error);
+              reject(error);
+            });
           });
 
           filePath = `/uploads/${filename}`;
@@ -143,6 +153,8 @@ const resolvers = {
     },
   },
 };
+
+
 
 async function startServer() {
   const server = new ApolloServer({
