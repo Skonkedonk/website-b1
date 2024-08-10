@@ -64,11 +64,10 @@
         }
 
         async function createEntry(title, description, category, rating, file) {
-            const formData = new FormData();
-
-            // Construct GraphQL operation and variables
-            const operations = {
-                query: `
+    const formData = new FormData();
+    
+    const operations = {
+        query: `
             mutation($title: String!, $description: String!, $category: String!, $rating: Int!, $file: Upload) {
                 createEntry(title: $title, description: $description, category: $category, rating: $rating, file: $file) {
                     id
@@ -80,35 +79,36 @@
                 }
             }
         `,
-                variables: {
-                    title: title,
-                    description: description,
-                    category: category,
-                    rating: parseInt(rating),
-                    file: null
-                }
-            };
-
-            // Add the GraphQL operation to the formData
-            formData.append('operations', JSON.stringify(operations));
-
-            // Specify which part of the request corresponds to the file
-            const map = {
-                "0": ["variables.file"]
-            };
-            formData.append('map', JSON.stringify(map));
-
-            // Append the actual file to the formData
-            formData.append('0', file);
-
-            const response = await fetch('http://localhost:4000/graphql', {
-                method: 'POST',
-                body: formData // Send FormData instead of JSON
-            });
-
-            const result = await response.json();
-            return result.data.createEntry;
+        variables: {
+            title: title,
+            description: description,
+            category: category,
+            rating: parseInt(rating),
+            file: null
         }
+    };
+
+    formData.append('operations', JSON.stringify(operations));
+    formData.append('map', JSON.stringify({ "0": ["variables.file"] }));
+    formData.append('0', file);
+
+    const response = await fetch('http://localhost:4000/graphql', {
+        method: 'POST',
+        body: formData
+    });
+
+    const result = await response.json();
+
+    // Log the entire response to inspect it
+    console.log('GraphQL response:', result);
+
+    if (result && result.data && result.data.createEntry) {
+        return result.data.createEntry;
+    } else {
+        throw new Error('Failed to create entry');
+    }
+}
+
 
         form.addEventListener('submit', async (event) => {
             event.preventDefault();
