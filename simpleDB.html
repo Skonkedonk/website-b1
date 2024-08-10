@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple File Upload Test</title>
+</head>
+<body>
+    <h1>Simple File Upload Test</h1>
+
+    <form id="fileUploadForm">
+        <label for="file">File:</label>
+        <input type="file" id="file" name="file"><br /><br />
+        <button type="submit">Upload File</button>
+    </form>
+
+    <script>
+        const form = document.getElementById('fileUploadForm');
+        
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const fileInput = document.getElementById('file');
+            const file = fileInput.files[0];
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const response = await fetch('http://127.0.0.1:4000/upload', { // Adjust this endpoint
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+                console.log('Server response:', result);
+            } catch (error) {
+                console.error('Upload failed:', error);
+            }
+        });
+    </script>
+</body>
+</html>
