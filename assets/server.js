@@ -4,7 +4,9 @@ const mongoose = require('mongoose');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const { graphqlUploadExpress } = require('graphql-upload'); // Ensure correct import
 const Entry = require('./models/Entry');
+
 
 // Set up Multer for file uploads
 const upload = multer({ dest: 'uploads/' }); // 'uploads/' is the directory where files will be stored
