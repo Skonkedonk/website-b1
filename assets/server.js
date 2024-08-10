@@ -33,7 +33,7 @@ const upload = multer({ dest: 'uploads/' });
 const app = express();
 
 // Connect to MongoDB
-mongoose.connect('mongodb://127.0.0.1:27017/fileuploads', { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect('mongodb://127.0.0.1:27017/fileuploads')
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.error('MongoDB connection error:', err));
 
