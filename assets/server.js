@@ -9,6 +9,7 @@ const { Kind } = require('graphql/language');
 const { graphqlUploadExpress } = require('graphql-upload'); // Import graphql-upload
 const Entry = require('./models/Entry');
 
+
 // Define the Upload scalar type
 const Upload = new GraphQLScalarType({
   name: 'Upload',
@@ -32,6 +33,7 @@ const upload = multer({ dest: 'uploads/' });
 
 // Set up Express app
 const app = express();
+
 
 // Apply the graphql-upload middleware BEFORE graphql or express-graphql middlewares
 app.use(graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 })); // Adjust the file size and file limits as needed
@@ -87,7 +89,7 @@ const typeDefs = gql`
 `;
 
 const resolvers = {
-  Upload, // Ensure the Upload scalar is properly configured
+  Upload,
 
   Query: {
     entries: async () => await Entry.find(),
@@ -102,12 +104,15 @@ const resolvers = {
 
       if (file) {
         try {
-          // Resolve the file promise explicitly
+          // Resolve the file promise
           const resolvedFile = await file;
           console.log('Resolved File:', resolvedFile);
 
-          // Now destructure the resolved file
-          const { createReadStream, filename, mimetype } = resolvedFile;
+          // Access file properties directly from the resolved file
+          const createReadStream = resolvedFile.createReadStream;
+          const filename = resolvedFile.filename;
+          const mimetype = resolvedFile.mimetype;
+
           console.log('Filename:', filename);
           console.log('MIME Type:', mimetype);
 
@@ -157,6 +162,7 @@ const resolvers = {
     },
   },
 };
+
 
 
 
