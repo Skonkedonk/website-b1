@@ -4,7 +4,27 @@ const mongoose = require('mongoose');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const { GraphQLScalarType } = require('graphql');
+const { Kind } = require('graphql/language');
 const Entry = require('./models/Entry');
+
+// Define the Upload scalar type
+const Upload = new GraphQLScalarType({
+  name: 'Upload',
+  description: 'A file upload.',
+  parseValue(value) {
+    return value; // value from the client
+  },
+  parseLiteral(ast) {
+    if (ast.kind === Kind.STRING) {
+      return ast.value; // ast value is always in string format
+    }
+    return null;
+  },
+  serialize(value) {
+    return value;
+  }
+});
 
 // Set up Multer for file uploads
 const upload = multer({ dest: 'uploads/' });
@@ -19,14 +39,16 @@ mongoose.connect('mongodb://127.0.0.1:27017/fileuploads', { useNewUrlParser: tru
 
 // Define GraphQL schema
 const typeDefs = gql`
+  scalar Upload
+
   type Entry {
     id: ID!
     title: String!
     description: String!
     category: String!
-    filePath: String!
-    fileType: String!
-    fileSize: Int!
+    filePath: String
+    fileType: String
+    fileSize: Int
     rating: Int!
   }
 
@@ -40,29 +62,50 @@ const typeDefs = gql`
       description: String!,
       category: String!,
       rating: Int!,
-      file: String!
+      file: Upload
     ): Entry!
   }
 `;
 
-// Define GraphQL resolvers
+
 const resolvers = {
+  Upload, // Add the Upload scalar to your resolvers
+
   Query: {
     entries: async () => await Entry.find(),
   },
   Mutation: {
     uploadFile: async (parent, { title, description, category, rating, file }) => {
-      const filePath = path.join(__dirname, 'uploads', file);
+      let filePath = null;
+      let fileType = null;
+      let fileSize = null;
 
-      // Simulate saving the file to disk (already handled by multer in a real app)
-      // Save file metadata to MongoDB
+      if (file) {
+        const { createReadStream, filename, mimetype } = await file;
+        const stream = createReadStream();
+        filePath = path.join(__dirname, 'uploads', filename);
+
+        // Save file to disk
+        const out = fs.createWriteStream(filePath);
+        await new Promise((resolve, reject) => {
+          stream.pipe(out);
+          out.on('finish', resolve);
+          out.on('error', reject);
+        });
+
+        filePath = `/uploads/${filename}`;
+        fileType = mimetype;
+        fileSize = fs.statSync(filePath).size;
+      }
+
+      // Save metadata (and optionally the file path) to MongoDB
       const entry = new Entry({
         title,
         description,
         category,
-        filePath: `/uploads/${file}`, // Store relative path to file
-        fileType: 'unknown', // Assuming fileType not handled by multer in this simplified example
-        fileSize: 0, // Placeholder since we don't handle file size here
+        filePath,
+        fileType,
+        fileSize,
         rating,
       });
 
@@ -70,6 +113,7 @@ const resolvers = {
     },
   },
 };
+
 
 // Set up Apollo Server
 async function startServer() {
