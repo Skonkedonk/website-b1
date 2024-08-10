@@ -63,16 +63,11 @@
 
         async function createEntry(title, description, category, rating, file) {
             const formData = new FormData();
+            
             formData.append('operations', JSON.stringify({
                 query: `
-                    mutation {
-                        createEntry(
-                            title: "${title}", 
-                            description: "${description}", 
-                            category: "${category}", 
-                            rating: ${rating}, 
-                            file: "${file}"
-                        ) {
+                    mutation($title: String!, $description: String!, $category: String!, $rating: Int!, $file: String) {
+                        createEntry(title: $title, description: $description, category: $category, rating: $rating, file: $file) {
                             id
                             title
                             description
@@ -81,9 +76,18 @@
                             file
                         }
                     }
-                `
+                `,
+                variables: {
+                    title: title,
+                    description: description,
+                    category: category,
+                    rating: parseInt(rating),
+                    file: file ? "" : null
+                }
             }));
-            formData.append('file', file);
+
+            formData.append('map', JSON.stringify({ "0": ["variables.file"] }));
+            formData.append('0', file);
 
             const response = await fetch('http://localhost:4000/graphql', {
                 method: 'POST',
