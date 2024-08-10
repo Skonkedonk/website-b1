@@ -6,6 +6,7 @@ const path = require('path');
 const fs = require('fs');
 const { GraphQLScalarType } = require('graphql');
 const { Kind } = require('graphql/language');
+const cors = require('cors'); // Import the cors package
 const Entry = require('./models/Entry');
 
 // Define the Upload scalar type
@@ -32,10 +33,24 @@ const upload = multer({ dest: 'uploads/' });
 // Set up Express app
 const app = express();
 
+// Enable CORS for all origins or restrict it to specific origins
+app.use(cors({
+    origin: 'https://skonkedonk.github.io', // Replace with your frontend origin
+}));
+
 // Connect to MongoDB
 mongoose.connect('mongodb://127.0.0.1:27017/fileuploads')
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.error('MongoDB connection error:', err));
+
+// Simple file upload route for testing
+app.post('/upload', upload.single('file'), (req, res) => {
+    if (req.file) {
+        res.json({ message: 'File uploaded successfully', file: req.file });
+    } else {
+        res.status(400).json({ message: 'No file uploaded' });
+    }
+});
 
 // Define GraphQL schema
 const typeDefs = gql`
@@ -66,7 +81,6 @@ const typeDefs = gql`
     ): Entry!
   }
 `;
-
 
 const resolvers = {
   Upload, // Add the Upload scalar to your resolvers
@@ -124,9 +138,6 @@ const resolvers = {
   },
 };
 
-
-
-// Set up Apollo Server
 async function startServer() {
   const server = new ApolloServer({
     typeDefs,
