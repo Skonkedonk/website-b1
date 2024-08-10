@@ -32,33 +32,6 @@
     <ul id="entryList"></ul>
 
     <script>
-        // Function to fetch entries (not directly relevant to the current issue, but included for completeness)
-        async function fetchEntries() {
-            const response = await fetch('http://127.0.0.1:4000/graphql', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    query: `
-                    query {
-                        entries {
-                            id
-                            title
-                            description
-                            category
-                            rating
-                            filePath
-                        }
-                    }
-                    `
-                })
-            });
-            const result = await response.json();
-            return result.data.entries;
-        }
-
-        // Function to upload a file and create an entry
         async function uploadFile(title, description, category, rating, file) {
             const formData = new FormData();
 
@@ -92,17 +65,25 @@
 
             // Adding the actual file to FormData
             if (file) {
-                formData.append('0', file);  // File itself goes here
+                formData.append('0', file);
             } else {
                 console.warn('No file selected!');
             }
 
             try {
+                // Debug: Check the formData content before sending
+                for (var pair of formData.entries()) {
+                    console.log(pair[0]+ ', ' + pair[1]);
+                }
+
                 // Sending the POST request via fetch
                 const response = await fetch('http://127.0.0.1:4000/graphql', {
                     method: 'POST',
                     body: formData,
                 });
+
+                // Debug: Check the Content-Type header
+                console.log(response.headers.get('Content-Type'));
 
                 const result = await response.json();
 
@@ -138,6 +119,32 @@
                 console.error('Error in form submission:', error);
             }
         });
+
+        // Function to fetch entries (not directly relevant to the current issue, but included for completeness)
+        async function fetchEntries() {
+            const response = await fetch('http://127.0.0.1:4000/graphql', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    query: `
+                    query {
+                        entries {
+                            id
+                            title
+                            description
+                            category
+                            rating
+                            filePath
+                        }
+                    }
+                    `
+                })
+            });
+            const result = await response.json();
+            return result.data.entries;
+        }
 
         // Render entries (not directly related to current issue)
         async function renderEntries() {
