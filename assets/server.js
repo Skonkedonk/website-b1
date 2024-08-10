@@ -1,76 +1,91 @@
-const { ApolloServer } = require('@apollo/server');
-const { startStandaloneServer } = require('@apollo/server/standalone');
+const { ApolloServer } = require('apollo-server');
+const { GraphQLUpload } = require('graphql-upload');
 const mongoose = require('mongoose');
+const fs = require('fs');
+const path = require('path');
 
 // Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/graphql')
+mongoose.connect('mongodb://localhost:27017/graphql', { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.error('MongoDB connection error:', err));
 
-// Define a Mongoose model for User
-const User = mongoose.model('User', {
-  name: { type: String, required: true }, // Make sure name is required
-  second: { type: String, required: false } // Allow second to be nullable
-});
-
+// Define your Mongoose model
+const Entry = require('./entry');  // Assuming entry.js is set up as discussed
 
 // Define GraphQL type definitions
 const typeDefs = `
-  type User {
+  scalar Upload
+
+  type Entry {
     id: ID!
-    name: String!
-    second: String  # Nullable field
+    title: String!
+    description: String!
+    file: String  # URL to the image file
+    category: String!
+    rating: Int!
   }
 
   type Query {
-    user(id: ID!): User
-    users: [User]
+    entries: [Entry]
   }
 
   type Mutation {
-    createUser(name: String!, second: String): User  # Make second optional
+    createEntry(
+      title: String!,
+      description: String,
+      file: Upload!,
+      category: String!,
+      rating: Int
+    ): Entry
   }
 `;
 
+// Define your resolvers
 const resolvers = {
+  Upload: GraphQLUpload,
+
   Query: {
-    users: async () => {
-      try {
-        const users = await User.find();
-        return users;
-      } catch (error) {
-        console.error('Error fetching users:', error);
-        return null;
-      }
-    },
+    entries: async () => {
+      return await Entry.find();
+    }
   },
+  
   Mutation: {
-    createUser: async (parent, args) => {
-      console.log('Received createUser mutation with args:', args); // Debugging log
-      const user = new User({
-        name: args.name,
-        second: args.second || null  // Ensure the second field is handled correctly
+    createEntry: async (parent, { title, description, file, category, rating }) => {
+      // Handle file upload
+      const { createReadStream, filename, mimetype } = await file;
+      const stream = createReadStream();
+      const filePath = path.join(__dirname, 'uploads', `${Date.now()}-${filename}`);
+      
+      // Store the file in the server's filesystem
+      await new Promise((resolve, reject) => {
+        const writeStream = fs.createWriteStream(filePath);
+        stream.pipe(writeStream);
+        writeStream.on('finish', resolve);
+        writeStream.on('error', reject);
       });
-      const savedUser = await user.save();
-      console.log('User saved:', savedUser); // Debugging log
-      return savedUser;
+
+      // Create the database entry
+      const entry = new Entry({
+        title,
+        description: description || 'N/A',
+        file: filePath,  // Save the file path to the database
+        category,
+        rating: rating || 0
+      });
+      
+      return await entry.save();
     }
   }
 };
 
-// Create the Apollo Server
+// Start the Apollo Server
 const server = new ApolloServer({
   typeDefs,
-  resolvers
+  resolvers,
+  uploads: false  // Disable built-in uploads, use graphql-upload instead
 });
 
-// Read port from environment variable or use default
-const PORT = process.env.PORT || 4000;
-
-startStandaloneServer(server, {
-  listen: { port: PORT, host: '0.0.0.0' }
-}).then(({ url }) => {
-  console.log(`Server is running on ${url}`);
-}).catch(err => {
-  console.error('Failed to start the server:', err);
+server.listen().then(({ url }) => {
+  console.log(`🚀 Server ready at ${url}`);
 });
