@@ -1,187 +1,123 @@
-<div>
-    <!-- Form Modal -->
-    <button onclick="addEntry()">Open Form</button>
+    <div>
+        <!-- Form Modal -->
+        <button onclick="addEntry()">Open Form</button>
 
-    <div id="formModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeForm()">&times;</span>
-            <form id="entryForm">
-                <label for="title">Title:</label>
-                <input type="text" id="title" name="title" required>
+        <div id="formModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeForm()">&times;</span>
+                <form id="entryForm">
+                    <label for="title">Title:</label>
+                    <input type="text" id="title" name="title" required>
 
-                <label for="category">Category:</label>
-                <select id="category" name="category" required>
-                    <option value="">Choose a category</option>
-                    <option value="Category1">Books</option>
-                    <option value="Category2">Music</option>
-                    <option value="Category3">Computer</option>
-                    <option value="Category4">Tabletop</option>
-                </select>
+                    <label for="category">Category:</label>
+                    <select id="category" name="category" required>
+                        <option value="">Choose a category</option>
+                        <option value="Category1">Books</option>
+                        <option value="Category2">Music</option>
+                        <option value="Category3">Computer</option>
+                        <option value="Category4">Tabletop</option>
+                    </select>
 
-                <label for="description">Description:</label>
-                <textarea id="description" name="description" rows="4" required></textarea>
+                    <label for="description">Description:</label>
+                    <textarea id="description" name="description" rows="4" required></textarea>
 
-                <label for="rating">Rating:</label>
-                <select id="rating" name="rating" required>
-                    <option value="0">0</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
-                    <option value="9">9</option>
-                    <option value="10">10</option>
-                </select>
+                    <label for="rating">Rating:</label>
+                    <select id="rating" name="rating" required>
+                        <option value="0">0</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                    </select>
 
-                <label for="image">Upload Image:</label>
-                <input type="file" id="image" name="image" accept="image/*">
+                    <label for="image">Upload Image:</label>
+                    <input type="file" id="image" name="image" accept="image/*">
 
-                <button type="submit">Submit</button>
-            </form>
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
         </div>
+        <h2>Entries</h2>
+        <ul id="entryList"></ul>
     </div>
-    <h2>Entries</h2>
-    <ul id="entryList"></ul>
-</div>
 
-<script>
-    async function uploadFile(title, description, category, rating, file) {
-        const formData = new FormData();
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            console.log('DOM fully loaded and parsed');
 
-        formData.append('operations', JSON.stringify({
-            query: `
-            mutation uploadFile($title: String!, $description: String!, $category: String!, $rating: Int!, $file: Upload) {
-                uploadFile(title: $title, description: $description, category: $category, rating: $rating, file: $file) {
-                    id
-                    title
-                    description
-                    category
-                    rating
-                    filePath
+            const form = document.getElementById('entryForm');
+            console.log('Form:', form);
+
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault();
+
+                // Log the entire form object
+                console.log('Form object:', form);
+
+                // Directly log and access form elements using getElementById
+                const titleInput = document.getElementById('title');
+                const categoryInput = document.getElementById('category');
+                const descriptionInput = document.getElementById('description');
+                const ratingInput = document.getElementById('rating');
+                const imageInput = document.getElementById('image');
+
+                // Log the elements to check if they exist
+                console.log('Title input:', titleInput);
+                console.log('Category input:', categoryInput);
+                console.log('Description input:', descriptionInput);
+                console.log('Rating input:', ratingInput);
+                console.log('Image input:', imageInput);
+
+                // Check if any of the elements are undefined
+                if (!titleInput) {
+                    console.error('Title not found');
+                    return;
                 }
-            }
-        `,
-            variables: {
-                title,
-                description,
-                category,
-                rating,
-                file: null  // This is a placeholder for the file
-            }
-        }));
+                if (!categoryInput) {
+                    console.error('Category not found');
+                    return;
+                }
+                if (!descriptionInput) {
+                    console.error('Description not found');
+                    return;
+                }
+                if (!ratingInput) {
+                    console.error('Rating not found');
+                    return;
+                }
+                if (!imageInput) {
+                    console.error('Image not found');
+                    return;
+                }
 
-        formData.append('map', JSON.stringify({ '0': ['variables.file'] }));
+                const title = titleInput.value || '';
+                const description = descriptionInput.value || '';
+                const category = categoryInput.value || '';
+                const rating = parseInt(ratingInput.value) || 0;
+                const file = imageInput.files[0] || null;
 
-        if (file) {
-            console.log("FILE IS >> " + file);
-            formData.append('0', file);
-        } else {
-            console.warn('No file provided.');
-        }
-
-        try {
-            const response = await fetch('http://127.0.0.1:4000/graphql', {
-                method: 'POST',
-                body: formData,
+                try {
+                    await uploadFile(title, description, category, rating, file);
+                    form.reset();
+                    renderEntries();
+                } catch (error) {
+                    console.error('Error in form submission:', error);
+                }
             });
 
-            const result = await response.json();
-            if (result.errors) {
-                console.error('GraphQL errors:', result.errors);
-                throw new Error('Failed to create entry');
-            }
+            async function uploadFile(title, description, category, rating, file) {
+                const formData = new FormData();
 
-            return result.data.uploadFile;
-        } catch (error) {
-            console.error('Error during upload:', error);
-        }
-    }
-
-
-
-    const form = document.getElementById('entryForm');
-
-form.addEventListener('submit', async (event) => {
-    event.preventDefault();
-
-    // Log the entire form object
-    console.log('Form object:', form);
-
-    // Directly log and access form elements using getElementById
-    const titleInput = document.getElementById('title');
-    const categoryInput = document.getElementById('category');
-    const descriptionInput = document.getElementById('description');
-    const ratingInput = document.getElementById('rating');
-    const imageInput = document.getElementById('image');
-
-    // Log the elements to check if they exist
-    console.log('Title input:', titleInput);
-    console.log('Category input:', categoryInput);
-    console.log('Description input:', descriptionInput);
-    console.log('Rating input:', ratingInput);
-    console.log('Image input:', imageInput);
-
-    // Check if any of the elements are undefined
-    if (!titleInput) {
-        console.error('Title not found');
-        return;
-    }
-    if (!categoryInput) {
-        console.error('Category not found');
-        return;
-    }
-    if (!descriptionInput) {
-        console.error('Description not found');
-        return;
-    }
-    if (!ratingInput) {
-        console.error('Rating not found');
-        return;
-    }
-    if (!imageInput) {
-        console.error('Image not found');
-        return;
-    }
-
-    const title = titleInput.value || '';
-    const description = descriptionInput.value || '';
-    const category = categoryInput.value || '';
-    const rating = parseInt(ratingInput.value) || 0;
-    const file = imageInput.files[0] || null;
-
-    try {
-        await uploadFile(title, description, category, rating, file);
-        form.reset();
-        renderEntries();
-    } catch (error) {
-        console.error('Error in form submission:', error);
-    }
-});
-
-    async function updateGitHub() {
-        try {
-            const response = await fetch('http://localhost:4000/run-update');
-            const result = await response.text();
-            alert(result);
-            console.log('GitHub updated:', result);
-        } catch (error) {
-            console.error('Failed to update GitHub Pages:', error);
-        }
-    }
-
-    async function fetchEntries() {
-        const response = await fetch('http://127.0.0.1:4000/graphql', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                query: `
-                    query {
-                        entries {
+                formData.append('operations', JSON.stringify({
+                    query: `
+                    mutation uploadFile($title: String!, $description: String!, $category: String!, $rating: Int!, $file: Upload) {
+                        uploadFile(title: $title, description: $description, category: $category, rating: $rating, file: $file) {
                             id
                             title
                             description
@@ -190,47 +126,104 @@ form.addEventListener('submit', async (event) => {
                             filePath
                         }
                     }
-                `
-            })
-        });
-        const result = await response.json();
-        return result.data.entries;
-    }
+                `,
+                    variables: {
+                        title,
+                        description,
+                        category,
+                        rating,
+                        file: null  // This is a placeholder for the file
+                    }
+                }));
 
-    async function renderEntries() {
-        const entries = await fetchEntries();
-        const entryList = document.getElementById('entryList');
-        entryList.innerHTML = '';
+                formData.append('map', JSON.stringify({ '0': ['variables.file'] }));
 
-        entries.forEach(entry => {
-            const li = document.createElement('li');
-            li.textContent = `${entry.title} - ${entry.description} - ${entry.category} - ${entry.rating}`;
+                if (file) {
+                    console.log("FILE IS >> " + file);
+                    formData.append('0', file);
+                } else {
+                    console.warn('No file provided.');
+                }
 
-            if (entry.filePath) {
-                const fileLink = document.createElement('a');
-                fileLink.href = "https://skonkedonk.github.io/website-b1/assets" + entry.filePath;
-                fileLink.textContent = ' View File';
-                fileLink.target = '_blank';
-                li.appendChild(fileLink);
+                try {
+                    const response = await fetch('http://127.0.0.1:4000/graphql', {
+                        method: 'POST',
+                        body: formData,
+                    });
+
+                    const result = await response.json();
+                    if (result.errors) {
+                        console.error('GraphQL errors:', result.errors);
+                        throw new Error('Failed to create entry');
+                    }
+
+                    return result.data.uploadFile;
+                } catch (error) {
+                    console.error('Error during upload:', error);
+                }
             }
 
-            entryList.appendChild(li);
+            async function fetchEntries() {
+                const response = await fetch('http://127.0.0.1:4000/graphql', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        query: `
+                            query {
+                                entries {
+                                    id
+                                    title
+                                    description
+                                    category
+                                    rating
+                                    filePath
+                                }
+                            }
+                        `
+                    })
+                });
+                const result = await response.json();
+                return result.data.entries;
+            }
+
+            async function renderEntries() {
+                const entries = await fetchEntries();
+                const entryList = document.getElementById('entryList');
+                entryList.innerHTML = '';
+
+                entries.forEach(entry => {
+                    const li = document.createElement('li');
+                    li.textContent = `${entry.title} - ${entry.description} - ${entry.category} - ${entry.rating}`;
+
+                    if (entry.filePath) {
+                        const fileLink = document.createElement('a');
+                        fileLink.href = "https://skonkedonk.github.io/website-b1/assets" + entry.filePath;
+                        fileLink.textContent = ' View File';
+                        fileLink.target = '_blank';
+                        li.appendChild(fileLink);
+                    }
+
+                    entryList.appendChild(li);
+                });
+            }
+
+            renderEntries();
+
+            function addEntry() {
+                document.getElementById('formModal').style.display = 'block';
+            }
+
+            function closeForm() {
+                document.getElementById('formModal').style.display = 'none';
+            }
+
+            window.onclick = function (event) {
+                if (event.target == document.getElementById('formModal')) {
+                    document.getElementById('formModal').style.display = 'none';
+                }
+            }
         });
-    }
+    </script>
 
-    renderEntries();
-
-    function addEntry() {
-        document.getElementById('formModal').style.display = 'block';
-    }
-
-    function closeForm() {
-        document.getElementById('formModal').style.display = 'none';
-    }
-
-    window.onclick = function (event) {
-        if (event.target == document.getElementById('formModal')) {
-            document.getElementById('formModal').style.display = 'none';
-        }
-    }
-</script>
