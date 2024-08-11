@@ -102,34 +102,53 @@ const resolvers = {
 
       const defaultFilePath = path.join(__dirname, 'uploads', 'placeholder_pika.jpg');
 
-      if (file && file.createReadStream && file.filename && file.mimetype) {
-        try {
-          const { createReadStream, filename, mimetype } = file;
+      try {
+        if (file) {
+          // Resolve the file promise to get the actual file object
+          const resolvedFile = await file.promise;
 
-          const uploadsDir = path.join(__dirname, 'uploads');
-          if (!fs.existsSync(uploadsDir)) {
-            fs.mkdirSync(uploadsDir, { recursive: true });
+          // Check if the resolved file has the necessary properties
+          if (resolvedFile && resolvedFile.createReadStream && resolvedFile.filename && resolvedFile.mimetype) {
+            const { createReadStream, filename, mimetype } = resolvedFile;
+
+            console.log('File details:', { filename, mimetype });
+
+            const uploadsDir = path.join(__dirname, 'uploads');
+            if (!fs.existsSync(uploadsDir)) {
+              fs.mkdirSync(uploadsDir, { recursive: true });
+              console.log('Uploads directory created:', uploadsDir);
+            }
+
+            const outputPath = path.join(uploadsDir, filename);
+            console.log('Output path for file:', outputPath);
+
+            const stream = createReadStream();
+            await new Promise((resolve, reject) => {
+              const out = fs.createWriteStream(outputPath);
+              stream.pipe(out);
+              out.on('finish', resolve);
+              out.on('error', reject);
+            });
+
+            filePath = `/uploads/${filename}`;
+            fileType = mimetype;
+            fileSize = fs.statSync(outputPath).size;
+
+            console.log('File saved successfully:', { filePath, fileType, fileSize });
+          } else {
+            console.log('File is present but missing necessary properties, using default file.');
+            filePath = `/uploads/placeholder_pika.jpg`;
+            fileType = 'image/jpeg';
+            fileSize = fs.statSync(defaultFilePath).size;
           }
-
-          const outputPath = path.join(uploadsDir, filename);
-
-          const stream = createReadStream();
-          await new Promise((resolve, reject) => {
-            const out = fs.createWriteStream(outputPath);
-            stream.pipe(out);
-            out.on('finish', resolve);
-            out.on('error', reject);
-          });
-
-          filePath = `/uploads/${filename}`;
-          fileType = mimetype;
-          fileSize = fs.statSync(outputPath).size;
-        } catch (error) {
-          console.error("Error processing file upload:", error);
-          throw new Error("File upload failed");
+        } else {
+          console.log('No file uploaded. Using default file.');
+          filePath = `/uploads/placeholder_pika.jpg`;
+          fileType = 'image/jpeg';
+          fileSize = fs.statSync(defaultFilePath).size;
         }
-      } else {
-        console.log('No valid file provided. Using default file.');
+      } catch (error) {
+        console.error("Error processing file upload:", error);
         filePath = `/uploads/placeholder_pika.jpg`;
         fileType = 'image/jpeg';
         fileSize = fs.statSync(defaultFilePath).size;
@@ -146,7 +165,9 @@ const resolvers = {
       });
 
       try {
-        return await entry.save();
+        const savedEntry = await entry.save();
+        console.log('Entry saved to MongoDB:', savedEntry);
+        return savedEntry;
       } catch (error) {
         console.error("Error saving entry to MongoDB:", error);
         throw new Error("Failed to save entry");
@@ -154,7 +175,6 @@ const resolvers = {
     },
   },
 };
-
 
 
 async function startServer() {
