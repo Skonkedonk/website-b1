@@ -6,11 +6,13 @@ function loadHTML(url, elementId) {
             var element = document.getElementById(elementId);
             if (element) {
                 element.innerHTML = xhr.responseText;
-                // Execute scripts after DOM is updated
-                setTimeout(function() {
-                    executeScripts(element);
-                }, 0); // Delay added to ensure DOM is updated
+                // Execute scripts after content is loaded
+                executeScripts(element);
+            } else {
+                console.error(`Element with ID ${elementId} not found.`);
             }
+        } else if (xhr.readyState === 4 && xhr.status !== 200) {
+            console.error(`Failed to load ${url}. Status: ${xhr.status}`);
         }
     };
     xhr.send();
