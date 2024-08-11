@@ -45,7 +45,7 @@ app.use(cors({
 }));
 
 // Connect to MongoDB
-mongoose.connect('mongodb://127.0.0.1:27017/fileuploads')
+mongoose.connect('mongodb://127.0.0.1:27017/graphql')
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.error('MongoDB connection error:', err));
 
