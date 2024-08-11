@@ -102,23 +102,28 @@
 
     const form = document.getElementById('entryForm');  // Updated ID reference
     form.addEventListener('submit', async (event) => {
-        event.preventDefault();
+    event.preventDefault();
 
-        const title = form.title.value;
-        const description = form.description.value;
-        const category = form.category.value;
-        const rating = parseInt(form.rating.value);
-        const file = form.image.files[0];  // Corrected to 'image' to match the input name
+    if (!form.title || !form.category || !form.description || !form.rating || !form.image) {
+        console.error('Form elements not found');
+        return;
+    }
 
-        try {
-            await uploadFile(title, description, category, rating, file);
-            form.reset();
-            // updateGitHub();  // Uncomment if needed
-            renderEntries();
-        } catch (error) {
-            console.error('Error in form submission:', error);
-        }
-    });
+    const title = form.title.value || '';
+    const description = form.description.value || '';
+    const category = form.category.value || '';
+    const rating = parseInt(form.rating.value) || 0;
+    const file = form.image.files[0] || null;
+
+    try {
+        await uploadFile(title, description, category, rating, file);
+        form.reset();
+        renderEntries();
+    } catch (error) {
+        console.error('Error in form submission:', error);
+    }
+});
+
 
     async function updateGitHub() {
         try {
