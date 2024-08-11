@@ -100,39 +100,50 @@ const resolvers = {
       let fileType = null;
       let fileSize = null;
 
-      if (file) {
+      const defaultFilePath = path.join(__dirname, 'assets', 'uploads', 'placeholder_pika.jpg');
+
+      // Ensure file exists and is valid
+      if (file && typeof file.then === 'function') {
         try {
-          const resolvedFile = await file.promise;
-          const { createReadStream, filename, mimetype } = resolvedFile;
+          const resolvedFile = await file;
 
-          const uploadsDir = path.join(__dirname, 'assets', 'uploads');
-          if (!fs.existsSync(uploadsDir)) {
-            fs.mkdirSync(uploadsDir, { recursive: true });
+          // Check that the resolved file has the necessary properties
+          if (resolvedFile && resolvedFile.createReadStream && resolvedFile.filename && resolvedFile.mimetype) {
+            const { createReadStream, filename, mimetype } = resolvedFile;
+
+            const uploadsDir = path.join(__dirname, 'assets', 'uploads');
+            if (!fs.existsSync(uploadsDir)) {
+              fs.mkdirSync(uploadsDir, { recursive: true });
+            }
+
+            const outputPath = path.join(uploadsDir, filename);
+
+            const stream = createReadStream();
+            await new Promise((resolve, reject) => {
+              const out = fs.createWriteStream(outputPath);
+              stream.pipe(out);
+              out.on('finish', resolve);
+              out.on('error', reject);
+            });
+
+            filePath = `/assets/uploads/${filename}`;
+            fileType = mimetype;
+            fileSize = fs.statSync(outputPath).size;
+          } else {
+            console.log('File is present but missing necessary properties, using default file.');
+            filePath = `/assets/uploads/placeholder_pika.jpg`;
+            fileType = 'image/jpeg';
+            fileSize = fs.statSync(defaultFilePath).size;
           }
-
-          const outputPath = path.join(uploadsDir, filename);
-
-          const stream = createReadStream();
-          await new Promise((resolve, reject) => {
-            const out = fs.createWriteStream(outputPath);
-            stream.pipe(out);
-            out.on('finish', resolve);
-            out.on('error', reject);
-          });
-
-          filePath = `/assets/uploads/${filename}`;
-          fileType = mimetype;
-          fileSize = fs.statSync(outputPath).size;
         } catch (error) {
           console.error("Error processing file upload:", error);
           throw new Error("File upload failed");
         }
       } else {
-        // Use the default file when no file is uploaded
         console.log('No file uploaded. Using default file.');
-        filePath = `/assets/uploads/placeholder_pika.jpg`;  // Path to the default file
-        fileType = 'image/jpeg';  // Adjust based on your default file type
-        fileSize = fs.statSync(path.join(__dirname, 'assets', 'uploads', 'default.jpg')).size;
+        filePath = `/assets/uploads/placeholder_pika.jpg`;
+        fileType = 'image/jpeg';
+        fileSize = fs.statSync(defaultFilePath).size;
       }
 
       const entry = new Entry({
