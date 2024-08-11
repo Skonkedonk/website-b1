@@ -99,18 +99,28 @@
             console.error('Error during upload:', error);
         }
     }
- 
+
     const form = document.getElementById('entryForm');
 
 form.addEventListener('submit', async (event) => {
     event.preventDefault();
 
-    // Use `form.elements` to access form inputs
+    // Log the entire form object to debug
+    console.log('Form object:', form);
+
+    // Access form elements using getElementById or form.elements
     const titleInput = form.elements['title'];
     const categoryInput = form.elements['category'];
     const descriptionInput = form.elements['description'];
     const ratingInput = form.elements['rating'];
     const imageInput = form.elements['image'];
+
+    // Log each element to check if they are correctly accessed
+    console.log('Title input:', titleInput);
+    console.log('Category input:', categoryInput);
+    console.log('Description input:', descriptionInput);
+    console.log('Rating input:', ratingInput);
+    console.log('Image input:', imageInput);
 
     if (!titleInput) {
         console.error('Title not found');
@@ -142,14 +152,11 @@ form.addEventListener('submit', async (event) => {
     try {
         await uploadFile(title, description, category, rating, file);
         form.reset();
-        // updateGitHub();
         renderEntries();
     } catch (error) {
         console.error('Error in form submission:', error);
     }
 });
-
-
 
     async function updateGitHub() {
         try {
