@@ -6,7 +6,6 @@ function loadHTML(url, elementId) {
             var element = document.getElementById(elementId);
             if (element) {
                 element.innerHTML = xhr.responseText;
-                // Execute scripts after content is loaded
                 executeScripts(element);
             } else {
                 console.error(`Element with ID ${elementId} not found.`);
