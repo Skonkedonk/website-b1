@@ -13,7 +13,7 @@ function loadHTML(url, elementId) {
                 if (element) {
                     element.innerHTML = xhr.responseText;
                     console.log(`HTML content successfully injected into element with ID ${elementId}`);
-                    executeScripts(element);
+                    executeScripts(element); // Ensure scripts are executed
                 } else {
                     console.error(`Element with ID ${elementId} not found.`);
                 }

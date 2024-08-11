@@ -46,6 +46,17 @@
 </div>
 
 <script>
+    // Define the addEntry and closeForm functions within the entryForm.html file
+    function addEntry() {
+        console.log('Opening form modal');
+        document.getElementById('formModal').style.display = 'block';
+    }
+
+    function closeForm() {
+        console.log('Closing form modal');
+        document.getElementById('formModal').style.display = 'none';
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
         const form = document.getElementById('entryForm');
 
