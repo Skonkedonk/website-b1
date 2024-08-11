@@ -101,25 +101,30 @@
     }
 
 
+
     const form = document.getElementById('entryForm');
 
-    form.addEventListener('submit', async (event) => {
+form.addEventListener('submit', async (event) => {
     event.preventDefault();
 
-    // Access form elements using getElementById
+    // Log the entire form object
+    console.log('Form object:', form);
+
+    // Directly log and access form elements using getElementById
     const titleInput = document.getElementById('title');
     const categoryInput = document.getElementById('category');
     const descriptionInput = document.getElementById('description');
     const ratingInput = document.getElementById('rating');
     const imageInput = document.getElementById('image');
 
-    // Log each element to check if they are correctly accessed
+    // Log the elements to check if they exist
     console.log('Title input:', titleInput);
     console.log('Category input:', categoryInput);
     console.log('Description input:', descriptionInput);
     console.log('Rating input:', ratingInput);
     console.log('Image input:', imageInput);
 
+    // Check if any of the elements are undefined
     if (!titleInput) {
         console.error('Title not found');
         return;
