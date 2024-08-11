@@ -46,7 +46,8 @@
 </div>
 
 <script>
-    // Define the addEntry and closeForm functions within the entryForm.html file
+    console.log('Script in entryForm.html loaded');
+    
     function addEntry() {
         console.log('Opening form modal');
         document.getElementById('formModal').style.display = 'block';
@@ -57,9 +58,9 @@
         document.getElementById('formModal').style.display = 'none';
     }
 
-    document.addEventListener('DOMContentLoaded', function () {
-        const form = document.getElementById('entryForm');
-
+    // Attach the event listener directly without waiting for DOMContentLoaded
+    const form = document.getElementById('entryForm');
+    if (form) {
         form.addEventListener('submit', async (event) => {
             event.preventDefault();
 
@@ -82,5 +83,9 @@
                 console.error('Error in form submission:', error);
             }
         });
-    });
+
+        console.log('Form submit event listener attached');
+    } else {
+        console.error('Form not found');
+    }
 </script>
