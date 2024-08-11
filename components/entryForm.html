@@ -37,7 +37,7 @@
                 </select>
 
                 <label for="image">Upload Image:</label>
-                <input type="file" id="image" name="image" accept="image/*" required>
+                <input type="file" id="image" name="image" accept="image/*">
 
                 <button type="submit">Submit</button>
             </form>
@@ -104,10 +104,27 @@
     form.addEventListener('submit', async (event) => {
     event.preventDefault();
 
-    if (!form.title || !form.category || !form.description || !form.rating || !form.image) {
-        console.error('Form elements not found');
+    if (!form.title) {
+        console.error('Title not found');
         return;
     }
+    if (!form.category) {
+        console.error('Category not found');
+        return;
+    }
+    if (!form.description) {
+        console.error('description not found');
+        return;
+    }
+    if (!form.rating) {
+        console.error('rating not found');
+        return;
+    }
+    if (!form.image) {
+        console.error('image not found');
+        return;
+    }
+    
 
     const title = form.title.value || '';
     const description = form.description.value || '';
