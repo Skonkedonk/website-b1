@@ -3,8 +3,14 @@ function loadHTML(url, elementId) {
     xhr.open('GET', url, true);
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
-            document.getElementById(elementId).innerHTML = xhr.responseText;
-            executeScripts(document.getElementById(elementId));
+            var element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = xhr.responseText;
+                // Execute scripts after DOM is updated
+                setTimeout(function() {
+                    executeScripts(element);
+                }, 0); // Delay added to ensure DOM is updated
+            }
         }
     };
     xhr.send();
