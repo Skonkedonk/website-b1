@@ -62,15 +62,24 @@
     const form = document.getElementById('entryForm');
     if (form) {
         console.log('Form found:', form); // Confirm form is found
+
+        // Log the elements directly
+        console.log('Title field:', form.title);
+        console.log('Category field:', form.category);
+        console.log('Description field:', form.description);
+        console.log('Rating field:', form.rating);
+        console.log('Image field:', form.image);
+
         form.addEventListener('submit', async (event) => {
             event.preventDefault();
             console.log('Form submitted');  // Log to ensure event is triggered
 
-            const title = form.title.value || '';
-            const description = form.description.value || '';
-            const category = form.category.value || '';
-            const rating = parseInt(form.rating.value) || 0;
-            const file = form.image.files[0] || null;
+            // Now that we've confirmed the elements exist, access their values
+            const title = form.title ? form.title.value : '';
+            const description = form.description ? form.description.value : '';
+            const category = form.category ? form.category.value : '';
+            const rating = form.rating ? parseInt(form.rating.value) : 0;
+            const file = form.image ? form.image.files[0] : null;
 
             // Log form data to verify it's captured correctly
             console.log('Form data:', { title, description, category, rating, file });
