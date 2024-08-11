@@ -189,6 +189,23 @@ async function startServer() {
   // Serve uploaded files statically
   app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+  app.get('/run-script', (req, res) => {
+    exec('..\\scripts\\update.bat', (error, stdout, stderr) => {
+        if (error) {
+            console.error(`Error: ${error.message}`);
+            res.status(500).send('Script execution failed');
+            return;
+        }
+        if (stderr) {
+            console.error(`Stderr: ${stderr}`);
+            res.status(500).send('Script execution had errors');
+            return;
+        }
+        console.log(`Stdout: ${stdout}`);
+        res.send('Script executed successfully');
+    });
+});
+
   // Start the server
   app.listen(4000, () => {
     console.log('Server running at http://127.0.0.1:4000');

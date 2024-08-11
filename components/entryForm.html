@@ -113,11 +113,23 @@
         try {
             await uploadFile(title, description, category, rating, file);
             form.reset();
+            updateGithub();
             renderEntries();
         } catch (error) {
             console.error('Error in form submission:', error);
         }
     });
+
+    async function updateGitHub() {
+        try {
+            const response = await fetch('http://localhost:4000/run-update');
+            const result = await response.text();
+            alert(result);
+            console.log('GitHub updated:', result);
+        } catch (error) {
+            console.error('Failed to update GitHub Pages:', error);
+        }
+    }
 
     async function fetchEntries() {
         const response = await fetch('http://127.0.0.1:4000/graphql', {
