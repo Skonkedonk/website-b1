@@ -47,7 +47,7 @@
 
 <script>
     console.log('Script in entryForm.html loaded');
-    
+
     function addEntry() {
         console.log('Opening form modal');
         document.getElementById('formModal').style.display = 'block';
@@ -58,12 +58,12 @@
         document.getElementById('formModal').style.display = 'none';
     }
 
-    // Attach the event listener directly without waiting for DOMContentLoaded
+    // Attach the event listener directly
     const form = document.getElementById('entryForm');
     if (form) {
+        console.log('Form found:', form); // Confirm form is found
         form.addEventListener('submit', async (event) => {
             event.preventDefault();
-
             console.log('Form submitted');  // Log to ensure event is triggered
 
             const title = form.title.value || '';
