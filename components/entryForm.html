@@ -115,7 +115,7 @@
         try {
             await uploadFile(title, description, category, rating, file);
             form.reset();
-            updateGithub();
+          //  updateGithub();
             renderEntries();
         } catch (error) {
             console.error('Error in form submission:', error);
