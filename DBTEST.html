@@ -32,53 +32,60 @@
     <ul id="entryList"></ul>
 
     <script>
-        async function uploadFile(title, description, category, rating, file) {
-            const formData = new FormData();
+       async function uploadFile(title, description, category, rating, file) {
+    const formData = new FormData();
 
-            formData.append('operations', JSON.stringify({
-                query: `
-                    mutation uploadFile($title: String!, $description: String!, $category: String!, $rating: Int!, $file: Upload) {
-                        uploadFile(title: $title, description: $description, category: $category, rating: $rating, file: $file) {
-                            id
-                            title
-                            description
-                            category
-                            rating
-                            filePath
-                        }
-                    }
-                `,
-                variables: {
-                    title: title,
-                    description: description,
-                    category: category,
-                    rating: rating,
-                    file: null
+    // Create the operations part of the FormData
+    formData.append('operations', JSON.stringify({
+        query: `
+            mutation uploadFile($title: String!, $description: String!, $category: String!, $rating: Int!, $file: Upload) {
+                uploadFile(title: $title, description: $description, category: $category, rating: $rating, file: $file) {
+                    id
+                    title
+                    description
+                    category
+                    rating
+                    filePath
                 }
-            }));
-
-            formData.append('map', JSON.stringify({ '0': ['variables.file'] }));
-
-            if (file) {
-                formData.append('0', file);
             }
-
-            try {
-                const response = await fetch('http://127.0.0.1:4000/graphql', {
-                    method: 'POST',
-                    body: formData,
-                });
-
-                const result = await response.json();
-                if (result.errors) {
-                    throw new Error('Failed to create entry');
-                }
-
-                return result.data.uploadFile;
-            } catch (error) {
-                console.error('Error during upload:', error);
-            }
+        `,
+        variables: {
+            title,
+            description,
+            category,
+            rating,
+            file: null  // This is a placeholder for the file
         }
+    }));
+
+    // Map the file field in FormData to the file variable in the query
+    formData.append('map', JSON.stringify({ '0': ['variables.file'] }));
+
+    // Append the actual file to FormData
+    if (file) {
+        console.log("FILE IS >> " + file);
+        formData.append('0', file);
+    } else {
+        console.warn('No file provided.');
+    }
+
+    try {
+        const response = await fetch('http://127.0.0.1:4000/fileUploads', {
+            method: 'POST',
+            body: formData,
+        });
+
+        const result = await response.json();
+        if (result.errors) {
+            console.error('GraphQL errors:', result.errors);
+            throw new Error('Failed to create entry');
+        }
+
+        return result.data.uploadFile;
+    } catch (error) {
+        console.error('Error during upload:', error);
+    }
+}
 
         const form = document.getElementById('createEntryForm');
         form.addEventListener('submit', async (event) => {
