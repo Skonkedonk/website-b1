@@ -15,7 +15,7 @@
                     <option value="Category1">Books</option>
                     <option value="Category2">Music</option>
                     <option value="Category3">Computer</option>
-                    <option value="Category3">Tabletop</option>
+                    <option value="Category4">Tabletop</option>
                 </select>
 
                 <label for="description">Description:</label>
@@ -23,17 +23,17 @@
 
                 <label for="rating">Rating:</label>
                 <select id="rating" name="rating" required>
-                    <option value="rating0">0</option>
-                    <option value="rating1">1</option>
-                    <option value="rating2">2</option>
-                    <option value="rating3">3</option>
-                    <option value="rating4">4</option>
-                    <option value="rating5">5</option>
-                    <option value="rating6">6</option>
-                    <option value="rating7">7</option>
-                    <option value="rating8">8</option>
-                    <option value="rating9">9</option>
-                    <option value="rating10">10</option>
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
                 </select>
 
                 <label for="image">Upload Image:</label>
@@ -46,11 +46,11 @@
     <h2>Entries</h2>
     <ul id="entryList"></ul>
 </div>
+
 <script>
     async function uploadFile(title, description, category, rating, file) {
         const formData = new FormData();
 
-        // Create the operations part of the FormData
         formData.append('operations', JSON.stringify({
             query: `
             mutation uploadFile($title: String!, $description: String!, $category: String!, $rating: Int!, $file: Upload) {
@@ -73,10 +73,8 @@
             }
         }));
 
-        // Map the file field in FormData to the file variable in the query
         formData.append('map', JSON.stringify({ '0': ['variables.file'] }));
 
-        // Append the actual file to FormData
         if (file) {
             console.log("FILE IS >> " + file);
             formData.append('0', file);
@@ -102,7 +100,7 @@
         }
     }
 
-    const form = document.getElementById('createEntryForm');
+    const form = document.getElementById('entryForm');  // Updated ID reference
     form.addEventListener('submit', async (event) => {
         event.preventDefault();
 
@@ -110,12 +108,12 @@
         const description = form.description.value;
         const category = form.category.value;
         const rating = parseInt(form.rating.value);
-        const file = form.file.files[0];
+        const file = form.image.files[0];  // Corrected to 'image' to match the input name
 
         try {
             await uploadFile(title, description, category, rating, file);
             form.reset();
-          //  updateGithub();
+            // updateGitHub();  // Uncomment if needed
             renderEntries();
         } catch (error) {
             console.error('Error in form submission:', error);
@@ -151,7 +149,7 @@
                             filePath
                         }
                     }
-                    `
+                `
             })
         });
         const result = await response.json();
@@ -171,7 +169,7 @@
                 const fileLink = document.createElement('a');
                 fileLink.href = "https://skonkedonk.github.io/website-b1/assets" + entry.filePath;
                 fileLink.textContent = ' View File';
-                fileLink.target = '_blank';  // Open in new tab
+                fileLink.target = '_blank';
                 li.appendChild(fileLink);
             }
 
@@ -189,7 +187,6 @@
         document.getElementById('formModal').style.display = 'none';
     }
 
-    // Close the modal when clicking outside of it
     window.onclick = function (event) {
         if (event.target == document.getElementById('formModal')) {
             document.getElementById('formModal').style.display = 'none';
