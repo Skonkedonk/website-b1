@@ -100,20 +100,18 @@
         }
     }
 
+
     const form = document.getElementById('entryForm');
 
-form.addEventListener('submit', async (event) => {
+    form.addEventListener('submit', async (event) => {
     event.preventDefault();
 
-    // Log the entire form object to debug
-    console.log('Form object:', form);
-
-    // Access form elements using getElementById or form.elements
-    const titleInput = form.elements['title'];
-    const categoryInput = form.elements['category'];
-    const descriptionInput = form.elements['description'];
-    const ratingInput = form.elements['rating'];
-    const imageInput = form.elements['image'];
+    // Access form elements using getElementById
+    const titleInput = document.getElementById('title');
+    const categoryInput = document.getElementById('category');
+    const descriptionInput = document.getElementById('description');
+    const ratingInput = document.getElementById('rating');
+    const imageInput = document.getElementById('image');
 
     // Log each element to check if they are correctly accessed
     console.log('Title input:', titleInput);
