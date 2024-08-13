@@ -238,18 +238,22 @@
 
 		@include breakpoint('wide') {
 			width: 1200px;
+			color:pink
 		}
 
 		@include breakpoint('normal') {
 			width: 960px;
+			color:#45a049
 		}
 
 		@include breakpoint('narrow') {
 			width: 100%;
+			color:blue
 		}
 
 		@include breakpoint('<=narrower') {
 			width: 100%;
+			color:yellow
 		}
 
 		@include breakpoint('<=mobile') {
@@ -794,19 +798,19 @@
 		/* Header */
 
 			#header {
-				width: 350px;
+				width: 250px;
 			}
 
 		/* Footer */
 
 			#footer {
-				margin-left: 350px;
+				margin-left: 250px;
 			}
 
 		/* Main */
 
 			#main {
-				margin-left: 350px;
+				margin-left: 250px;
 			}
 
 	}

@@ -211,21 +211,25 @@ br.clear {
 @media screen and (min-width: 961px) and (max-width: 1880px) {
   .container {
     width: 1200px;
+    color: pink;
   }
 }
 @media screen and (min-width: 961px) and (max-width: 1620px) {
   .container {
     width: 960px;
+    color: #45a049;
   }
 }
 @media screen and (min-width: 961px) and (max-width: 1320px) {
   .container {
     width: 100%;
+    color: blue;
   }
 }
 @media screen and (max-width: 960px) {
   .container {
     width: 100%;
+    color: yellow;
   }
 }
 @media screen and (max-width: 736px) {
@@ -1814,15 +1818,15 @@ button:active,
   }
   /* Header */
   #header {
-    width: 350px;
+    width: 250px;
   }
   /* Footer */
   #footer {
-    margin-left: 350px;
+    margin-left: 250px;
   }
   /* Main */
   #main {
-    margin-left: 350px;
+    margin-left: 250px;
   }
 }
 /* Normal */
