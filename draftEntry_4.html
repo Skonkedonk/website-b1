@@ -55,7 +55,21 @@
         </div>
     </div>
 </div>
+
 <div id="entryGrid" class="grid-container"></div>
+
+<!-- Modal to display full information -->
+<div id="entryModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h3 id="modalTitle"></h3>
+        <img id="modalImage" style="max-width: 100%;" alt="Image">
+        <p id="modalDescription"></p>
+        <p><strong>Category:</strong> <span id="modalCategory"></span></p>
+        <p><strong>Rating:</strong> <span id="modalRating"></span>/10</p>
+    </div>
+</div>
+
 <div id="output"></div>
 
 <script>
@@ -175,15 +189,24 @@ async function renderEntries() {
         gridItem.className = 'grid-item';
 
         gridItem.innerHTML = `
+            <img src="https://skonkedonk.github.io/website-b1/assets${entry.filePath}" alt="${entry.title}" style="width: 100px; height: 100px;">
             <h3>${entry.title}</h3>
-            <p>${entry.description}</p>
-            <p><strong>Category:</strong> ${entry.category}</p>
             <p><strong>Rating:</strong> ${entry.rating}/10</p>
-            ${entry.filePath ? `<img src="https://skonkedonk.github.io/website-b1/assets${entry.filePath}" alt="${entry.title}" style="max-width: 100%;">` : ''}
         `;
+
+        // Set up the click event to show the modal
+        gridItem.addEventListener('click', () => {
+            document.getElementById('modalTitle').textContent = entry.title;
+            document.getElementById('modalImage').src = "https://skonkedonk.github.io/website-b1/assets" + entry.filePath;
+            document.getElementById('modalDescription').textContent = entry.description;
+            document.getElementById('modalCategory').textContent = entry.category;
+            document.getElementById('modalRating').textContent = entry.rating;
+            document.getElementById('entryModal').style.display = 'block';
+        });
 
         entryGrid.appendChild(gridItem);
     });
+}
 }
 renderEntries();
 </script>
