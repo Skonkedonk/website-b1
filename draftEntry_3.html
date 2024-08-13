@@ -22,11 +22,11 @@
 
                 <label for="category">Category:</label>
                 <select id="category" name="category" required>
-                    <option value="">Choose a category</option>
-                    <option value="Category1">Books</option>
-                    <option value="Category2">Music</option>
-                    <option value="Category3">Computer</option>
-                    <option value="Category4">Tabletop</option>
+                    <option value="Default">Choose a category</option>
+                    <option value="Books">Books</option>
+                    <option value="Music">Music</option>
+                    <option value="Computer">Computer</option>
+                    <option value="Tabletop">Tabletop</option>
                 </select>
 
                 <label for="description">Description:</label>
@@ -71,8 +71,7 @@
 
 
     document.getElementById('entryForm').addEventListener('submit', async (event) => {
-      //  event.preventDefault();
-
+        event.preventDefault();
         const formData = new FormData();
 
         const title = document.getElementById('title').value;
@@ -126,11 +125,16 @@
                 throw new Error('Failed to upload file');
             }
             document.getElementById('output').textContent = 'Upload successful! File path: ' + result.data.uploadFile.filePath;
-
+            setTimeout(() => {
+            window.location.reload();
+        }, 1000); // Delay of 1 second (1000 milliseconds)
             return result.data.uploadFile;
         } catch (error) {
             console.error('Error during upload:', error);
             document.getElementById('output').textContent = 'Upload failed';
+            setTimeout(() => {
+            window.location.reload();
+        }, 1000); // Delay of 1 second (1000 milliseconds)
         }
 
 
