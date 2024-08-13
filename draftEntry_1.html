@@ -66,7 +66,7 @@
             }));
 
             formData.append('map', JSON.stringify({ '0': ['variables.file'] })); // Means to map file correctly.
-                                                                                 // Takes first file (1, 2 if i had more files)
+            // Takes first file (1, 2 if i had more files)
 
             if (file) {
                 formData.append('0', file);
@@ -76,8 +76,26 @@
 
             console.log("formData operations: " + formData.get('operations'));
 
-            console.log("formData map: " + formData.get('map'));
-        
+            console.log("formData map: " + formData.get('map').filePath);
+
+            try {
+                const response = await fetch('http://127.0.0.1:4000/graphql', {
+                    method: 'POST',
+                    body: formData,
+                });
+                const result = await response.json();
+                if (result.errors) {
+                    throw new Error('Failed to upload file');
+                }
+                document.getElementById('output').textContent = 'Upload successful! File path: ' + result.data.uploadFile.filePath;
+
+                return result.data.uploadFile;
+            } catch (error) {
+                console.error('Error during upload:', error);
+                document.getElementById('output').textContent = 'Upload failed';
+            }
+
+
         })
     </script>
 </body>
