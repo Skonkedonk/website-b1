@@ -36,7 +36,7 @@ const app = express();
 
 
 // Apply the graphql-upload middleware BEFORE graphql or express-graphql middlewares
-app.use(graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 })); // Adjust the file size and file limits as needed
+app.use(graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 100 })); // Adjust the file size and file limits as needed
 
 // Enable CORS for all origins or restrict it to specific origins
 const cors = require('cors');
