@@ -7,7 +7,7 @@ const fs = require('fs');
 const { GraphQLScalarType } = require('graphql');
 const { Kind } = require('graphql/language');
 const { graphqlUploadExpress } = require('graphql-upload'); // Import graphql-upload
-const Entry = require('./models/Entry');
+const Entry = require('./assets/models/Entry');
 
 
 // Define the Upload scalar type
@@ -96,11 +96,13 @@ const resolvers = {
   },
   Mutation: {
     uploadFile: async (parent, { title, description, category, rating, file }) => {
-      let filePath = null;
-      let fileType = null;
-      let fileSize = null;
+      const defaultFilePath = path.join(__dirname, 'collection/uploads', 'placeholder_pika.jpg'); // MIGHT BE WRONG
+      
+      console.log("CURRENT: " + __dirname);
 
-      const defaultFilePath = path.join(__dirname, 'uploads', 'placeholder_pika.jpg');
+      filePath = `collection/images/placeholder_pika.jpg`;
+      fileType = 'image/jpeg';
+      fileSize = fs.statSync(defaultFilePath).size;
 
       try {
         if (file) {
@@ -113,7 +115,7 @@ const resolvers = {
 
             console.log('File details:', { filename, mimetype });
 
-            const uploadsDir = path.join(__dirname, 'uploads');
+            const uploadsDir = path.join(__dirname, 'collection/uploads');
             if (!fs.existsSync(uploadsDir)) {
               fs.mkdirSync(uploadsDir, { recursive: true });
               console.log('Uploads directory created:', uploadsDir);
@@ -130,28 +132,19 @@ const resolvers = {
               out.on('error', reject);
             });
 
-            filePath = `/uploads/${filename}`;
+            filePath = `/collection/uploads/${filename}`;
             fileType = mimetype;
             fileSize = fs.statSync(outputPath).size;
 
             console.log('File saved successfully:', { filePath, fileType, fileSize });
           } else {
             console.log('File is present but missing necessary properties, using default file.');
-            filePath = `/uploads/placeholder_pika.jpg`;
-            fileType = 'image/jpeg';
-            fileSize = fs.statSync(defaultFilePath).size;
           }
         } else {
           console.log('No file uploaded. Using default file.');
-          filePath = `/uploads/placeholder_pika.jpg`;
-          fileType = 'image/jpeg';
-          fileSize = fs.statSync(defaultFilePath).size;
         }
       } catch (error) {
         console.error("Error processing file upload:", error);
-        filePath = `/uploads/placeholder_pika.jpg`;
-        fileType = 'image/jpeg';
-        fileSize = fs.statSync(defaultFilePath).size;
       }
 
       const entry = new Entry({
@@ -187,8 +180,9 @@ async function startServer() {
   server.applyMiddleware({ app });
 
   // Serve uploaded files statically
-  app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+  app.use('/collection/uploads', express.static(path.join(__dirname, 'collection/uploads')));
 
+  /*
   app.get('/run-script', (req, res) => {
     exec('..\\scripts\\update.bat', (error, stdout, stderr) => {
         if (error) {
@@ -204,7 +198,7 @@ async function startServer() {
         console.log(`Stdout: ${stdout}`);
         res.send('Script executed successfully');
     });
-});
+});*/
 
   // Start the server
   app.listen(4000, () => {
