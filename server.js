@@ -113,7 +113,7 @@ const resolvers = {
           if (resolvedFile && resolvedFile.createReadStream && resolvedFile.filename && resolvedFile.mimetype) {
             const { createReadStream, filename, mimetype } = resolvedFile;
 
-            const uploadsDir = path.join(__dirname, '/collection/uploads');
+            const uploadsDir = path.join(__dirname, '/collection/uploads/');
             console.log('File details:', { filename, mimetype } + " NEW UPLOADS at dir: " + uploadsDir);
 
             if (!fs.existsSync(uploadsDir)) {
@@ -132,7 +132,7 @@ const resolvers = {
               out.on('error', reject);
             });
 
-            filePath = `/collection/uploads/${filename}`;
+            filePath = `collection/uploads/${filename}`;
             fileType = mimetype;
             fileSize = fs.statSync(outputPath).size;
 
@@ -180,7 +180,7 @@ async function startServer() {
   server.applyMiddleware({ app });
 
   // Serve uploaded files statically
-  app.use('/collection/uploads', express.static(path.join(__dirname, 'collection/uploads')));
+  app.use('/collection/uploads', express.static(path.join(__dirname, '/collection/uploads')));
 
   /*
   app.get('/run-script', (req, res) => {
