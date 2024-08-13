@@ -52,7 +52,7 @@
             description
             category
             rating
-            file
+            filePath
         }
     }
 `,
@@ -65,7 +65,8 @@
                 }
             }));
 
-            formData.append('map', JSON.stringify({ '0': ['variables.file'] }));
+            formData.append('map', JSON.stringify({ '0': ['variables.file'] })); // Means to map file correctly.
+                                                                                 // Takes first file (1, 2 if i had more files)
 
             if (file) {
                 formData.append('0', file);
