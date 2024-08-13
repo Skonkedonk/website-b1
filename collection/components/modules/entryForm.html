@@ -175,7 +175,7 @@ async function renderEntries() {
         console.log("Entry: " + entry.title + " and path: " + entry.filePath);
 
         gridItem.innerHTML = `
-            <img src="https://skonkedonk.github.io/website-b1${entry.filePath}" alt="${entry.title}" style="width: 100px; height: 100px;">
+            <img src="https://skonkedonk.github.io/website-b1/${entry.filePath}" alt="${entry.title}" style="width: 100px; height: 100px;">
             <h3>${entry.title}</h3>
             <p><strong>Rating:</strong> ${entry.rating}/10</p>
         `;
@@ -183,7 +183,7 @@ async function renderEntries() {
         // Set up the click event to show the modal
         gridItem.addEventListener('click', () => {
             document.getElementById('modalTitle').textContent = entry.title;
-            document.getElementById('modalImage').src = "https://skonkedonk.github.io/website-b1" + entry.filePath;
+            document.getElementById('modalImage').src = "https://skonkedonk.github.io/website-b1/" + entry.filePath;
             document.getElementById('modalDescription').textContent = entry.description;
             document.getElementById('modalCategory').textContent = entry.category;
             document.getElementById('modalRating').textContent = entry.rating;
