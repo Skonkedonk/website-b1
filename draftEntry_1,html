@@ -28,5 +28,17 @@
     </form>
 
     <div id="output"></div>
+
+    <script>
+        const form = document.getElementById('uploadForm');
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            console.log("Regular getter >>> " + form.title.value);
+        })
+        document.getElementById('uploadForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            console.log("Element by ID >>> " +document.getElementById('title').value);
+        })
+    </script>
 </body>
 </html>
