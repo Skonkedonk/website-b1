@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>File Upload with GraphQL</title>
 </head>
+
 <body>
     <h1>Upload a File</h1>
-    
+
     <form id="uploadForm" enctype="multipart/form-data">
         <label for="title">Title:</label>
         <input type="text" id="title" name="title" required><br>
@@ -30,15 +32,53 @@
     <div id="output"></div>
 
     <script>
-        const form = document.getElementById('uploadForm');
-        form.addEventListener('submit', async (event) => {
-            event.preventDefault();
-            console.log("Regular getter >>> " + form.title.value);
-        })
         document.getElementById('uploadForm').addEventListener('submit', async (event) => {
             event.preventDefault();
-            console.log("Element by ID >>> " +document.getElementById('title').value);
+
+            const formData = new FormData();
+
+            const title = document.getElementById('title').value;
+            const description = document.getElementById('description').value;
+            const category = document.getElementById('category').value;
+            const rating = parseInt(document.getElementById('rating').value);
+            const file = document.getElementById('file').files[0];
+
+            formData.append('operations', JSON.stringify({
+                query: `
+             mutation uploadFile($title: String!, $description: String!, $category: String!, $rating: Int!, $file: Upload) {
+                uploadFile(title: $title, description: $description, category: $category, rating: $rating, file: $file) {
+            id
+            title
+            description
+            category
+            rating
+            file
+        }
+    }
+`,
+                variables: {
+                    title,
+                    description,
+                    category,
+                    rating,
+                    file: null
+                }
+            }));
+
+            formData.append('map', JSON.stringify({ '0': ['variables.file'] }));
+
+            if (file) {
+                formData.append('0', file);
+            }
+
+            console.log("formData only: " + formData);
+
+            console.log("formData operations: " + formData.get('operations'));
+
+            console.log("formData map: " + formData.get('map'));
+        
         })
     </script>
 </body>
+
 </html>
