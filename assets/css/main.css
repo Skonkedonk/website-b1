@@ -1488,7 +1488,7 @@ table th {
   text-align: left;
   padding: 0.5em 1em 0.5em 1em;
   color: #fff;
-  background: #222729 url("images/overlay.png");
+  background: #222729 url("../../collection/images/overlay.png");
 }
 table thead {
   background: #444;
@@ -1512,10 +1512,10 @@ button,
   background-color: #8ebebc;
   border: 0;
   cursor: pointer;
-  background-image: -moz-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15)), url("images/overlay.png");
-  background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15)), url("images/overlay.png");
-  background-image: -ms-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15)), url("images/overlay.png");
-  background-image: linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15)), url("images/overlay.png");
+  background-image: -moz-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15)), url("../../collection/images/overlay.png");
+  background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15)), url("../../collection/images/overlay.png");
+  background-image: -ms-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15)), url("../../collection/images/overlay.png");
+  background-image: linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15)), url("../../collection/images/overlay.png");
   -moz-transition: background-color 0.35s ease-in-out;
   -webkit-transition: background-color 0.35s ease-in-out;
   -ms-transition: background-color 0.35s ease-in-out;
@@ -1592,7 +1592,7 @@ button:active,
   -webkit-justify-content: space-between;
   -ms-justify-content: space-between;
   justify-content: space-between;
-  background: #222629 url("images/overlay.png");
+  background: #222629 url("../../collection/images/overlay.png");
   box-shadow: inset -0.25em 0 0.25em 0 rgba(0, 0, 0, 0.1);
   color: #fff;
   height: 100%;
@@ -1737,7 +1737,7 @@ button:active,
   padding: 4em 0;
   box-shadow: inset 0 1px 0 0 rgba(0, 0, 0, 0.05), inset 0 0.1em 0.1em 0 rgba(0, 0, 0, 0.025);
   text-align: center;
-  background-image: url("images/overlay.png");
+  background-image: url("../../collection/images/overlay.png");
 }
 #main > section.dark {
   color: #ddd;
@@ -1763,11 +1763,11 @@ button:active,
   background-position: center center;
 }
 #main > section.outer {
-  background-image: url("../../images/outer_wilds.jpg");
+  background-image: url("../../collection/images/outer_wilds.jpg");
 }
 #main > section.one {
   background-color: #81918E;
-  background-image: url("../../images/banner.jpg");
+  background-image: url("../../collection/images/banner.jpg");
 }
 #main > section.two {
   background-color: #f5fafa;
@@ -1888,7 +1888,7 @@ button:active,
     width: 275px;
     z-index: 10002;
     width: 275px;
-    background: #222729 url("images/overlay.png");
+    background: #222729 url("../../collection/images/overlay.png");
     box-shadow: inset -0.25em 0 0.25em 0 rgba(0, 0, 0, 0.125);
   }
   #header .top {

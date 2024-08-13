@@ -115,12 +115,6 @@
             formData.append('0', file);
         }
 
-        console.log("formData only: " + formData);
-
-        console.log("formData operations: " + formData.get('operations'));
-
-        console.log("formData map: " + formData.get('map').filePath);
-
         try {
             const response = await fetch('http://127.0.0.1:4000/graphql', {
                 method: 'POST',
@@ -177,10 +171,8 @@ async function renderEntries() {
         const gridItem = document.createElement('div');
         gridItem.className = 'grid-item';
 
-        console.log("FOUND >> " + entry + " at " + entry.filePath);
-
         gridItem.innerHTML = `
-            <img src="https://skonkedonk.github.io/website-b1/assets${entry.filePath}" alt="${entry.title}" style="width: 100px; height: 100px;">
+            <img src="https://skonkedonk.github.io/website-b1/collection/${entry.filePath}" alt="${entry.title}" style="width: 100px; height: 100px;">
             <h3>${entry.title}</h3>
             <p><strong>Rating:</strong> ${entry.rating}/10</p>
         `;
@@ -188,7 +180,7 @@ async function renderEntries() {
         // Set up the click event to show the modal
         gridItem.addEventListener('click', () => {
             document.getElementById('modalTitle').textContent = entry.title;
-            document.getElementById('modalImage').src = "https://skonkedonk.github.io/website-b1/assets" + entry.filePath;
+            document.getElementById('modalImage').src = "https://skonkedonk.github.io/website-b1/collection" + entry.filePath;
             document.getElementById('modalDescription').textContent = entry.description;
             document.getElementById('modalCategory').textContent = entry.category;
             document.getElementById('modalRating').textContent = entry.rating;
