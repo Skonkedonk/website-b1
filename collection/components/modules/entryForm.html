@@ -115,6 +115,12 @@
             formData.append('0', file);
         }
 
+        console.log("formData only: " + formData);
+
+        console.log("formData operations: " + formData.get('operations'));
+
+        console.log("formData map: " + formData.get('map').filePath);
+
         try {
             const response = await fetch('http://127.0.0.1:4000/graphql', {
                 method: 'POST',
