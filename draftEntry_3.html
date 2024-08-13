@@ -125,16 +125,10 @@
                 throw new Error('Failed to upload file');
             }
             document.getElementById('output').textContent = 'Upload successful! File path: ' + result.data.uploadFile.filePath;
-            setTimeout(() => {
-            window.location.reload();
-        }, 1000); // Delay of 1 second (1000 milliseconds)
             return result.data.uploadFile;
         } catch (error) {
             console.error('Error during upload:', error);
             document.getElementById('output').textContent = 'Upload failed';
-            setTimeout(() => {
-            window.location.reload();
-        }, 1000); // Delay of 1 second (1000 milliseconds)
         }
 
 
@@ -184,6 +178,9 @@ async function renderEntries() {
 
         entryGrid.appendChild(gridItem);
     });
+    setTimeout(() => {
+            window.location.reload();
+        }, 500); // Delay of 1 second (1000 milliseconds)
 }
 
 // Call renderEntries initially to display the grid when the page loads
