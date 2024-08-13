@@ -58,6 +58,17 @@
 <div id="output"></div>
 
 <script>
+    function addEntry() {
+        console.log('Opening form modal');
+        document.getElementById('formModal').style.display = 'block';
+    }
+
+    function closeForm() {
+        console.log('Closing form modal');
+        document.getElementById('formModal').style.display = 'none';
+    }
+
+
     document.getElementById('entryForm').addEventListener('submit', async (event) => {
         event.preventDefault();
 
