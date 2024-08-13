@@ -177,6 +177,8 @@ async function renderEntries() {
         const gridItem = document.createElement('div');
         gridItem.className = 'grid-item';
 
+        console.log("FOUND >> " + entry + " at " + entry.filePath);
+
         gridItem.innerHTML = `
             <img src="https://skonkedonk.github.io/website-b1/assets${entry.filePath}" alt="${entry.title}" style="width: 100px; height: 100px;">
             <h3>${entry.title}</h3>

@@ -29,7 +29,7 @@ const Upload = new GraphQLScalarType({
 });
 
 // Set up Multer for file uploads
-const upload = multer({ dest: 'uploads/' });
+const upload = multer({ dest: 'collection/uploads/' });
 
 // Set up Express app
 const app = express();
@@ -50,7 +50,7 @@ mongoose.connect('mongodb://127.0.0.1:27017/graphql')
   .catch(err => console.error('MongoDB connection error:', err));
 
 // Simple file upload route for testing
-app.post('/upload', upload.single('file'), (req, res) => {
+app.post('collection/uploads', upload.single('file'), (req, res) => {
     if (req.file) {
         res.json({ message: 'File uploaded successfully', file: req.file });
     } else {

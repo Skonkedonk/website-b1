@@ -1,1 +1,1 @@
-node ./assets/server.js
+node ./server.js
