@@ -131,7 +131,9 @@
             document.getElementById('output').textContent = 'Upload failed';
         }
 
-
+        setTimeout(() => {
+            window.location.reload();
+        }, 500); //Millis
     })
 
     async function fetchEntries() {
@@ -178,9 +180,6 @@ async function renderEntries() {
 
         entryGrid.appendChild(gridItem);
     });
-    setTimeout(() => {
-            window.location.reload();
-        }, 500); // Delay of 1 second (1000 milliseconds)
 }
 
 // Call renderEntries initially to display the grid when the page loads
