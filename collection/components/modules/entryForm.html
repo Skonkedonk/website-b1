@@ -10,7 +10,7 @@
                 <input type="text" id="title" name="title" required>
 
                 <label for="category">Category:</label>
-                <select id="category" name="category" required>
+                <select id="category" name="category: " required>
                     <option value="Default">Choose a category</option>
                     <option value="Books">Books</option>
                     <option value="Music">Music</option>
@@ -19,10 +19,10 @@
                 </select>
 
                 <label for="description">Description:</label>
-                <textarea id="description" name="description" rows="4" required></textarea>
+                <textarea id="description" name="description: " rows="4" required></textarea>
 
                 <label for="rating">Rating:</label>
-                <select id="rating" name="rating" required>
+                <select id="rating" name="rating: " required>
                     <option value="0">0</option>
                     <option value="1">1</option>
                     <option value="2">2</option>
@@ -37,7 +37,7 @@
                 </select>
 
                 <label for="file">Upload Image:</label>
-                <input type="file" id="file" name="image" accept="image/*"> <!-- Maybe dont use "accept"-->
+                <input type="file" id="file" name="image: " accept="image/*"> <!-- Maybe dont use "accept"-->
 
                 <button type="submit">Submit</button>
             </form>
@@ -170,6 +170,9 @@ async function renderEntries() {
     entries.forEach(entry => {
         const gridItem = document.createElement('div');
         gridItem.className = 'grid-item';
+
+        console.log("---------------------------------------------------");
+        console.log("Entry: " + entry.title + " and path: " + entry.filePath);
 
         gridItem.innerHTML = `
             <img src="https://skonkedonk.github.io/website-b1/collection/${entry.filePath}" alt="${entry.title}" style="width: 100px; height: 100px;">

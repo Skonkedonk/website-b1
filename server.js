@@ -96,11 +96,11 @@ const resolvers = {
   },
   Mutation: {
     uploadFile: async (parent, { title, description, category, rating, file }) => {
-      const defaultFilePath = path.join(__dirname, 'collection/uploads', 'placeholder_pika.jpg'); // MIGHT BE WRONG
+      const defaultFilePath = path.join(__dirname, '/collection/images', 'placeholder_pika.jpg'); 
       
-      console.log("CURRENT: " + __dirname);
+      console.log("STARTED: " + __dirname + " default is: " + defaultFilePath);
 
-      filePath = `collection/images/placeholder_pika.jpg`;
+      filePath = 'collection/images/placeholder_pika.jpg';
       fileType = 'image/jpeg';
       fileSize = fs.statSync(defaultFilePath).size;
 
@@ -113,9 +113,9 @@ const resolvers = {
           if (resolvedFile && resolvedFile.createReadStream && resolvedFile.filename && resolvedFile.mimetype) {
             const { createReadStream, filename, mimetype } = resolvedFile;
 
-            console.log('File details:', { filename, mimetype });
+            const uploadsDir = path.join(__dirname, '/collection/uploads');
+            console.log('File details:', { filename, mimetype } + " NEW UPLOADS at dir: " + uploadsDir);
 
-            const uploadsDir = path.join(__dirname, 'collection/uploads');
             if (!fs.existsSync(uploadsDir)) {
               fs.mkdirSync(uploadsDir, { recursive: true });
               console.log('Uploads directory created:', uploadsDir);
