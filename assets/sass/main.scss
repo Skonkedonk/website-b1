@@ -696,7 +696,6 @@ button,
         background-image: url('images/overlay.png');
 
         &.dark {
-            color: #ddd;
             color: rgba(255, 255, 255, 0.75);
 
             h2, h3, h4, h5, h6 {
@@ -1167,8 +1166,8 @@ button,
     background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 }
 
-.modal-content {
-    background-color: #fefefe;
+.modal-content { 
+    background-color: mediumaquamarine;
     margin: 15% auto; /* 15% from the top and centered */
     padding: 20px;
     border: 1px solid #888;

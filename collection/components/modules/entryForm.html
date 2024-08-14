@@ -10,7 +10,7 @@
                 <input type="text" id="title" name="title" required>
 
                 <label for="category">Category:</label>
-                <select id="category" name="category: " required>
+                <select id="category" name="category" required>
                     <option value="Default">Choose a category</option>
                     <option value="Books">Books</option>
                     <option value="Music">Music</option>
@@ -19,10 +19,10 @@
                 </select>
 
                 <label for="description">Description:</label>
-                <textarea id="description" name="description: " rows="4" required></textarea>
+                <textarea id="description" name="description" rows="4" required></textarea>
 
                 <label for="rating">Rating:</label>
-                <select id="rating" name="rating: " required>
+                <select id="rating" name="rating" required>
                     <option value="0">0</option>
                     <option value="1">1</option>
                     <option value="2">2</option>
@@ -37,7 +37,7 @@
                 </select>
 
                 <label for="file">Upload Image:</label>
-                <input type="file" id="file" name="image: " accept="image/*"> <!-- Maybe dont use "accept"-->
+                <input type="file" id="file" name="image" accept="image/*"> <!-- This is correct -->
 
                 <button type="submit">Submit</button>
             </form>
@@ -46,6 +46,7 @@
 </div>
 
 <div id="entryGrid" class="grid-container"></div>
+
 
 <!-- Modal to display full information -->
 <div id="entryModal" class="modal">
@@ -73,8 +74,8 @@
     }
 
     function closeModal() {
-    document.getElementById('entryModal').style.display = 'none';
-}
+        document.getElementById('entryModal').style.display = 'none';
+    }
 
     document.getElementById('entryForm').addEventListener('submit', async (event) => {
         event.preventDefault();
@@ -111,9 +112,17 @@
         formData.append('map', JSON.stringify({ '0': ['variables.file'] })); // Means to map file correctly.
         // Takes first file (1, 2 if i had more files)
 
-        if (file) {
-            formData.append('0', file);
+        for (let pair of formData.entries()) {
+            console.log("PAIS: " + pair[0] + ', ' + pair[1]);
         }
+
+
+        console.log("formData operations:", JSON.parse(formData.get('operations')));
+        console.log("formData map:", JSON.parse(formData.get('map')));
+        if (file) {
+            console.log("file:", file.name);
+        }
+
 
         console.log("formData only: " + formData);
 
@@ -131,26 +140,26 @@
                 throw new Error('Failed to upload file');
             }
             document.getElementById('output').textContent = 'Upload successful! File path: ' + result.data.uploadFile.filePath;
-        //    return result.data.uploadFile;
+            //    return result.data.uploadFile;
         } catch (error) {
             console.error('Error during upload:', error);
             document.getElementById('output').textContent = 'Upload failed';
         }
 
         setTimeout(() => {
-         //   window.location.reload();
+            //   window.location.reload();
         }, 50); //Millis
         closeForm();
     })
 
     async function fetchEntries() {
-    const response = await fetch('http://127.0.0.1:4000/graphql', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            query: `
+        const response = await fetch('http://127.0.0.1:4000/graphql', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                query: `
                 query {
                     entries {
                         id
@@ -162,43 +171,43 @@
                     }
                 }
             `
-        })
-    });
-    const result = await response.json();
-    return result.data.entries;
-}
+            })
+        });
+        const result = await response.json();
+        return result.data.entries;
+    }
 
-async function renderEntries() {
-    const entries = await fetchEntries();
-    const entryGrid = document.getElementById('entryGrid');
-    entryGrid.innerHTML = ''; // Clear the grid before rendering
+    async function renderEntries() {
+        const entries = await fetchEntries();
+        const entryGrid = document.getElementById('entryGrid');
+        entryGrid.innerHTML = ''; // Clear the grid before rendering
 
-    entries.forEach(entry => {
-        const gridItem = document.createElement('div');
-        gridItem.className = 'grid-item';
+        entries.forEach(entry => {
+            const gridItem = document.createElement('div');
+            gridItem.className = 'grid-item';
 
-        console.log("---------------------------------------------------");
-        console.log("Entry: " + entry.title + " and path: " + entry.filePath);
+            console.log("---------------------------------------------------");
+            console.log("Entry: " + entry.title + " and path: " + entry.filePath);
 
-        gridItem.innerHTML = `
+            gridItem.innerHTML = `
             <img src="https://skonkedonk.github.io/website-b1/${entry.filePath}" alt="${entry.title}" style="width: 100px; height: 100px;">
             <h3>${entry.title}</h3>
             <p><strong>Rating:</strong> ${entry.rating}/10</p>
         `;
 
-        // Set up the click event to show the modal
-        gridItem.addEventListener('click', () => {
-            document.getElementById('modalTitle').textContent = entry.title;
-            document.getElementById('modalImage').src = "https://skonkedonk.github.io/website-b1/" + entry.filePath;
-            document.getElementById('modalDescription').textContent = entry.description;
-            document.getElementById('modalCategory').textContent = entry.category;
-            document.getElementById('modalRating').textContent = entry.rating;
-            document.getElementById('entryModal').style.display = 'block';
+            // Set up the click event to show the modal
+            gridItem.addEventListener('click', () => {
+                document.getElementById('modalTitle').textContent = entry.title;
+                document.getElementById('modalImage').src = "https://skonkedonk.github.io/website-b1/" + entry.filePath;
+                document.getElementById('modalDescription').textContent = entry.description;
+                document.getElementById('modalCategory').textContent = entry.category;
+                document.getElementById('modalRating').textContent = entry.rating;
+                document.getElementById('entryModal').style.display = 'block';
+            });
+
+            entryGrid.appendChild(gridItem);
         });
+    }
 
-        entryGrid.appendChild(gridItem);
-    });
-}
-
-renderEntries();
+    renderEntries();
 </script>
