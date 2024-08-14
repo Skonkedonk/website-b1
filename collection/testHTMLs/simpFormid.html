@@ -3,15 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FormData with GraphQL</title>
+    <title>File Upload with GraphQL</title>
 </head>
 <body>
     <form id="entryForm">
         <label for="title">Title:</label>
         <input type="text" id="title" name="title" required>
 
+        <label for="description">Description:</label>
+        <textarea id="description" name="description" rows="4" required></textarea>
+
+        <label for="category">Category:</label>
+        <select id="category" name="category" required>
+            <option value="Books">Books</option>
+            <option value="Music">Music</option>
+            <option value="Computer">Computer</option>
+            <option value="Tabletop">Tabletop</option>
+        </select>
+
+        <label for="rating">Rating:</label>
+        <select id="rating" name="rating" required>
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+        </select>
+
         <label for="file">Upload Image:</label>
-        <input type="file" id="file" name="image" accept=".jpg, .jpeg, .png" required>
+        <input type="file" id="file" name="file" accept=".jpg, .jpeg, .png" required>
 
         <button type="submit">Submit</button>
     </form>
@@ -26,35 +52,47 @@
                 formElement.addEventListener('submit', async (event) => {
                     event.preventDefault();
 
+                    // Create FormData from the form element
                     const formData = new FormData(formElement);
 
+                    // Construct GraphQL query and map
                     const operations = {
                         query: `
-                            mutation uploadFile($title: String!, $file: Upload) {
-                                uploadFile(title: $title, file: $file) {
+                            mutation uploadFile($title: String!, $description: String!, $category: String!, $rating: Int!, $file: Upload) {
+                                uploadFile(title: $title, description: $description, category: $category, rating: $rating, file: $file) {
                                     id
                                     title
+                                    description
+                                    category
+                                    rating
                                     filePath
                                 }
                             }
                         `,
                         variables: {
                             title: formData.get('title'),
-                            file: null,  // The file will be mapped in the map object
+                            description: formData.get('description'),
+                            category: formData.get('category'),
+                            rating: parseInt(formData.get('rating')),
+                            file: null,
                         }
                     };
 
-                    const map = { '0': ['variables.file'] };
+                    const map = {
+                        '0': ['variables.file']
+                    };
 
-                    const data = new FormData();
-                    data.append('operations', JSON.stringify(operations));
-                    data.append('map', JSON.stringify(map));
-                    data.append('0', formData.get('file'));
+                    // Append the GraphQL operations and map to FormData
+                    formData.append('operations', JSON.stringify(operations));
+                    formData.append('map', JSON.stringify(map));
+
+                    // Append the actual file to FormData
+                    formData.append('0', formElement.file.files[0]);
 
                     try {
                         const response = await fetch('http://127.0.0.1:4000/graphql', {
                             method: 'POST',
-                            body: data,
+                            body: formData,
                         });
 
                         if (!response.ok) {
@@ -62,10 +100,14 @@
                         }
 
                         const result = await response.json();
+                        if (result.errors) {
+                            throw new Error('Failed to upload file: ' + result.errors[0].message);
+                        }
+
                         document.getElementById('output').textContent = 'Upload successful! File path: ' + result.data.uploadFile.filePath;
                     } catch (error) {
                         console.error('Error during upload:', error);
-                        document.getElementById('output').textContent = 'Upload failed';
+                        document.getElementById('output').textContent = 'Upload failed: ' + error.message;
                     }
                 });
             } else {
