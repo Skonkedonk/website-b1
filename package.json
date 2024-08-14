@@ -19,6 +19,7 @@
     "apollo-server-express": "^3.13.0",
     "cors": "^2.8.5",
     "express": "^4.19.2",
+    "express-formidable": "^1.2.0",
     "formidable": "^3.5.1",
     "graphql": "^16.9.0",
     "graphql-tools": "^9.0.1",
