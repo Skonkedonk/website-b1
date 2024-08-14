@@ -76,40 +76,51 @@
         document.getElementById('entryModal').style.display = 'none';
     }
 
+    document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('entryForm').addEventListener('submit', async (event) => {
-    event.preventDefault();
+        event.preventDefault();
 
-    // Create a FormData object from the form element directly
-    const formElement = document.getElementById('entryForm');
-    const formData = new FormData(formElement);
-
-    // Debugging logs before appending to FormData
-    console.log("Form Data:", ...formData.entries());
-
-    try {
-        const response = await fetch('http://127.0.0.1:4000/collection/uploads', {
-            method: 'POST',
-            body: formData,
-        });
-
-        if (!response.ok) {
-            throw new Error('Failed to upload file');
+        // Make sure the form element exists and is correctly referenced
+        const formElement = document.getElementById('entryForm');
+        if (!formElement || !(formElement instanceof HTMLFormElement)) {
+            console.error("The form element is not found or is not a valid HTMLFormElement.");
+            return;
         }
 
-        const result = await response.json();
-        console.log('Upload successful:', result);
+        // Create a FormData object from the form element directly
+        const formData = new FormData(formElement);
 
-        document.getElementById('output').textContent = 'Upload successful! File path: ' + result.file.path;
-    } catch (error) {
-        console.error('Error during upload:', error);
-        document.getElementById('output').textContent = 'Upload failed';
-    }
+        // Debugging logs before sending the request
+        for (let pair of formData.entries()) {
+            console.log(`${pair[0]}: ${pair[1]}`);
+        }
 
-    setTimeout(() => {
-    //    window.location.reload();
-    }, 50); //Millis
-    closeForm();
+        try {
+            const response = await fetch('http://127.0.0.1:4000/collection/uploads', {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to upload file');
+            }
+
+            const result = await response.json();
+            console.log('Upload successful:', result);
+
+            document.getElementById('output').textContent = 'Upload successful! File path: ' + result.file.path;
+        } catch (error) {
+            console.error('Error during upload:', error);
+            document.getElementById('output').textContent = 'Upload failed';
+        }
+
+        setTimeout(() => {
+            window.location.reload();
+        }, 50); //Millis
+        closeForm();
+    });
 });
+
 
 
     async function fetchEntries() {
