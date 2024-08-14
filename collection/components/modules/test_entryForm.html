@@ -96,7 +96,7 @@
         }
 
         try {
-            const response = await fetch('http://127.0.0.1:4000/graphql', {
+            const response = await fetch('http://127.0.0.1:4000/collection/uploads', {
                 method: 'POST',
                 body: formData,
             });
@@ -106,7 +106,7 @@
             }
 
             const result = await response.json();
-            console.log('Upload successful:', result);
+            console.log('Upload successful:', result); 
 
             document.getElementById('output').textContent = 'Upload successful! File path: ' + result.file.path;
         } catch (error) {
@@ -115,7 +115,7 @@
         }
 
         setTimeout(() => {
-       //     window.location.reload(); 
+     //       window.location.reload(); 
         }, 50); //Millis
         closeForm();
     });
