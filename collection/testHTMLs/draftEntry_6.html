@@ -11,22 +11,39 @@
 <body class="is-preload">
 
     <div id="header">
-        <div class="top"></div>
+        <div class="top">
+            <nav id="nav">
+                <ul>
+                    <li><a href="../../#top" id="top-link"><span class="icon solid fa-home">Intro</span></a></li>
+                    <!--TODO: Make this dropdown -->
+                    <li><a href="books.html" id="collection-link"><span class="icon solid fa-th">Books</span></a></li>
+                    <li><a href="computer.html" id="collection-link"><span class="icon solid fa-th">Computer</span></a>
+                    </li>
+                    <li><a href="music.html" id="collection-link"><span class="icon solid fa-th">Music</span></a></li>
+                    <li><a href="tabletop.html" id="collection-link"><span class="icon solid fa-th">Tabletop</span></a>
+                    </li>
+                    <li><a href="../../#about" id="about-link"><span class="icon solid fa-user">About Me</span></a></li>
+                    <li><a href="../../#contact" id="contact-link"><span
+                                class="icon solid fa-envelope">Contact</span></a></li>
+                </ul>
+            </nav>
+        </div>
         <div class="bottom">
             <!-- Social Icons -->
-                <ul class="icons">
-                    <li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
-                    <li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
-                    <li><a href="#" class="icon brands fa-github"><span class="label">Github</span></a></li>
-                    <li><a href="#" class="icon brands fa-dribbble"><span class="label">Dribbble</span></a></li>
-                    <li><a href="#" class="icon solid fa-envelope"><span class="label">Email</span></a></li>
-                </ul></div>
+            <ul class="icons">
+                <li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
+                <li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
+                <li><a href="#" class="icon brands fa-github"><span class="label">Github</span></a></li>
+                <li><a href="#" class="icon brands fa-dribbble"><span class="label">Dribbble</span></a></li>
+                <li><a href="#" class="icon solid fa-envelope"><span class="label">Email</span></a></li>
+            </ul>
+        </div>
     </div>
 
     <div id="main">
-		<section id="top" class="outer dark cover">
-			<h1>BOOKS</h1>
-		</section>
+        <section id="top" class="outer dark cover">
+            <h1>BOOKS</h1>
+        </section>
         <!-- Form Modal -->
         <button onclick="addEntry()">Open Form</button>
 
@@ -47,7 +64,8 @@
                     </select>
 
                     <label for="description">Description:</label>
-                    <textarea id="description" name="description" rows="4" required>An incredible description!</textarea>
+                    <textarea id="description" name="description" rows="4"
+                        required>An incredible description!</textarea>
 
                     <label for="rating">Rating:</label>
                     <select id="rating" name="rating" required>
@@ -72,21 +90,21 @@
             </div>
         </div>
 
-    <div id="entryGrid" class="grid-container"></div>
+        <div id="entryGrid" class="grid-container"></div>
 
-    <!-- Modal to display full information -->
-    <div id="entryModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <h3 id="modalTitle"></h3>
-            <img id="modalImage" style="max-width: 100%;" alt="Image">
-            <p id="modalDescription"></p>
-            <p><strong>Category:</strong> <span id="modalCategory"></span></p>
-            <p><strong>Rating:</strong> <span id="modalRating"></span>/10</p>
+        <!-- Modal to display full information -->
+        <div id="entryModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <h3 id="modalTitle"></h3>
+                <img id="modalImage" style="max-width: 100%;" alt="Image">
+                <p id="modalDescription"></p>
+                <p><strong>Category:</strong> <span id="modalCategory"></span></p>
+                <p><strong>Rating:</strong> <span id="modalRating"></span>/10</p>
+            </div>
         </div>
-    </div>
 
-    <div id="output"></div>
+        <div id="output"></div>
     </div>
     <script>
         function addEntry() {
@@ -165,7 +183,7 @@
             }
 
             setTimeout(() => {
-              //  window.location.reload();
+                //  window.location.reload();
             }, 50); //Millis
             closeForm();
         })
