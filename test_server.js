@@ -5,8 +5,24 @@ const path = require('path');
 const fs = require('fs');
 const { GraphQLScalarType } = require('graphql');
 const { Kind } = require('graphql/language');
-const formidable = require('formidable'); // Import formidable
+const cors = require('cors');
 const Entry = require('./assets/models/Entry');
+const formidableMiddleware = require('express-formidable');
+
+const app = express();
+
+// Enable CORS for all origins or restrict it to specific origins
+app.use(cors({
+  origin: 'https://skonkedonk.github.io', // Replace with your frontend origin
+}));
+
+// Use formidable middleware to parse multipart/form-data
+app.use(formidableMiddleware());
+
+// Connect to MongoDB
+mongoose.connect('mongodb://127.0.0.1:27017/graphql')
+  .then(() => console.log('MongoDB connected'))
+  .catch(err => console.error('MongoDB connection error:', err));
 
 // Define the Upload scalar type
 const Upload = new GraphQLScalarType({
@@ -24,56 +40,6 @@ const Upload = new GraphQLScalarType({
   serialize(value) {
     return value;
   }
-});
-
-// Set up Express app
-const app = express();
-
-// Enable CORS for all origins or restrict it to specific origins
-const cors = require('cors');
-app.use(cors({
-  origin: 'https://skonkedonk.github.io', // Replace with your frontend origin
-}));
-
-// Connect to MongoDB
-mongoose.connect('mongodb://127.0.0.1:27017/graphql')
-  .then(() => console.log('MongoDB connected'))
-  .catch(err => console.error('MongoDB connection error:', err));
-
-// Simple file upload route using formidable
-app.post('/upload', (req, res) => {
-  const form = new formidable.IncomingForm();
-
-  form.parse(req, (err, fields, files) => {
-    if (err) {
-      console.error('Error parsing form:', err);
-      return res.status(400).json({ message: 'Form parsing error' });
-    }
-
-    const file = files.file;
-
-    if (!file) {
-      return res.status(400).json({ message: 'No file uploaded' });
-    }
-
-    const uploadsDir = path.join(__dirname, '/collection/uploads/');
-    if (!fs.existsSync(uploadsDir)) {
-      fs.mkdirSync(uploadsDir, { recursive: true });
-      console.log('Uploads directory created:', uploadsDir);
-    }
-
-    const oldPath = file.filepath;
-    const newPath = path.join(uploadsDir, file.originalFilename);
-
-    fs.rename(oldPath, newPath, (err) => {
-      if (err) {
-        console.error('Error moving file:', err);
-        return res.status(500).json({ message: 'File upload error' });
-      }
-
-      res.json({ message: 'File uploaded successfully', filePath: newPath });
-    });
-  });
 });
 
 // Define GraphQL schema
@@ -112,36 +78,41 @@ const resolvers = {
   Query: {
     entries: async () => await Entry.find(),
   },
+
   Mutation: {
-    uploadFile: async (parent, { title, description, category, rating, file }) => {
+    uploadFile: async (parent, args, context) => {
+      const { req } = context;
+
+      // Extract fields and files from the formidable-parsed request
+      const { fields, files } = req;
+
+      const { title, description, category, rating } = fields;
+      const file = files.file; // Assuming the file field is named 'file'
+
       let filePath = 'collection/images/placeholder_pika.jpg';
       let fileType = 'image/jpeg';
       let fileSize = fs.statSync(path.join(__dirname, filePath)).size;
 
-      try {
-        if (file) {
-          const uploadsDir = path.join(__dirname, '/collection/uploads/');
-          if (!fs.existsSync(uploadsDir)) {
-            fs.mkdirSync(uploadsDir, { recursive: true });
-          }
+      if (file) {
+        const uploadsDir = path.join(__dirname, '/collection/uploads/');
 
-          const newFilename = `${Date.now()}-${file.filename}`;
-          const newPath = path.join(uploadsDir, newFilename);
-
-          const stream = file.createReadStream();
-          await new Promise((resolve, reject) => {
-            const out = fs.createWriteStream(newPath);
-            stream.pipe(out);
-            out.on('finish', resolve);
-            out.on('error', reject);
-          });
-
-          filePath = `collection/uploads/${newFilename}`;
-          fileType = file.mimetype;
-          fileSize = fs.statSync(newPath).size;
+        if (!fs.existsSync(uploadsDir)) {
+          fs.mkdirSync(uploadsDir, { recursive: true });
+          console.log('Uploads directory created:', uploadsDir);
         }
-      } catch (error) {
-        console.error('Error processing file upload:', error);
+
+        const outputPath = path.join(uploadsDir, file.name);
+
+        // Move the uploaded file to the uploads directory
+        fs.renameSync(file.path, outputPath);
+
+        filePath = `collection/uploads/${file.name}`;
+        fileType = file.type;
+        fileSize = file.size;
+
+        console.log('File saved successfully:', { filePath, fileType, fileSize });
+      } else {
+        console.log('No file uploaded. Using default file.');
       }
 
       const entry = new Entry({
@@ -151,7 +122,7 @@ const resolvers = {
         filePath,
         fileType,
         fileSize,
-        rating,
+        rating: parseInt(rating, 10),
       });
 
       try {
@@ -159,8 +130,8 @@ const resolvers = {
         console.log('Entry saved to MongoDB:', savedEntry);
         return savedEntry;
       } catch (error) {
-        console.error('Error saving entry to MongoDB:', error);
-        throw new Error('Failed to save entry');
+        console.error("Error saving entry to MongoDB:", error);
+        throw new Error("Failed to save entry");
       }
     },
   },
@@ -170,6 +141,7 @@ async function startServer() {
   const server = new ApolloServer({
     typeDefs,
     resolvers,
+    context: ({ req }) => ({ req }), // Pass the request to context
   });
 
   await server.start();
@@ -178,6 +150,7 @@ async function startServer() {
   // Serve uploaded files statically
   app.use('/collection/uploads', express.static(path.join(__dirname, '/collection/uploads')));
 
+  // Start the server
   app.listen(4000, () => {
     console.log('Server running at http://127.0.0.1:4000');
   });
