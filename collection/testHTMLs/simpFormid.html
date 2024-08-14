@@ -1,10 +1,9 @@
-<!-- Simplified HTML for Testing -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FormData Test</title>
+    <title>FormData with GraphQL</title>
 </head>
 <body>
     <form id="entryForm">
@@ -21,24 +20,41 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const formElement = document.getElementById('entryForm'); 
-            
+            const formElement = document.getElementById('entryForm');
+
             if (formElement) {
                 formElement.addEventListener('submit', async (event) => {
                     event.preventDefault();
-                    
-                    // Create FormData from the form element
+
                     const formData = new FormData(formElement);
 
-                    // Log FormData content for debugging
-                    for (let pair of formData.entries()) {
-                        console.log(`${pair[0]}: ${pair[1]}`);
-                    }
+                    const operations = {
+                        query: `
+                            mutation uploadFile($title: String!, $file: Upload) {
+                                uploadFile(title: $title, file: $file) {
+                                    id
+                                    title
+                                    filePath
+                                }
+                            }
+                        `,
+                        variables: {
+                            title: formData.get('title'),
+                            file: null,  // The file will be mapped in the map object
+                        }
+                    };
+
+                    const map = { '0': ['variables.file'] };
+
+                    const data = new FormData();
+                    data.append('operations', JSON.stringify(operations));
+                    data.append('map', JSON.stringify(map));
+                    data.append('0', formData.get('file'));
 
                     try {
                         const response = await fetch('http://127.0.0.1:4000/graphql', {
                             method: 'POST',
-                            body: formData,
+                            body: data,
                         });
 
                         if (!response.ok) {
@@ -46,7 +62,7 @@
                         }
 
                         const result = await response.json();
-                        document.getElementById('output').textContent = 'Upload successful! File path: ' + result.file.path;
+                        document.getElementById('output').textContent = 'Upload successful! File path: ' + result.data.uploadFile.filePath;
                     } catch (error) {
                         console.error('Error during upload:', error);
                         document.getElementById('output').textContent = 'Upload failed';
