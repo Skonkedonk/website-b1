@@ -8,10 +8,13 @@
     <link rel="stylesheet" href="../../assets/css/main.css" />
 </head>
 
-<body>
-    <div>
-        <div id="insertedHeader"></div>
+<body class="is-preload">
 
+	<div id="insertedHeader"></div>
+	<div id="main">
+		<section id="top" class="outer dark cover">
+			<h1>BOOKS</h1>
+		</section>
         <!-- Form Modal -->
         <button onclick="addEntry()">Open Form</button>
 
@@ -56,7 +59,6 @@
                 </form>
             </div>
         </div>
-    </div>
 
     <div id="entryGrid" class="grid-container"></div>
 
@@ -73,10 +75,10 @@
     </div>
 
     <div id="output"></div>
+    </div>
 
     <script src="../js/loadcontent.js"></script>
     <script> loadHTML('../components/modules/header.html', 'insertedHeader');</script>
-    <script> loadHTML('../components/modules/entryForm.html', 'entryForm');</script>
     <script>
         function addEntry() {
             console.log('Opening form modal');
