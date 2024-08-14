@@ -1,0 +1,61 @@
+<!-- Simplified HTML for Testing -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FormData Test</title>
+</head>
+<body>
+    <form id="entryForm">
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title" required>
+
+        <label for="file">Upload Image:</label>
+        <input type="file" id="file" name="image" accept=".jpg, .jpeg, .png" required>
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <div id="output"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const formElement = document.getElementById('entryForm');
+            
+            if (formElement) {
+                formElement.addEventListener('submit', async (event) => {
+                    event.preventDefault();
+                    
+                    // Create FormData from the form element
+                    const formData = new FormData(formElement);
+
+                    // Log FormData content for debugging
+                    for (let pair of formData.entries()) {
+                        console.log(`${pair[0]}: ${pair[1]}`);
+                    }
+
+                    try {
+                        const response = await fetch('http://127.0.0.1:4000/collection/uploads', {
+                            method: 'POST',
+                            body: formData,
+                        });
+
+                        if (!response.ok) {
+                            throw new Error('Failed to upload file');
+                        }
+
+                        const result = await response.json();
+                        document.getElementById('output').textContent = 'Upload successful! File path: ' + result.file.path;
+                    } catch (error) {
+                        console.error('Error during upload:', error);
+                        document.getElementById('output').textContent = 'Upload failed';
+                    }
+                });
+            } else {
+                console.error("Form element not found");
+            }
+        });
+    </script>
+</body>
+</html>
