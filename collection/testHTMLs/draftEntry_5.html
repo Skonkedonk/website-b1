@@ -1,0 +1,217 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<title>Books</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<link rel="stylesheet" href="../../assets/css/main.css" />
+</head>
+
+<body>
+<div>
+    <div id="insertedHeader"></div>
+
+    <!-- Form Modal -->
+    <button onclick="addEntry()">Open Form</button>
+
+    <div id="formModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeForm()">&times;</span>
+            <form id="entryForm">
+                <label for="title">Title:</label>
+                <input type="text" id="title" name="title" required>
+
+                <label for="category">Category:</label>
+                <select id="category" name="category" required>
+                    <option value="Default">Choose a category</option>
+                    <option value="Books">Books</option>
+                    <option value="Music">Music</option>
+                    <option value="Computer">Computer</option>
+                    <option value="Tabletop">Tabletop</option>
+                </select>
+
+                <label for="description">Description:</label>
+                <textarea id="description" name="description" rows="4" required></textarea>
+
+                <label for="rating">Rating:</label>
+                <select id="rating" name="rating" required>
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                </select>
+
+                <label for="file">Upload Image:</label>
+                <input type="file" id="file" name="image" accept="image/*"> <!-- Maybe dont use "accept"-->
+
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="entryGrid" class="grid-container"></div>
+
+<!-- Modal to display full information -->
+<div id="entryModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h3 id="modalTitle"></h3>
+        <img id="modalImage" style="max-width: 100%;" alt="Image">
+        <p id="modalDescription"></p>
+        <p><strong>Category:</strong> <span id="modalCategory"></span></p>
+        <p><strong>Rating:</strong> <span id="modalRating"></span>/10</p>
+    </div>
+</div>
+
+<div id="output"></div>
+
+<script>
+    function addEntry() {
+        console.log('Opening form modal');
+        document.getElementById('formModal').style.display = 'block';
+    }
+
+    function closeForm() {
+        console.log('Closing form modal');
+        document.getElementById('formModal').style.display = 'none';
+    }
+
+    function closeModal() {
+    document.getElementById('entryModal').style.display = 'none';
+}
+
+    document.getElementById('entryForm').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const formData = new FormData();
+
+        const title = document.getElementById('title').value;
+        const description = document.getElementById('description').value;
+        const category = document.getElementById('category').value;
+        const rating = parseInt(document.getElementById('rating').value);
+        const file = document.getElementById('file').files[0];
+
+        formData.append('operations', JSON.stringify({
+            query: `
+         mutation uploadFile($title: String!, $description: String!, $category: String!, $rating: Int!, $file: Upload) {
+            uploadFile(title: $title, description: $description, category: $category, rating: $rating, file: $file) {
+        id
+        title
+        description
+        category
+        rating
+        filePath
+    }
+}
+`,
+            variables: {
+                title,
+                description,
+                category,
+                rating,
+                file: null
+            }
+        }));
+
+        formData.append('map', JSON.stringify({ '0': ['variables.file'] })); // Means to map file correctly.
+        // Takes first file (1, 2 if i had more files)
+
+        if (file) {
+            formData.append('0', file);
+        }
+
+        console.log("formData only: " + formData);
+
+        console.log("formData operations: " + formData.get('operations'));
+
+        console.log("formData map: " + formData.get('map').filePath);
+
+        try {
+            const response = await fetch('http://127.0.0.1:4000/graphql', {
+                method: 'POST',
+                body: formData,
+            });
+            const result = await response.json();
+            if (result.errors) {
+                throw new Error('Failed to upload file');
+            }
+            document.getElementById('output').textContent = 'Upload successful! File path: ' + result.data.uploadFile.filePath;
+        //    return result.data.uploadFile;
+        } catch (error) {
+            console.error('Error during upload:', error);
+            document.getElementById('output').textContent = 'Upload failed';
+        }
+
+        setTimeout(() => {
+            window.location.reload();
+        }, 50); //Millis
+        closeForm();
+    })
+
+    async function fetchEntries() {
+    const response = await fetch('http://127.0.0.1:4000/graphql', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            query: `
+                query {
+                    entries {
+                        id
+                        title
+                        description
+                        category
+                        rating
+                        filePath
+                    }
+                }
+            `
+        })
+    });
+    const result = await response.json();
+    return result.data.entries;
+}
+
+async function renderEntries() {
+    const entries = await fetchEntries();
+    const entryGrid = document.getElementById('entryGrid');
+    entryGrid.innerHTML = ''; // Clear the grid before rendering
+
+    entries.forEach(entry => {
+        const gridItem = document.createElement('div');
+        gridItem.className = 'grid-item';
+
+        gridItem.innerHTML = `
+            <img src="https://skonkedonk.github.io/website-b1/${entry.filePath}" alt="${entry.title}" style="width: 100px; height: 100px;">
+            <h3>${entry.title}</h3>
+            <p><strong>Rating:</strong> ${entry.rating}/10</p>
+        `;
+
+        // Set up the click event to show the modal
+        gridItem.addEventListener('click', () => {
+            document.getElementById('modalTitle').textContent = entry.title;
+            document.getElementById('modalImage').src = "https://skonkedonk.github.io/website-b1/" + entry.filePath;
+            document.getElementById('modalDescription').textContent = entry.description;
+            document.getElementById('modalCategory').textContent = entry.category;
+            document.getElementById('modalRating').textContent = entry.rating;
+            document.getElementById('entryModal').style.display = 'block';
+        });
+
+        entryGrid.appendChild(gridItem);
+    });
+}
+
+renderEntries();
+</script>
+</body>
+
+</html>
