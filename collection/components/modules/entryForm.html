@@ -78,79 +78,76 @@
     }
 
     document.getElementById('entryForm').addEventListener('submit', async (event) => {
-        event.preventDefault();
-        const formData = new FormData();
+    event.preventDefault();
 
-        const title = document.getElementById('title').value;
-        const description = document.getElementById('description').value;
-        const category = document.getElementById('category').value;
-        const rating = parseInt(document.getElementById('rating').value);
-        const file = document.getElementById('file').files[0];
+    const formData = new FormData();
 
-        formData.append('operations', JSON.stringify({
-            query: `
-         mutation uploadFile($title: String!, $description: String!, $category: String!, $rating: Int!, $file: Upload) {
-            uploadFile(title: $title, description: $description, category: $category, rating: $rating, file: $file) {
-        id
-        title
-        description
-        category
-        rating
-        filePath
+    const title = document.getElementById('title').value;
+    const description = document.getElementById('description').value;
+    const category = document.getElementById('category').value;
+    const rating = parseInt(document.getElementById('rating').value);
+    const file = document.getElementById('file').files[0];
+
+    // Debugging logs before appending to FormData
+    console.log("Title:", title);
+    console.log("Description:", description);
+    console.log("Category:", category);
+    console.log("Rating:", rating);
+    console.log("File:", file);
+
+    const operations = {
+        query: `
+            mutation uploadFile($title: String!, $description: String!, $category: String!, $rating: Int!, $file: Upload) {
+                uploadFile(title: $title, description: $description, category: $category, rating: $rating, file: $file) {
+                    id
+                    title
+                    description
+                    category
+                    rating
+                    filePath
+                }
+            }
+        `,
+        variables: {
+            title,
+            description,
+            category,
+            rating,
+            file: null
+        }
+    };
+    
+    const map = { '0': ['variables.file'] };
+
+    formData.append('operations', JSON.stringify(operations));
+    formData.append('map', JSON.stringify(map));
+    formData.append('0', file);
+
+    // Log FormData content for debugging
+    for (let pair of formData.entries()) {
+        console.log(`${pair[0]}: ${pair[1]}`);
     }
-}
-`,
-            variables: {
-                title,
-                description,
-                category,
-                rating,
-                file: null
-            }
-        }));
 
-        formData.append('map', JSON.stringify({ '0': ['variables.file'] })); // Means to map file correctly.
-        // Takes first file (1, 2 if i had more files)
+    try {
+        const response = await fetch('http://127.0.0.1:4000/graphql', {
+            method: 'POST',
+            body: formData,
+        });
 
-        for (let pair of formData.entries()) {
-            console.log("PAIS: " + pair[0] + ', ' + pair[1]);
+        const result = await response.json();
+        if (result.errors) {
+            throw new Error('Failed to upload file');
         }
 
+        document.getElementById('output').textContent = 'Upload successful! File path: ' + result.data.uploadFile.filePath;
+    } catch (error) {
+        console.error('Error during upload:', error);
+        document.getElementById('output').textContent = 'Upload failed';
+    }
 
-        console.log("formData operations:", JSON.parse(formData.get('operations')));
-        console.log("formData map:", JSON.parse(formData.get('map')));
-        if (file) {
-            console.log("file:", file.name);
-        }
+    closeForm();
+});
 
-
-        console.log("formData only: " + formData);
-
-        console.log("formData operations: " + formData.get('operations'));
-
-        console.log("formData map: " + formData.get('map').filePath);
-
-        try {
-            const response = await fetch('http://127.0.0.1:4000/graphql', {
-                method: 'POST',
-                body: formData,
-            });
-            const result = await response.json();
-            if (result.errors) {
-                throw new Error('Failed to upload file');
-            }
-            document.getElementById('output').textContent = 'Upload successful! File path: ' + result.data.uploadFile.filePath;
-            //    return result.data.uploadFile;
-        } catch (error) {
-            console.error('Error during upload:', error);
-            document.getElementById('output').textContent = 'Upload failed';
-        }
-
-        setTimeout(() => {
-            //   window.location.reload();
-        }, 50); //Millis
-        closeForm();
-    })
 
     async function fetchEntries() {
         const response = await fetch('http://127.0.0.1:4000/graphql', {
