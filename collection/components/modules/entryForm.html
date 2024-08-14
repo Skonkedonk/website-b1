@@ -81,7 +81,15 @@
     document.getElementById('entryForm').addEventListener('submit', async (event) => {
     event.preventDefault();
 
-    const formData = new FormData(document.getElementById('entryForm'));
+    const formElement = document.getElementById('entryForm');
+if (!formElement) {
+    console.error("Form element not found");
+    const formData = new FormData();
+} else {
+    const formData = new FormData(formElement);
+    // Rest of the code...
+}
+
 
     const title = document.getElementById('title').value;
     const description = document.getElementById('description').value;
