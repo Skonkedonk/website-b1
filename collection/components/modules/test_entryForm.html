@@ -37,8 +37,7 @@
                 </select>
 
                 <label for="file">Upload Image:</label>
-                <input type="file" id="file" name="image" accept=".jpg, .jpeg, .png" required>
-                "> <!-- This is correct -->
+                <input type="file" id="file" name="file" accept=".jpg, .jpeg, .png" required>
 
                 <button type="submit">Submit</button>
             </form>
@@ -47,7 +46,6 @@
 </div>
 
 <div id="entryGrid" class="grid-container"></div>
-
 
 <!-- Modal to display full information -->
 <div id="entryModal" class="modal">
@@ -79,78 +77,34 @@
     }
 
     document.getElementById('entryForm').addEventListener('submit', async (event) => {
-    event.preventDefault();
+        event.preventDefault();
 
-    const formData = new FormData();
+        const formData = new FormData(document.getElementById('entryForm'));
 
-    const title = document.getElementById('title').value;
-    const description = document.getElementById('description').value;
-    const category = document.getElementById('category').value;
-    const rating = parseInt(document.getElementById('rating').value);
-    const file = document.getElementById('file').files[0];
+        try {
+            const response = await fetch('http://127.0.0.1:4000/collection/uploads', {
+                method: 'POST',
+                body: formData,
+            });
 
-    // Debugging logs before appending to FormData
-    console.log("Title:", title);
-    console.log("Description:", description);
-    console.log("Category:", category);
-    console.log("Rating:", rating);
-    console.log("File:", file);
-
-    const operations = {
-        query: `
-            mutation uploadFile($title: String!, $description: String!, $category: String!, $rating: Int!, $file: Upload) {
-                uploadFile(title: $title, description: $description, category: $category, rating: $rating, file: $file) {
-                    id
-                    title
-                    description
-                    category
-                    rating
-                    filePath
-                }
+            if (!response.ok) {
+                throw new Error('Failed to upload file');
             }
-        `,
-        variables: {
-            title,
-            description,
-            category,
-            rating,
-            file: null
-        }
-    };
-    
-    const map = { '0': ['variables.file'] };
 
-    formData.append('operations', JSON.stringify(operations));
-    formData.append('map', JSON.stringify(map));
-    formData.append('0', file);
+            const result = await response.json();
+            console.log('Upload successful:', result);
 
-    // Log FormData content for debugging
-    for (let pair of formData.entries()) {
-        console.log(`${pair[0]}: ${pair[1]}`);
-    }
-
-    try {
-        const response = await fetch('http://127.0.0.1:4000/graphql', {
-            method: 'POST',
-            body: formData,
-        });
-
-        const result = await response.json();
-        if (result.errors) {
-            throw new Error('Failed to upload file');
+            document.getElementById('output').textContent = 'Upload successful! File path: ' + result.file.path;
+        } catch (error) {
+            console.error('Error during upload:', error);
+            document.getElementById('output').textContent = 'Upload failed';
         }
 
-        document.getElementById('output').textContent = 'Upload successful! File path: ' + result.data.uploadFile.filePath;
-    } catch (error) {
-        console.error('Error during upload:', error);
-        document.getElementById('output').textContent = 'Upload failed';
-    }
-    setTimeout(() => {
+        setTimeout(() => {
             window.location.reload();
-            }, 50); //Millis
-    closeForm();
-});
-
+        }, 50); //Millis
+        closeForm();
+    });
 
     async function fetchEntries() {
         const response = await fetch('http://127.0.0.1:4000/graphql', {
