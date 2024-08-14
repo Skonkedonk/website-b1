@@ -144,7 +144,9 @@
         console.error('Error during upload:', error);
         document.getElementById('output').textContent = 'Upload failed';
     }
-
+    setTimeout(() => {
+            window.location.reload();
+            }, 50); //Millis
     closeForm();
 });
 
