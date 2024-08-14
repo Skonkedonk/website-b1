@@ -37,7 +37,7 @@
                 </select>
 
                 <label for="file">Upload Image:</label>
-                <input type="file" id="file" name="file" accept=".jpg, .jpeg, .png" required>
+                <input type="file" id="file" name="file" accept=".jpg, .jpeg, .png">
 
                 <button type="submit">Submit</button>
             </form>
@@ -77,34 +77,40 @@
     }
 
     document.getElementById('entryForm').addEventListener('submit', async (event) => {
-        event.preventDefault();
+    event.preventDefault();
 
-        const formData = new FormData(document.getElementById('entryForm'));
+    // Create a FormData object from the form element directly
+    const formElement = document.getElementById('entryForm');
+    const formData = new FormData(formElement);
 
-        try {
-            const response = await fetch('http://127.0.0.1:4000/collection/uploads', {
-                method: 'POST',
-                body: formData,
-            });
+    // Debugging logs before appending to FormData
+    console.log("Form Data:", ...formData.entries());
 
-            if (!response.ok) {
-                throw new Error('Failed to upload file');
-            }
+    try {
+        const response = await fetch('http://127.0.0.1:4000/collection/uploads', {
+            method: 'POST',
+            body: formData,
+        });
 
-            const result = await response.json();
-            console.log('Upload successful:', result);
-
-            document.getElementById('output').textContent = 'Upload successful! File path: ' + result.file.path;
-        } catch (error) {
-            console.error('Error during upload:', error);
-            document.getElementById('output').textContent = 'Upload failed';
+        if (!response.ok) {
+            throw new Error('Failed to upload file');
         }
 
-        setTimeout(() => {
-            window.location.reload();
-        }, 50); //Millis
-        closeForm();
-    });
+        const result = await response.json();
+        console.log('Upload successful:', result);
+
+        document.getElementById('output').textContent = 'Upload successful! File path: ' + result.file.path;
+    } catch (error) {
+        console.error('Error during upload:', error);
+        document.getElementById('output').textContent = 'Upload failed';
+    }
+
+    setTimeout(() => {
+        window.location.reload();
+    }, 50); //Millis
+    closeForm();
+});
+
 
     async function fetchEntries() {
         const response = await fetch('http://127.0.0.1:4000/graphql', {
