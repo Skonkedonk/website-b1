@@ -1805,13 +1805,12 @@ button:active,
   transition: none;
 }
 #nav ul li a span {
-  position: relative;
-  display: block;
+  display: inline-flex;
+  align-items: center;
   font-size: 0.8em;
 }
 #nav ul li a span:before {
-  position: absolute;
-  left: 0;
+  margin-right: 8px;
   color: #41484c;
   text-align: center;
   width: 1.25em;

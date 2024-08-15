@@ -722,14 +722,13 @@ button,
 #nav {
     ul {
         list-style: none;
-        padding-left: 0;
+        padding-left: 0; 
         margin-bottom: 0;
 
         li {
             padding-left: 0;
 
             a {
-
                 display: flex;
                 align-items: center; // Vertically align icon and text
                 padding: 0.5em 1.5em; // Adjust as needed for spacing
@@ -738,16 +737,14 @@ button,
                 outline: 0;
                 border: 0;
                 @include vendor('transition', 'none');
-                //display: block;
 
                 span {
-                    position: relative;
-                    display: block;
+                    display: inline-flex;  // Ensure icons and text align properly
+                    align-items: center;
                     font-size: 0.8em;
 
                     &:before {
-                        position: absolute;
-                        left: 0;
+                        margin-right: 8px; // Space between icon and text
                         color: #41484c;
                         text-align: center;
                         width: 1.25em;
@@ -812,8 +809,8 @@ button,
             }
         }
     }
-
 }
+
 
 // Footer
 #footer {
