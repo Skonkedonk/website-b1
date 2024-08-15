@@ -647,13 +647,12 @@ button,
 
 // Header
 #header {
-        @include vendor('transform', 'translateX(-250px)');
-    
-        @include breakpoint('<=narrower') {
-            @include vendor('transition', 'transform 0.3s ease-in-out');
-        }
-    
-    
+    transform: translateX(-250px);
+
+    @include breakpoint('<=narrower') {
+        @include vendor('transition', 'transform 0.3s ease-in-out');
+    }
+
     @include vendor('display', 'flex');
     @include vendor('flex-direction', 'column');
     @include vendor('justify-content', 'space-between');
@@ -667,6 +666,7 @@ button,
     text-align: right;
     top: 0;
     width: 250px;
+    z-index: 1000;
 
     .top {
         @include vendor('flex-grow', '1');
@@ -737,8 +737,8 @@ button,
 
             a {
                 display: flex;
-                align-items: center; // Vertically align icon and text
-                padding: 0.5em 1.5em; // Adjust as needed for spacing
+                align-items: center;
+                padding: 0.5em 1.5em;
                 color: rgba(255, 255, 255, 0.5);
                 text-decoration: none;
                 outline: 0;
@@ -746,12 +746,12 @@ button,
                 @include vendor('transition', 'none');
 
                 span {
-                    display: inline-flex;  // Ensure icons and text align properly
+                    display: inline-flex;
                     align-items: center;
                     font-size: 1.0em;
 
                     &:before {
-                        margin-right: 8px; // Space between icon and text
+                        margin-right: 8px;
                         color: #41484c;
                         text-align: center;
                         width: 1.25em;
@@ -817,7 +817,6 @@ button,
         }
     }
 }
-
 
 // Footer
 #footer {
@@ -1065,7 +1064,6 @@ button,
                 }
             }
         }
-
     }
 
     // Footer
@@ -1125,8 +1123,8 @@ button,
     // Header
     #header {
         @include vendor('backface-visibility', 'hidden');
-        @include vendor('transform', 'translateX(#{_size(header) * -1})');
-        @include vendor('transition', ('transform #{_duration(header)} ease'));
+        transform: translateX(-250px);
+        @include vendor('transition', 'transform 0.3s ease-in-out');
         -webkit-overflow-scrolling: touch;
         display: block;
         height: 100%;
@@ -1134,9 +1132,8 @@ button,
         overflow-y: auto;
         position: fixed;
         top: 0;
-        width: _size(header);
-        z-index: _misc(z-index-base) + 2;
-        width: _size(header);
+        width: 250px;
+        z-index: 1000;
         background: #222729 url('images/overlay.png');
         box-shadow: inset -0.25em 0 0.25em 0 rgba(0, 0, 0, 0.125);
 
@@ -1210,7 +1207,6 @@ button,
                 }
             }
         }
-
     }
 
     #headerToggle {
@@ -1235,20 +1231,19 @@ button,
             }
         }
     }
-    
 
     body {
         &.header-visible {
             #main {
-                @include vendor('transform', 'translateX(#{_size(header)})');
+                transform: translateX(250px);
             }
 
             #headerToggle {
-                @include vendor('transform', 'translateX(#{_size(header)})');
+                transform: translateX(250px);
             }
 
             #header {
-                @include vendor('transform', 'translateX(0)');
+                transform: translateX(0);
             }
         }
     }
@@ -1261,7 +1256,7 @@ button,
     // Main
     #main {
         @include vendor('backface-visibility', 'hidden');
-        @include vendor('transition', 'transform #{_duration(header)} ease');
+        @include vendor('transition', 'transform 0.3s ease-in-out');
         padding-bottom: 1px;
         margin-left: 0;
         padding-top: 3.25em;
@@ -1348,9 +1343,9 @@ button,
     height: 100vh;
 
     .navbar {
-        width: 180px; // Slightly thinner navbar
-        background-color: #000; // Black background
-        color: #fff; // White text
+        width: 180px;
+        background-color: #000;
+        color: #fff;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -1380,12 +1375,12 @@ button,
             .image-placeholder {
                 width: 200px;
                 height: 200px;
-                background-color: #999; // Grey background for placeholder
+                background-color: #999;
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 font-size: 24px;
-                color: #fff; // White text
+                color: #fff;
                 margin-bottom: 10px;
             }
 
@@ -1410,7 +1405,7 @@ button,
                 cursor: pointer;
 
                 &:hover {
-                    background-color: #eee; // Light grey background on hover
+                    background-color: #eee;
                 }
             }
         }
@@ -1420,31 +1415,22 @@ button,
 // Modal Styles
 .modal {
     display: none;
-    /* Hidden by default */
     position: fixed;
-    /* Stay in place */
     z-index: 1;
-    /* Sit on top */
     left: 0;
     top: 0;
     width: 100%;
-    /* Full width */
     height: 100%;
-    /* Full height */
     overflow: auto;
-    /* Enable scroll if needed */
     background-color: rgba(0, 0, 0, 0.4);
-    /* Black w/ opacity */
 }
 
 .modal-content {
     background-color: blanchedalmond;
     margin: 15% auto;
-    /* 15% from the top and centered */
     padding: 20px;
     border: 1px solid #888;
     width: 80%;
-    /* Could be more or less, depending on screen size */
     max-width: 500px;
     border-radius: 10px;
 }
@@ -1549,17 +1535,17 @@ form {
 
 // Toggle button styles
 #headerToggle {
-    display: none; // Initially hidden
+    display: none;
 
     @include breakpoint('<=narrower') {
-        display: block; // Show the toggle button at narrower breakpoints
+        display: block;
         position: fixed;
         top: 0;
         left: 0;
         width: 3.25em;
         height: 3.25em;
         background-color: rgba(128, 136, 144, 0.5);
-        z-index: 1001; // Ensure it stays on top
+        z-index: 1001;
         cursor: pointer;
         text-align: center;
 
@@ -1574,11 +1560,10 @@ form {
 // Apply transition for smooth slide-in/out of the navbar
 body.header-visible {
     #header {
-        @include vendor('transform', 'translateX(0)'); // Slide the navbar into view
-        z-index: 1000; // Ensure it stays above content
+        transform: translateX(0);
     }
 
     #main {
-        @include vendor('transform', 'translateX(250px)'); // Shift the main content
+        transform: translateX(250px);
     }
 }
