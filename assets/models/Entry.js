@@ -9,7 +9,7 @@ const entrySchema = new mongoose.Schema({
   filePath: { type: String, default: null }, 
   fileType: { type: String, default: null }, 
   fileSize: { type: Number, default: null }, 
-  rating: { type: Number, required: true },
+  rating: { type: String, required: true },
 });
 
 module.exports = mongoose.model('Entry', entrySchema);

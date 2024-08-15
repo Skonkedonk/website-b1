@@ -70,7 +70,7 @@ const typeDefs = gql`
     filePath: String
     fileType: String
     fileSize: Int
-    rating: Int!
+    rating: String!
   }
 
   type Query {
@@ -82,7 +82,7 @@ const typeDefs = gql`
       title: String!,
       description: String!,
       category: String!,
-      rating: Int!,
+      rating: String!,
       file: Upload
     ): Entry!
   }
