@@ -2234,6 +2234,7 @@ button:active,
     transition: transform 0.5s ease;
     padding-bottom: 1px;
     margin-left: 0;
+    padding-top: 3.25em;
   }
   #main > section {
     padding: 3em 0;
@@ -2467,6 +2468,57 @@ form button:hover {
 .grid-item p {
   font-size: 1em;
   margin-bottom: 0;
+}
+
+#headerToggle {
+  display: none;
+}
+@media screen and (max-width: 960px) {
+  #headerToggle {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 3.25em;
+    height: 3.25em;
+    background-color: rgba(128, 136, 144, 0.5);
+    z-index: 1001;
+    cursor: pointer;
+    text-align: center;
+  }
+  #headerToggle .toggle {
+    font-size: 18px;
+    color: #fff;
+    line-height: 3.25em;
+  }
+}
+
+body.header-visible #header {
+  -moz-transform: translateX(0);
+  -webkit-transform: translateX(0);
+  -ms-transform: translateX(0);
+  transform: translateX(0);
+}
+body.header-visible #main {
+  -moz-transform: translateX(250px);
+  -webkit-transform: translateX(250px);
+  -ms-transform: translateX(250px);
+  transform: translateX(250px);
+}
+
+#header {
+  -moz-transform: translateX(-250px);
+  -webkit-transform: translateX(-250px);
+  -ms-transform: translateX(-250px);
+  transform: translateX(-250px);
+}
+@media screen and (max-width: 960px) {
+  #header {
+    -moz-transition: -moz-transform 0.3s ease-in-out;
+    -webkit-transition: -webkit-transform 0.3s ease-in-out;
+    -ms-transition: -ms-transform 0.3s ease-in-out;
+    transition: transform 0.3s ease-in-out;
+  }
 }
 
 /*# sourceMappingURL=main.css.map */

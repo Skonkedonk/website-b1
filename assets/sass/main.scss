@@ -1273,6 +1273,7 @@ button,
         @include vendor('transition', 'transform #{_duration(header)} ease');
         padding-bottom: 1px;
         margin-left: 0;
+        padding-top: 3.25em;
 
         >section {
             padding: 3em 0;
@@ -1552,5 +1553,48 @@ form {
     p {
         font-size: 1em;
         margin-bottom: 0;
+    }
+}
+// Toggle button styles
+#headerToggle {
+    display: none; // Initially hidden
+
+    @include breakpoint('<=narrower') {
+        display: block; // Show the toggle button at narrower breakpoints
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 3.25em;
+        height: 3.25em;
+        background-color: rgba(128, 136, 144, 0.5);
+        z-index: 1001; // Ensure it stays on top
+        cursor: pointer;
+        text-align: center;
+
+        .toggle {
+            font-size: 18px;
+            color: #fff;
+            line-height: 3.25em;
+        }
+    }
+}
+
+// Apply transition for smooth slide-in/out of the navbar
+body.header-visible {
+    #header {
+        @include vendor('transform', 'translateX(0)'); // Slide the navbar into view
+    }
+
+    #main {
+        @include vendor('transform', 'translateX(250px)'); // Shift the main content
+    }
+}
+
+// Hide the navbar by default
+#header {
+    @include vendor('transform', 'translateX(-250px)');
+
+    @include breakpoint('<=narrower') {
+        @include vendor('transition', 'transform 0.3s ease-in-out');
     }
 }

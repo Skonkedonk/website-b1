@@ -1,3 +1,7 @@
+<div id="headerToggle">
+    <span class="toggle">☰</span>
+</div>
+
 <div id="header">
     <div class="top">
         <!-- Logo -->
@@ -13,7 +17,7 @@
                 <li class="nav-item dropdown">
                     <a href="#" class="dropbtn"><span class="icon solid fa-th">Categories</span></a>
                     <div class="dropdown-content">
-                        <a href="books.html" id="collection-link"><span class="icon solid fa-book-atlas">Books</span></a>
+                        <a href="books.html" id="collection-link"><span class="icon solid fa-book">Books</span></a>
                         <a href="computer.html" id="collection-link"><span class="icon solid fa-tv">Computer</span></a>
                         <a href="music.html" id="collection-link"><span class="icon solid fa-headphones">Music</span></a>
                         <a href="tabletop.html" id="collection-link"><span class="icon solid fa-dice">Tabletop</span></a>
@@ -36,3 +40,15 @@
         </ul>
     </div>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const body = document.body;
+        const toggleButton = document.getElementById('headerToggle');
+
+        if (toggleButton) {
+            toggleButton.addEventListener('click', function() {
+                body.classList.toggle('header-visible');
+            });
+        }
+    });
+</script>
