@@ -47,7 +47,7 @@
         const entryGrid = document.getElementById('entryGrid');
         entryGrid.innerHTML = ''; // Clear the grid before rendering
 
-        entries.filter(entry => entry.category === categoryFilter).forEach(entry => {
+        entries.filter(entry => ((entry.category === categoryFilter) || (entry.category === 'Default'))).forEach(entry => {
             const gridItem = document.createElement('div');
             gridItem.className = 'grid-item';
 
