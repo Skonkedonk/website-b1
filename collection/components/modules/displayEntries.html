@@ -50,6 +50,7 @@
 
         entries.forEach(entry => {
             if (!filterCategory || entry.category === filterCategory) {
+                console.log("CATEGORY >> " + filterCategory + " | entry.cat >> " + entry.category);
                 const gridItem = document.createElement('div');
                 gridItem.className = 'grid-item';
 
