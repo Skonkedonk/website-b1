@@ -1807,7 +1807,7 @@ button:active,
 #nav ul li a span {
   display: inline-flex;
   align-items: center;
-  font-size: 0.8em;
+  font-size: 1em;
 }
 #nav ul li a span:before {
   margin-right: 8px;
