@@ -2054,6 +2054,10 @@ button:active,
     margin-left: 22%;
   }
 }
+#headerToggle {
+  display: none;
+}
+
 @media screen and (max-width: 960px) {
   html,
   body {
@@ -2468,19 +2472,6 @@ form button:hover {
     color: #fff;
     line-height: 3.25em;
   }
-}
-
-body.header-visible #header {
-  -moz-transform: translateX(0);
-  -webkit-transform: translateX(0);
-  -ms-transform: translateX(0);
-  transform: translateX(0);
-}
-body.header-visible #main {
-  -moz-transform: translateX(250px);
-  -webkit-transform: translateX(250px);
-  -ms-transform: translateX(250px);
-  transform: translateX(250px);
 }
 
 body.header-visible #header {

@@ -1080,9 +1080,9 @@ button,
 }
 
 // Narrower
-//#headerToggle {
-//    display: none;
-//}
+#headerToggle {
+    display: none;
+}
 
 @include breakpoint('<=narrower') {
 
@@ -1546,6 +1546,7 @@ form {
         margin-bottom: 0;
     }
 }
+
 // Toggle button styles
 #headerToggle {
     display: none; // Initially hidden
@@ -1574,16 +1575,6 @@ form {
 body.header-visible {
     #header {
         @include vendor('transform', 'translateX(0)'); // Slide the navbar into view
-    }
-
-    #main {
-        @include vendor('transform', 'translateX(250px)'); // Shift the main content
-    }
-}
-
-body.header-visible {
-    #header {
-        @include vendor('transform', 'translateX(0)'); // Slide the navbar into view
         z-index: 1000; // Ensure it stays above content
     }
 
@@ -1591,4 +1582,3 @@ body.header-visible {
         @include vendor('transform', 'translateX(250px)'); // Shift the main content
     }
 }
-
