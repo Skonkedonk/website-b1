@@ -2054,10 +2054,6 @@ button:active,
     margin-left: 22%;
   }
 }
-#headerToggle {
-  display: none;
-}
-
 @media screen and (max-width: 960px) {
   html,
   body {

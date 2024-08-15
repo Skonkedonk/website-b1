@@ -1080,9 +1080,9 @@ button,
 }
 
 // Narrower
-#headerToggle {
-    display: none;
-}
+//#headerToggle {
+//    display: none;
+//}
 
 @include breakpoint('<=narrower') {
 
