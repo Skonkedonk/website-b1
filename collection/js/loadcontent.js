@@ -1,4 +1,4 @@
-function loadHTML(url, elementId) {
+function loadHTML(url, elementId, callback) {
     console.log(`Loading HTML from ${url} into element with ID ${elementId}`);
     
     var xhr = new XMLHttpRequest();
@@ -14,6 +14,10 @@ function loadHTML(url, elementId) {
                     element.innerHTML = xhr.responseText;
                     console.log(`HTML content successfully injected into element with ID ${elementId}`);
                     executeScripts(element); // Ensure scripts are executed
+                    
+                    if (callback) {
+                        callback(); // Call the callback after loading and executing scripts
+                    }
                 } else {
                     console.error(`Element with ID ${elementId} not found.`);
                 }

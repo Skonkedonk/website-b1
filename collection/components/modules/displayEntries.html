@@ -1,7 +1,6 @@
 <!-- displayEntries.html -->
 <div id="entryGrid" class="grid-container"></div>
 
-<!-- Modal to display full information -->
 <div id="entryModal" class="modal">
     <div class="modal-content">
         <span class="close" onclick="closeModal()">&times;</span>
@@ -43,37 +42,31 @@
         return result.data.entries;
     }
 
-    async function renderEntries(filterCategory) {
+    async function renderEntries(categoryFilter) {
         const entries = await fetchEntries();
         const entryGrid = document.getElementById('entryGrid');
         entryGrid.innerHTML = ''; // Clear the grid before rendering
 
-        entries.forEach(entry => {
-            if (!filterCategory || entry.category === filterCategory) {
-               // console.log("CATEGORY >> " + filterCategory + " | entry.cat >> " + entry.category);
-                const gridItem = document.createElement('div');
-                gridItem.className = 'grid-item';
+        entries.filter(entry => entry.category === categoryFilter).forEach(entry => {
+            const gridItem = document.createElement('div');
+            gridItem.className = 'grid-item';
 
-                gridItem.innerHTML = `
+            gridItem.innerHTML = `
                 <img src="https://skonkedonk.github.io/website-b1/${entry.filePath}" alt="${entry.title}" style="width: 100px; height: 100px;">
                 <h3>${entry.title}</h3>
                 <p><strong>Rating:</strong> ${entry.rating}/10</p>
             `;
 
-                gridItem.addEventListener('click', () => {
-                    document.getElementById('modalTitle').textContent = entry.title;
-                    document.getElementById('modalImage').src = "https://skonkedonk.github.io/website-b1/" + entry.filePath;
-                    document.getElementById('modalDescription').textContent = entry.description;
-                    document.getElementById('modalCategory').textContent = entry.category;
-                    document.getElementById('modalRating').textContent = entry.rating;
-                    document.getElementById('entryModal').style.display = 'block';
-                });
+            gridItem.addEventListener('click', () => {
+                document.getElementById('modalTitle').textContent = entry.title;
+                document.getElementById('modalImage').src = "https://skonkedonk.github.io/website-b1/" + entry.filePath;
+                document.getElementById('modalDescription').textContent = entry.description;
+                document.getElementById('modalCategory').textContent = entry.category;
+                document.getElementById('modalRating').textContent = entry.rating;
+                document.getElementById('entryModal').style.display = 'block';
+            });
 
-                entryGrid.appendChild(gridItem);
-            }
+            entryGrid.appendChild(gridItem);
         });
     }
-
-    // Example: renderEntries with no filter
-    renderEntries(); // Remove the argument to display all entries, or pass a category string to filter
 </script>

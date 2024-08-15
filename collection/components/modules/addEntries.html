@@ -1,49 +1,59 @@
-<!-- entryForm.html -->
-<div id="formModal" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="closeForm()">&times;</span>
-        <form id="entryForm">
-            <label for="title">Title:</label>
-            <input type="text" id="title" name="title" required>
+<!-- addEntries.html -->
+<div>
+    <!-- Form Modal -->
+    <button onclick="addEntry()">Open Form</button>
 
-            <label for="category">Category:</label>
-            <select id="category" name="category" required>
-                <option value="Default">Choose a category</option>
-                <option value="Books">Books</option>
-                <option value="Music">Music</option>
-                <option value="Computer">Computer</option>
-                <option value="Tabletop">Tabletop</option>
-            </select>
+    <div id="formModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeForm()">&times;</span>
+            <form id="entryForm">
+                <label for="title">Title:</label>
+                <input type="text" id="title" name="title" required>
 
-            <label for="description">Description:</label>
-            <textarea id="description" name="description" rows="4" required>An incredible description!</textarea>
+                <label for="category">Category:</label>
+                <select id="category" name="category" required>
+                    <option value="Default">Choose a category</option>
+                    <option value="Books">Books</option>
+                    <option value="Music">Music</option>
+                    <option value="Computer">Computer</option>
+                    <option value="Tabletop">Tabletop</option>
+                </select>
 
-            <label for="rating">Rating:</label>
-            <select id="rating" name="rating" required>
-                <option value="0">0</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
-            </select>
+                <label for="description">Description:</label>
+                <textarea id="description" name="description" rows="4" required>An incredible description!</textarea>
 
-            <label for="file">Upload Image:</label>
-            <input type="file" id="file" name="image" accept=".jpg, .jpeg, .png">
-            <!-- This is correct -->
+                <label for="rating">Rating:</label>
+                <select id="rating" name="rating" required>
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                </select>
 
-            <button type="submit">Submit</button>
-        </form>
+                <label for="file">Upload Image:</label>
+                <input type="file" id="file" name="image" accept=".jpg, .jpeg, .png">
+                
+                <button type="submit">Submit</button>
+            </form>
+        </div>
     </div>
 </div>
 
 <script>
+    function addEntry() {
+        console.log('Opening form modal');
+        document.getElementById('formModal').style.display = 'block';
+    }
+
     function closeForm() {
+        console.log('Closing form modal');
         document.getElementById('formModal').style.display = 'none';
     }
 
@@ -100,11 +110,13 @@
             document.getElementById('output').textContent = 'Upload successful! File path: ' + result.data.uploadFile.filePath;
         } catch (error) {
             console.error('Error during upload:', error);
-            document.getElementById('output').textContent = 'Upload failed';
+
+            const outputElement = document.getElementById('output');
+            if (outputElement) {
+                outputElement.textContent = 'Upload failed';
+            }
         }
-        setTimeout(() => {
-            // window.location.reload();
-        }, 50); //Millis
+
         closeForm();
     });
 </script>
