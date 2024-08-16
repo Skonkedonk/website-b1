@@ -647,6 +647,8 @@ button,
 
 // Header
 #header {
+    transform: none; //TODO
+    z-index: 1000;
     transform: translateX(-250px);
 
     @include breakpoint('<=narrower') {
@@ -729,7 +731,7 @@ button,
 #nav {
     ul {
         list-style: none;
-        padding-left: 0; 
+        padding-left: 0;
         margin-bottom: 0;
 
         li {
@@ -927,7 +929,11 @@ button,
 
     // Header
     #header {
+
+        z-index: 1000;
+
         width: 220px;
+        transform: none;
     }
 
     // Footer
@@ -989,6 +995,10 @@ button,
 
     // Header
     #header {
+
+        z-index: 1000;
+
+        transform: none;
         width: 18%;
     }
 
@@ -1211,7 +1221,7 @@ button,
 
     #headerToggle {
         display: none; // Initially hidden
-    
+
         @include breakpoint('<=narrower') {
             display: block; // Show the toggle button at narrower breakpoints
             position: fixed;
@@ -1223,7 +1233,7 @@ button,
             z-index: 1001; // Ensure it stays on top
             cursor: pointer;
             text-align: center;
-    
+
             .toggle {
                 font-size: 18px;
                 color: #fff;

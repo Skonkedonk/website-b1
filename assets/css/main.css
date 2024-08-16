@@ -1702,6 +1702,8 @@ button:active,
 }
 
 #header {
+  transform: none;
+  z-index: 1000;
   transform: translateX(-250px);
   display: -moz-flex;
   display: -webkit-flex;
@@ -1957,7 +1959,9 @@ button:active,
     font-size: 17pt;
   }
   #header {
+    z-index: 1000;
     width: 220px;
+    transform: none;
   }
   #footer {
     margin-left: 220px;
@@ -1991,6 +1995,8 @@ button:active,
     margin-bottom: 20px;
   }
   #header {
+    z-index: 1000;
+    transform: none;
     width: 18%;
   }
   #logo .image {
