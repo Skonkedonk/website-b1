@@ -1,0 +1,80 @@
+<!-- displayEntries.html -->
+<div id="entryGrid" class="grid-container"></div>
+
+<div id="entryModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h3 id="modalTitle"></h3>
+        <img id="modalImage" style="max-width: 100%;" alt="Image">
+        <p id="modalDescription"></p>
+        <p><strong>Category:</strong> <span id="modalCategory"></span></p>
+        <p><strong>Rating:</strong> <span id="modalRating"></span>/10</p>
+        <div class="card-buttons">
+            <button class="edit-btn">Edit</button>
+            <button class="delete-btn">Delete</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function closeModal() {
+        document.getElementById('entryModal').style.display = 'none';
+    }
+
+    async function fetchEntries() {
+        const response = await fetch('http://127.0.0.1:4000/graphql', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                query: `
+                query {
+                    entries {
+                        id
+                        title
+                        description
+                        category
+                        rating
+                        filePath
+                    }
+                }
+            `
+            })
+        });
+        const result = await response.json();
+        return result.data.entries;
+    }
+
+    async function renderEntries(categoryFilter) {
+        const entries = await fetchEntries();
+        const entryGrid = document.getElementById('entryGrid');
+        entryGrid.innerHTML = ''; // Clear the grid before rendering
+
+        entries.filter(entry => ((entry.category === categoryFilter) || (entry.category === 'Default'))).forEach(entry => {
+            const gridItem = document.createElement('div');
+            gridItem.className = 'grid-item';
+
+            gridItem.innerHTML = `
+                <img src="https://skonkedonk.github.io/website-b1/${entry.filePath}" alt="${entry.title}">
+                <h3>${entry.title}</h3>
+                <p><strong>Category:</strong> ${entry.category}</p>
+                <p class="rating"><strong>Rating:</strong> ${entry.rating}/10</p>
+            `;
+
+            gridItem.addEventListener('click', () => {
+                document.getElementById('modalTitle').textContent = entry.title;
+                document.getElementById('modalImage').src = "https://skonkedonk.github.io/website-b1/" + entry.filePath;
+                document.getElementById('modalDescription').textContent = entry.description;
+                document.getElementById('modalCategory').textContent = entry.category;
+                document.getElementById('modalRating').textContent = entry.rating;
+                document.getElementById('entryModal').style.display = 'block';
+            });
+
+            entryGrid.appendChild(gridItem);
+        });
+    }
+
+    // Example: Render all entries or filtered by category
+    renderEntries('Default');
+</script>
