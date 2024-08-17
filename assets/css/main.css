@@ -2149,11 +2149,12 @@ button:active,
 
 .modal-content {
   background-color: blanchedalmond;
-  margin: 10% auto;
+  margin: 5% auto;
   padding: 20px;
   border: 1px solid #888;
-  width: 80%;
-  max-width: 500px;
+  width: 70%; /* Increased width */
+  max-width: 900px; /* Increased max-width */
+  height: auto; /* Ensure the height can expand with content */
   border-radius: 10px;
   text-align: center;
 }
@@ -2170,11 +2171,24 @@ button:active,
   text-decoration: none;
 }
 
+.modal-content h3 {
+  margin-bottom: 10px;
+  font-size: 2em;
+  border-bottom: 1px solid #ccc; /* Line under the title */
+  padding-bottom: 10px;
+}
+
+.modal-content p {
+  margin: 10px 0;
+}
+
 .card-buttons {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
   margin-top: 20px;
+  border-top: 1px solid #ccc; /* Line above the buttons */
+  padding-top: 10px;
 }
 .card-buttons button {
   background-color: #4CAF50;
@@ -2193,6 +2207,13 @@ button:active,
 }
 .card-buttons button.delete-btn:hover {
   background-color: #e53935;
+}
+
+.modal-content img {
+  margin-top: 20px;
+  max-width: 100%;
+  border-radius: 5px;
+  margin-bottom: 10px;
 }
 
 /*# sourceMappingURL=main.css.map */
