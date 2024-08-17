@@ -2152,8 +2152,8 @@ button:active,
   margin: 5% auto;
   padding: 20px;
   border: 1px solid #888;
-  width: 70%; /* Increased width */
-  max-width: 900px; /* Increased max-width */
+  width: 80%; /* Increased width */
+  max-width: 1100px; /* Increased max-width */
   height: auto; /* Ensure the height can expand with content */
   border-radius: 10px;
   text-align: center;
@@ -2176,6 +2176,7 @@ button:active,
   font-size: 2em;
   border-bottom: 1px solid #ccc; /* Line under the title */
   padding-bottom: 10px;
+  overflow-wrap: break-word;
 }
 
 .modal-content p {
