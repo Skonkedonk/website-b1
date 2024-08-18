@@ -1,0 +1,225 @@
+<!-- addEntries.html -->
+<div>
+    <!-- Form Modal -->
+<!--    <div class="grid-item add-new-card">
+        <button onclick="addEntry()"><span>+</span></button>
+        <p>Always at this position</p>
+    </div>-->
+    
+
+    <div id="formModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeForm()">&times;</span>
+            <form id="entryForm">
+                <label for="title">Title:</label>
+                <input type="text" id="title" name="title" required>
+
+                <label for="category">Category:</label>
+                <select id="category" name="category" required>
+                    <option value="Default">Choose a category</option>
+                    <option value="Books">Books</option>
+                    <option value="Music">Music</option>
+                    <option value="Computer">Computer</option>
+                    <option value="Tabletop">Tabletop</option>
+                </select>
+
+                <label for="description">Description:</label>
+                <textarea id="description" name="description" rows="4" required>An incredible description!</textarea>
+
+                <label for="rating">Rating:</label>
+                <select id="rating" name="rating" required>
+                    <option value="?">?</option>
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                </select>
+
+                <label for="file">Upload Image:</label>
+                <input type="file" id="file" name="image" accept=".jpg, .jpeg, .png">
+                
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- displayEntries.html -->
+<div id="entryGrid" class="grid-container"></div>
+
+<div id="entryModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h3 id="modalTitle"></h3>
+        <p id="modalDescription"></p>
+        <p><strong>Category:</strong> <span id="modalCategory"></span></p>
+        <p><strong>Rating:</strong> <span id="modalRating"></span>/10</p>
+        <img id="modalImage" style="max-width: 100%;" alt="Image">
+        <div class="card-buttons">
+            <button class="edit-btn">Edit</button>
+            <button class="delete-btn">Delete</button>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function closeModal() {
+        document.getElementById('entryModal').style.display = 'none';
+    }
+
+    async function fetchEntries() {
+        const response = await fetch('http://127.0.0.1:4000/graphql', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                query: `
+                query {
+                    entries {
+                        id
+                        title
+                        description
+                        category
+                        rating
+                        filePath
+                    }
+                }
+            `
+            })
+        });
+        const result = await response.json();
+        return result.data.entries;
+    }
+
+    async function renderEntries(categoryFilter) {
+    const entries = await fetchEntries();
+    const entryGrid = document.getElementById('entryGrid');
+    entryGrid.innerHTML = ''; // Clear the grid before rendering
+
+    // Add the "Add New" card
+    const addNewCard = document.createElement('div');
+    addNewCard.className = 'grid-item add-new-card';
+    addNewCard.innerHTML = `
+        <span>+</span>
+    `;
+    addNewCard.addEventListener('click', () => {
+        addEntry();
+    });
+    entryGrid.appendChild(addNewCard);
+
+    // Filter and add the rest of the entries
+    entries
+        .filter(entry => (entry.category === categoryFilter || entry.category === 'Default'))
+        .forEach(entry => {
+            const gridItem = document.createElement('div');
+            gridItem.className = 'grid-item';
+
+            gridItem.innerHTML = `
+                <img src="https://skonkedonk.github.io/website-b1/${entry.filePath}" alt="${entry.title}">
+                <h3>${entry.title}</h3>
+                <p><strong>Category:</strong> ${entry.category}</p>
+                <p class="rating"><strong>Rating:</strong> ${entry.rating}/10</p>
+            `;
+
+            gridItem.addEventListener('click', () => {
+                document.getElementById('modalTitle').textContent = entry.title;
+                document.getElementById('modalImage').src = "https://skonkedonk.github.io/website-b1/" + entry.filePath;
+                document.getElementById('modalDescription').textContent = entry.description;
+                document.getElementById('modalCategory').textContent = entry.category;
+                document.getElementById('modalRating').textContent = entry.rating;
+                document.getElementById('entryModal').style.display = 'block';
+            });
+
+            entryGrid.appendChild(gridItem);
+        });
+}
+
+
+    // Example: Render all entries or filtered by category
+    renderEntries('Default');
+</script>
+
+
+<script>
+    function addEntry() {
+        console.log('Opening form modal');
+        document.getElementById('formModal').style.display = 'block';
+    }
+
+    function closeForm() {
+        console.log('Closing form modal');
+        document.getElementById('formModal').style.display = 'none';
+    }
+
+    document.getElementById('entryForm').addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        const formData = new FormData();
+
+        const title = document.getElementById('title').value;
+        const description = document.getElementById('description').value;
+        const category = document.getElementById('category').value;
+        const rating = document.getElementById('rating').value;
+        const file = document.getElementById('file').files[0];
+
+        const operations = {
+            query: `
+                mutation uploadFile($title: String!, $description: String!, $category: String!, $rating: String!, $file: Upload) {
+                    uploadFile(title: $title, description: $description, category: $category, rating: $rating, file: $file) {
+                        id
+                        title
+                        description
+                        category
+                        rating
+                        filePath
+                    }
+                }
+            `,
+            variables: {
+                title,
+                description,
+                category,
+                rating,
+                file: null
+            }
+        };
+        
+        const map = { '0': ['variables.file'] };
+
+        formData.append('operations', JSON.stringify(operations));
+        formData.append('map', JSON.stringify(map));
+        formData.append('0', file);
+
+        try {
+            const response = await fetch('http://127.0.0.1:4000/graphql', {
+                method: 'POST',
+                body: formData,
+            });
+
+            const result = await response.json();
+            if (result.errors) {
+                throw new Error('Failed to upload file');
+            }
+
+            document.getElementById('output').textContent = 'Upload successful! File path: ' + result.data.uploadFile.filePath;
+        } catch (error) {
+            console.error('Error during upload:', error);
+
+            const outputElement = document.getElementById('output');
+            if (outputElement) {
+                outputElement.textContent = 'Upload failed';
+            }
+        }
+
+        closeForm();
+    });
+</script>
