@@ -765,6 +765,14 @@
 				background-position: center center;
 			}
 
+			&.home {
+				background-image: url('../../collection/images/outer_wilds.jpg');
+			}
+
+			&.book {
+				background-image: url('../../collection/images/books_background.png');
+			}
+
 			&.one {
 				background-color: #81918E;
 				background-image: url('../../images/banner.jpg');
