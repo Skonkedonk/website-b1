@@ -10,24 +10,24 @@
 </head>
 
 <body class="is-preload">
+	<div id="showButtons" class="grid-container">
+		<div id="insertedHeader"></div>
+		<div id="main">
+			<section id="top" class="outer dark cover">
+				<h1>Books</h1>
+			</section>
+			<div id="entryFormContainer"></div>
 
-	<div id="insertedHeader"></div>
-	<div id="main">
-		<section id="top" class="outer dark cover">
-			<h1>Books</h1>
-		</section>
-		<div id="entryFormContainer"></div>
-
-		<div id="displayEntriesContainer"></div>
-		<!-- Include this in your entryForm.html or the main page where the form is loaded -->
-		<div id="output"></div>
-
+			<div id="displayEntriesContainer"></div>
+			<!-- Include this in your entryForm.html or the main page where the form is loaded -->
+			<div id="output"></div>
+		</div>
 	</div>
 	<script>
 		// Load the entry form into the specified container
 		loadHTML('modules/addEntries.html', 'entryFormContainer');
 		// Load the display entries into the specified container
-		loadHTML('modules/displayEntries_test.html', 'displayEntriesContainer', function () {
+		loadHTML('modules/displayEntries2.html', 'displayEntriesContainer', function () {
 			renderEntries('Books'); // Filter to show only 'Music' category entries
 		});
 		loadHTML('modules/header.html', 'insertedHeader');
