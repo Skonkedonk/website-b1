@@ -1,10 +1,10 @@
 <!-- addEntries.html -->
 <div>
     <!-- Form Modal -->
-    <div class="grid-item add-new-card">
+<!--    <div class="grid-item add-new-card">
         <button onclick="addEntry()"><span>+</span></button>
         <p>Always at this position</p>
-    </div>
+    </div>-->
     
 
     <div id="formModal" class="modal">
@@ -113,8 +113,7 @@
         <p>Always at this position</p>
     `;
     addNewCard.addEventListener('click', () => {
-        // Logic to add a new entry can be added here
-        alert('Add new entry!');
+        addEntry();
     });
     entryGrid.appendChild(addNewCard);
 
