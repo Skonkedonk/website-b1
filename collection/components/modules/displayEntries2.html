@@ -48,11 +48,27 @@
     }
 
     async function renderEntries(categoryFilter) {
-        const entries = await fetchEntries();
-        const entryGrid = document.getElementById('entryGrid');
-        entryGrid.innerHTML = ''; // Clear the grid before rendering
+    const entries = await fetchEntries();
+    const entryGrid = document.getElementById('entryGrid');
+    entryGrid.innerHTML = ''; // Clear the grid before rendering
 
-        entries.filter(entry => ((entry.category === categoryFilter) || (entry.category === 'Default'))).forEach(entry => {
+    // Add the "Add New" card
+    const addNewCard = document.createElement('div');
+    addNewCard.className = 'grid-item add-new-card';
+    addNewCard.innerHTML = `
+        <span>+</span>
+        <p>Always at this position</p>
+    `;
+    addNewCard.addEventListener('click', () => {
+        // Logic to add a new entry can be added here
+        alert('Add new entry!');
+    });
+    entryGrid.appendChild(addNewCard);
+
+    // Filter and add the rest of the entries
+    entries
+        .filter(entry => (entry.category === categoryFilter || entry.category === 'Default'))
+        .forEach(entry => {
             const gridItem = document.createElement('div');
             gridItem.className = 'grid-item';
 
@@ -74,7 +90,8 @@
 
             entryGrid.appendChild(gridItem);
         });
-    }
+}
+
 
     // Example: Render all entries or filtered by category
     renderEntries('Default');
