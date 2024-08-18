@@ -497,6 +497,37 @@
 	input[type="submit"],
 	input[type="reset"],
 	button,
+	
+	.add-new-card {
+		background-color: rgb(72, 160, 75); // Example green color for the add-new card
+		grid-column: span 1;
+		grid-row: 1 / span 2; /* Span the first two rows */
+		text-align: center;
+		padding: 20px;
+		color: white;
+		border-radius: 3em;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-direction: column;
+		background-color: rgba(0, 166, 255, 0);
+		border-color: aquamarine;
+		border: 0; 
+	
+		&:hover {
+			box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+			transform: translateY(-5px);	
+	}
+	}
+	
+	.add-new-card span {
+		font-size: 3em;
+	}
+	
+	#dynamic-cards {
+		display: contents; /* Ensures that grid items inside this container behave as direct children of the grid container */
+	}
+	
 	.button {
 		position: relative;
 		display: inline-block;
