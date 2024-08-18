@@ -107,7 +107,7 @@
 
     // Add the "Add New" card
     const addNewCard = document.createElement('div');
-    addNewCard.className = 'grid-item add-new-card';
+    addNewCard.className = 'add-new-card';
     addNewCard.innerHTML = `
         <span>+</span>
     `;
@@ -117,6 +117,11 @@
     entryGrid.appendChild(addNewCard);
 
     // Filter and add the rest of the entries
+    const gridRow = document.createElement('div');
+    gridRow.className = 'grid-row';
+    gridRow.id= 'dynamic-cards'
+    gridRow.innerHTML='';
+
     entries
         .filter(entry => (entry.category === categoryFilter || entry.category === 'Default'))
         .forEach(entry => {
@@ -139,8 +144,9 @@
                 document.getElementById('entryModal').style.display = 'block';
             });
 
-            entryGrid.appendChild(gridItem);
+            gridRow.appendChild(gridItem);
         });
+    entryGrid.appendChild(gridRow);
 }
 
 

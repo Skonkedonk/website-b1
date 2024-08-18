@@ -2126,12 +2126,19 @@ button span,
   }
 }
 .grid-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   gap: 20px;
   margin-top: 20px;
-  align-items: stretch;
-  justify-content: start;
+}
+
+.grid-row {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  width: 100%;
 }
 
 .grid-item {
@@ -2139,6 +2146,7 @@ button span,
   color: #fff;
   border-radius: 15px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 200px;
   padding: 15px;
   text-align: center;
   cursor: pointer;
