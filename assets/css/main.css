@@ -1528,7 +1528,7 @@ button,
   position: relative;
   display: inline-block;
   border-radius: 3em;
-  color: rgb(4, 255, 0) !important;
+  color: rgb(72, 160, 75) !important;
   font-size: 20pt;
   text-decoration: none;
   padding: 1.5em 1.5em 1.5em 1.5em;
@@ -1773,7 +1773,7 @@ button:active,
   color: rgba(255, 255, 255, 0.75);
 }
 #main > section.dark h1 {
-  color: rgba(72, 160, 97, 0.964);
+  color: rgb(72, 160, 75);
   font-size: 70pt;
 }
 #main > section.dark h2, #main > section.dark h3, #main > section.dark h4, #main > section.dark h5, #main > section.dark h6 {
