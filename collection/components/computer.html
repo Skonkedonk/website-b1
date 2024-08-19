@@ -12,7 +12,7 @@
 <body class="is-preload">
 	<div id="insertedHeader"></div>
 	<div id="main">
-		<section id="top" class="outer dark cover">
+		<section id="top" class="computer dark cover">
 			<h1>Computer</h1>
 		</section>
 		<div id="displayEntriesContainer"></div>
@@ -20,7 +20,7 @@
 
 	</div>
 	<script>
-		loadHTML('modules/addDisplay2.html', 'displayEntriesContainer', function () {
+		loadHTML('modules/addEntry_and_display.html', 'displayEntriesContainer', function () {
 			renderEntries('Computer'); // Filter to show only 'Music' category entries
 		});
 		loadHTML('modules/header.html', 'insertedHeader');
