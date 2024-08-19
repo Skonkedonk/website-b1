@@ -1829,8 +1829,6 @@ button span,
 }
 #main > section.computer {
   background-image: url("../../collection/images/zombies.jpg");
-  background-image: url("../../collection/images/perks.jpg");
-  background-image: url("../../collection/images/origins.jpg");
 }
 #main > section.tabletop {
   background-image: url("../../collection/images/outer_wilds.jpg");
@@ -2014,7 +2012,7 @@ button span,
     position: fixed;
     top: 0;
     width: 3.25em;
-    z-index: 1001;
+    z-index: 1002;
   }
   #headerToggle .toggle {
     position: absolute;
@@ -2126,7 +2124,8 @@ button span,
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   background-color: lavender;
   gap: 20px;
-  margin-top: 20px;
+  padding-top: 20px;
+  padding-left: 20px;
   align-items: stretch;
   justify-content: start;
 }
