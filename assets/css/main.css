@@ -1525,7 +1525,7 @@ input[type=submit],
 input[type=reset],
 button,
 .add-new-card {
-  background-color: rgb(72, 160, 75);
+  background-color: hsl(122, 36%, 61%);
   text-align: center;
   padding: 20px;
   color: white;
@@ -1799,6 +1799,7 @@ button span,
   color: rgba(255, 255, 255, 0.75);
 }
 #main > section.dark h1 {
+  color: rgb(230, 232, 229);
   font-size: 70pt;
 }
 #main > section.dark h2, #main > section.dark h3, #main > section.dark h4, #main > section.dark h5, #main > section.dark h6 {
