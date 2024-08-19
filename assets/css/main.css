@@ -1827,6 +1827,17 @@ button span,
 #main > section.book {
   background-image: url("../../collection/images/books_background.png");
 }
+#main > section.computer {
+  background-image: url("../../collection/images/zombies.jpg");
+  background-image: url("../../collection/images/perks.jpg");
+  background-image: url("../../collection/images/origins.jpg");
+}
+#main > section.tabletop {
+  background-image: url("../../collection/images/outer_wilds.jpg");
+}
+#main > section.music {
+  background-image: url("../../collection/images/outer_wilds.jpg");
+}
 #main > section.one {
   background-color: #81918E;
   background-image: url("../../images/banner.jpg");
