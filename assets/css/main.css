@@ -2257,6 +2257,7 @@ button span,
   margin: 0;
   display: flex;
   align-items: center;
+  justify-content: space-between;
 }
 .navbar-nav .nav-item {
   position: relative;
@@ -2265,43 +2266,46 @@ button span,
 .navbar-nav .nav-item a {
   text-decoration: none;
   padding: 10px 15px;
-  color: #333;
-  background-color: #f8f9fa;
+  color: #fff;
+  background-color: #333;
   border-radius: 5px;
   display: block;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 .navbar-nav .nav-item a:hover {
-  background-color: #e2e6ea;
-  color: #007bff;
+  background-color: #555;
+  color: #fff;
 }
 .navbar-nav .nav-item.dropdown .dropbtn {
   cursor: pointer;
+  background-color: #333;
 }
 .navbar-nav .nav-item.dropdown .dropbtn:hover {
-  background-color: #e2e6ea;
-  color: #007bff;
+  background-color: #555;
+  color: #fff;
 }
 .navbar-nav .nav-item.dropdown .dropdown-content {
   display: none;
   position: absolute;
-  background-color: #f8f9fa;
+  background-color: #333;
   min-width: 160px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
   z-index: 1000;
   border-radius: 5px;
   overflow: hidden;
+  top: 100%;
+  left: 0;
 }
 .navbar-nav .nav-item.dropdown .dropdown-content a {
   padding: 10px 15px;
   text-decoration: none;
   display: block;
-  color: #333;
+  color: #fff;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 .navbar-nav .nav-item.dropdown .dropdown-content a:hover {
-  background-color: #e2e6ea;
-  color: #007bff;
+  background-color: #555;
+  color: #fff;
 }
 .navbar-nav .nav-item.dropdown:hover .dropdown-content {
   display: block;
