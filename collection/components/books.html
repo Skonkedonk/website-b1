@@ -32,6 +32,24 @@
 		});
 		loadHTML('modules/header.html', 'insertedHeader');
 	</script>
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			document.body.classList.remove('is-preload');
+	
+			const body = document.body;
+			const toggleButton = document.getElementById('headerToggle');
+	
+			
+			console.log("Button is >> " + toggleButton.id + " | " + toggleButton + "CLICK");
+	
+			if (toggleButton) {
+				console.log("CLICK INSIDE");
+				toggleButton.addEventListener('click', function () {
+					body.classList.toggle('header-visible');
+				}); 
+			}
+		});
+	</script>
 </body>
 
 </html>
