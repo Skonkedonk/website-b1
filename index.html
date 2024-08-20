@@ -1,108 +1,116 @@
 <!DOCTYPE HTML>
 <html>
-	<head>
-		<title>HobbyDB</title>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="assets/css/main.css" />
-	</head>
-	<body class="is-preload">
 
-		<div id="headerToggle">
-			<span class="toggle"></span>
+<head>
+	<title>HobbyDB</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<link rel="stylesheet" href="assets/css/main.css" />
+</head>
+
+<body class="is-preload">
+
+	<div id="headerToggle">
+		<span class="toggle"></span>
+	</div>
+	<!-- Header -->
+	<div id="header">
+
+		<div class="top">
+
+			<!-- Logo -->
+			<div id="logo">
+				<span class="image avatar48"><img src="collection/images/website_icon.png" alt="" /></span>
+				<h1 id="title">HobbyDB</h1>
+			</div>
+
+			<!-- Nav -->
+			<!-- Nav -->
+			<nav id="nav">
+				<ul class="navbar-nav">
+					<li class="nav-item"><a href="#" id="top-link"><span class="icon solid fa-home">Intro</span></a>
+					</li>
+					<li class="nav-item">
+						<a href="collection/components/books.html" id="collection-link"><span
+								class="icon solid fa-book">Books</span></a>
+					</li>
+					<li class="nav-item"><a href="collection/components/computer.html" id="collection-link"><span
+								class="icon solid fa-tv">Computer</span></a></li>
+					<li class="nav-item"><a href="collection/components/music.html" id="collection-link"><span
+								class="icon solid fa-headphones">Music</span></a></li>
+					<li class="nav-item"><a href="collection/components/tabletop.html" id="collection-link"><span
+								class="icon solid fa-dice">Tabletop</span></a></li>
+					<li class="nav-item"><a href="#about" id="about-link"><span class="icon solid fa-user">About
+								Me</span></a></li>
+					<li class="nav-item"><a href="#contact" id="contact-link"><span
+								class="icon solid fa-envelope">Contact</span></a></li>
+				</ul>
+
+			</nav>
 		</div>
-		<!-- Header -->
-		<div id="header">
 
-			<div class="top">
-		
-				<!-- Logo -->
-					<div id="logo">
-						<span class="image avatar48"><img src="collection/images/website_icon.png" alt="" /></span>
-						<h1 id="title">HobbyDB</h1>
+		<div class="bottom">
+
+			<!-- Social Icons -->
+			<ul class="icons">
+				<li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
+				<li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
+				<li><a href="#" class="icon brands fa-github"><span class="label">Github</span></a></li>
+				<li><a href="#" class="icon brands fa-dribbble"><span class="label">Dribbble</span></a></li>
+				<li><a href="#" class="icon solid fa-envelope"><span class="label">Email</span></a></li>
+			</ul>
+
+		</div>
+
+	</div>
+
+	<!-- Main -->
+	<div id="main">
+
+		<!-- Intro -->
+		<section id="top" class="home dark cover">
+			<div class="container">
+				<header>
+					<h1><strong>HobbyDB</strong></h1>
+				</header>
+
+				<footer>
+					<a href="./#collection" class="button scrolly">Collection</a>
+				</footer>
+
+			</div>
+		</section>
+
+		<!-- Collection -->
+		<section id="collection" class="two">
+			<div class="container">
+
+				<header>
+					<h2>Collection</h2>
+				</header>
+
+				<p>Add more buttons and the sections to which they will lead here.</p>
+				<!-- Make form-esque thing to add entry. Name, icon, description, category, attached files. -->
+				<!-- I should add more "subpages" -->
+
+				<div class="row">
+					<div class="col-4 col-8-mobile">
+						<article class="item">
+							<a href="collection/components/music.html" class="image fit"><img
+									src="collection/images/pianote.jpg" alt="" /></a>
+							<header>
+								<h3>Music</h3>
+							</header>
+						</article>
+						<article class="item">
+							<a href="collection/components/books.html" class="image fit"><img
+									src="collection/images/placeholder_pika.jpg" alt="" /></a>
+							<header>
+								<h3>Books</h3>
+							</header>
+						</article>
 					</div>
-		
-				<!-- Nav -->
-					<!-- Nav -->
-					<nav id="nav">
-						<ul class="navbar-nav">
-							<li class="nav-item"><a href="#" id="top-link"><span class="icon solid fa-home">Intro</span></a></li>
-							<li class="nav-item dropdown">
-							  <a href="#" class="dropbtn"><span class="icon solid fa-th">Categories</span></a>
-							  <div class="dropdown-content">
-								<a href="collection/components/books.html" id="collection-link"><span class="icon solid fa-book">Books</span></a>
-								<a href="collection/components/computer.html" id="collection-link"><span class="icon solid fa-tv">Computer</span></a>
-								<a href="collection/components/music.html" id="collection-link"><span class="icon solid fa-headphones">Music</span></a>
-								<a href="collection/components/tabletop.html" id="collection-link"><span class="icon solid fa-dice">Tabletop</span></a>
-							  </div>
-							</li>
-							<li class="nav-item"><a href="#about" id="about-link"><span class="icon solid fa-user">About Me</span></a></li>
-							<li class="nav-item"><a href="#contact" id="contact-link"><span class="icon solid fa-envelope">Contact</span></a></li>
-						  </ul>
-												
-					</nav>
-			</div>
-		
-			<div class="bottom">
-		
-				<!-- Social Icons -->
-					<ul class="icons">
-						<li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
-						<li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
-						<li><a href="#" class="icon brands fa-github"><span class="label">Github</span></a></li>
-						<li><a href="#" class="icon brands fa-dribbble"><span class="label">Dribbble</span></a></li>
-						<li><a href="#" class="icon solid fa-envelope"><span class="label">Email</span></a></li>
-					</ul>
-		
-			</div>
-		
-		</div>
-
-		<!-- Main -->
-			<div id="main">
-
-				<!-- Intro -->
-					<section id="top" class="home dark cover">
-						<div class="container">
-							<header>
-								<h1><strong>HobbyDB</strong></h1>
-							</header>
-
-							<footer>
-								<a href="./#collection" class="button scrolly">Collection</a>
-							</footer>
-
-						</div>
-					</section>
-
-				<!-- Collection -->
-					<section id="collection" class="two">
-						<div class="container">
-
-							<header>
-								<h2>Collection</h2>
-							</header>
-
-							<p>Add more buttons and the sections to which they will lead here.</p>
-							<!-- Make form-esque thing to add entry. Name, icon, description, category, attached files. -->
-							<!-- I should add more "subpages" -->
-							
-							<div class="row">
-								<div class="col-4 col-8-mobile">
-									<article class="item">
-										<a href="collection/components/music.html" class="image fit"><img src="collection/images/pianote.jpg" alt="" /></a>
-										<header>
-											<h3>Music</h3>
-										</header>
-									</article>
-									<article class="item">
-										<a href="collection/components/books.html" class="image fit"><img src="collection/images/placeholder_pika.jpg" alt="" /></a>
-										<header>
-											<h3>Books</h3>
-										</header>
-									</article>
-								</div>
-								<!--<div class="col-4 col-12-mobile">
+					<!--<div class="col-4 col-12-mobile">
 									<article class="item">
 										<a href="#" class="image fit"><img src="images/pic04.jpg" alt="" /></a>
 										<header>
@@ -116,93 +124,97 @@
 										</header>
 									</article>
 								</div> -->
-								<div class="col-4 col-12-mobile">
-									<article class="item">
-										<a href="collection/components/books.html" class="image fit"><img src="collection/images/placeholder_pika.jpg" alt="" /></a>
-										<header>
-											<h3>Tabletop</h3>
-										</header>
-									</article>
-									<article class="item">
-										<a href="collection/components/books.html" class="image fit"><img src="collection/images/placeholder_pika.jpg" alt="" /></a>
-										<header>
-											<h3>Computer</h3>
-										</header>
-									</article>
-								</div>
-							</div>
-
-						</div>
-					</section>
-
-				<!-- About Me -->
-					<section id="about" class="three">
-						<div class="container">
-
+					<div class="col-4 col-12-mobile">
+						<article class="item">
+							<a href="collection/components/books.html" class="image fit"><img
+									src="collection/images/placeholder_pika.jpg" alt="" /></a>
 							<header>
-								<h2>About Me</h2>
+								<h3>Tabletop</h3>
 							</header>
+						</article>
+						<article class="item">
+							<a href="collection/components/books.html" class="image fit"><img
+									src="collection/images/placeholder_pika.jpg" alt="" /></a>
+							<header>
+								<h3>Computer</h3>
+							</header>
+						</article>
+					</div>
+				</div>
 
-							<a href="./#" class="image featured"><img src="collection/images/dog.jpg" alt="" /></a>
+			</div>
+		</section>
 
-							<p><!--Tincidunt eu elit diam magnis pretium accumsan etiam id urna. Ridiculus
+		<!-- About Me -->
+		<section id="about" class="three">
+			<div class="container">
+
+				<header>
+					<h2>About Me</h2>
+				</header>
+
+				<a href="./#" class="image featured"><img src="collection/images/dog.jpg" alt="" /></a>
+
+				<p><!--Tincidunt eu elit diam magnis pretium accumsan etiam id urna. Ridiculus
 							ultricies curae quis et rhoncus velit. Lobortis elementum aliquet nec vitae
 							laoreet eget cubilia quam non etiam odio tincidunt montes. Elementum sem
 							parturient nulla quam placerat viverra mauris non cum elit tempus ullamcorper
 							dolor. Libero rutrum ut lacinia donec curae mus vel quisque sociis nec
 							ornare iaculis.-->Expert at setting up websites from the GROUND up. No templates needed ever. Ever.</p>
 
+			</div>
+		</section>
+
+		<!-- Contact -->
+		<section id="contact" class="four">
+			<div class="container">
+
+				<header>
+					<h2>Contact</h2>
+				</header>
+
+				<p>This form does literally nothing.</p>
+
+				<form method="post" action="#">
+					<div class="row">
+						<div class="col-6 col-12-mobile"><input type="text" name="name" placeholder="Name" /></div>
+						<div class="col-6 col-12-mobile"><input type="text" name="email" placeholder="Email" /></div>
+						<div class="col-12">
+							<textarea name="message" placeholder="Message"></textarea>
 						</div>
-					</section>
-
-				<!-- Contact -->
-					<section id="contact" class="four">
-						<div class="container">
-
-							<header>
-								<h2>Contact</h2>
-							</header>
-
-							<p>This form does literally nothing.</p>
-
-							<form method="post" action="#">
-								<div class="row">
-									<div class="col-6 col-12-mobile"><input type="text" name="name" placeholder="Name" /></div>
-									<div class="col-6 col-12-mobile"><input type="text" name="email" placeholder="Email" /></div>
-									<div class="col-12">
-										<textarea name="message" placeholder="Message"></textarea>
-									</div>
-									<div class="col-12">
-										<input type="submit" value="Send Message" />
-									</div>
-								</div>
-							</form>
-
+						<div class="col-12">
+							<input type="submit" value="Send Message" />
 						</div>
-					</section>
+					</div>
+				</form>
 
 			</div>
+		</section>
 
-		<!-- Footer -->
-			<div id="footer">
+	</div>
 
-				<!-- Copyright -->
-					<ul class="copyright">
-						<li>&copy; Untitled. All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
-					</ul>
+	<!-- Footer -->
+	<div id="footer">
 
-			</div>
+		<!-- Copyright -->
+		<ul class="copyright">
+			<li>&copy; Untitled. All rights reserved.</li>
+			<li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+		</ul>
 
-		<!-- Scripts -->
-			<script src="collection/js/loadcontent.js"></script>
-			<!--<script> loadHTML('reusable/header.html', 'header');</script>-->
-			<script src="assets/js/jquery.min.js"></script>
-			<script src="assets/js/jquery.scrolly.min.js"></script>
-			<script src="assets/js/jquery.scrollex.min.js"></script>
-			<script src="assets/js/browser.min.js"></script>
-			<script src="assets/js/breakpoints.min.js"></script>
-			<script src="assets/js/util.js"></script>
-			<script src="assets/js/main.js"></script>
+	</div>
 
-	</body>
+	<!-- Scripts -->
+	<script src="collection/js/loadcontent.js"></script>
+	<!--<script> loadHTML('reusable/header.html', 'header');</script>-->
+	<script src="assets/js/jquery.min.js"></script>
+	<script src="assets/js/jquery.scrolly.min.js"></script>
+	<script src="assets/js/jquery.scrollex.min.js"></script>
+	<script src="assets/js/browser.min.js"></script>
+	<script src="assets/js/breakpoints.min.js"></script>
+	<script src="assets/js/util.js"></script>
+	<script src="assets/js/main.js"></script>
+
+</body>
+
 </html>
