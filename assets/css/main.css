@@ -2013,6 +2013,7 @@ button span,
     top: 0;
     width: 3.25em;
     z-index: 1001;
+    cursor: pointer;
   }
   #headerToggle .toggle {
     position: absolute;
@@ -2024,7 +2025,6 @@ button span,
     border: 0;
     background: rgba(128, 136, 144, 0.5);
     border-radius: 0.35em;
-    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
