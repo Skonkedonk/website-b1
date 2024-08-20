@@ -13,10 +13,13 @@ function loadHTML(url, elementId, callback) {
                 if (element) {
                     element.innerHTML = xhr.responseText;
                     console.log(`HTML content successfully injected into element with ID ${elementId}`);
-                    executeScripts(element); // Ensure scripts are executed
                     
                     if (callback) {
-                        callback(); // Call the callback after loading and executing scripts
+                        // Execute scripts and then run the callback
+                        executeScripts(element, callback);
+                    } else {
+                        // Just execute scripts
+                        executeScripts(element);
                     }
                 } else {
                     console.error(`Element with ID ${elementId} not found.`);
@@ -30,7 +33,7 @@ function loadHTML(url, elementId, callback) {
     xhr.send();
 }
 
-function executeScripts(element) {
+function executeScripts(element, callback) {
     var scripts = element.getElementsByTagName('script');
     console.log(`Executing ${scripts.length} scripts in the loaded content`);
     
@@ -47,5 +50,10 @@ function executeScripts(element) {
         }
         
         document.head.appendChild(script);
+        
+        // Once the script is appended and executed, you can call the callback
+        if (callback && i === scripts.length - 1) {
+            script.onload = callback;
+        }
     }
 }

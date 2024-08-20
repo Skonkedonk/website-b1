@@ -45,7 +45,7 @@
 </div>
 </div>
 <script>
-    /*document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function () {
         document.body.classList.remove('is-preload');
 
         const body = document.body;
@@ -60,20 +60,5 @@
                 body.classList.toggle('header-visible');
             }); 
         }
-    });*/window.onload = function () {
-    const body = document.body;
-    const toggleButton = document.getElementById('headerToggle');
-
-    if (toggleButton) {
-        console.log("Button found and script running on window.onload:", toggleButton);
-
-        toggleButton.addEventListener('click', function () {
-            console.log("Toggle button clicked");
-            body.classList.toggle('header-visible');
-            console.log("Body class 'header-visible' toggled:", body.classList.contains('header-visible'));
-        });
-    } else {
-        console.error("Toggle button not found!");
-    }
-};
+    });
 </script>
