@@ -14,13 +14,8 @@ function loadHTML(url, elementId, callback) {
                     element.innerHTML = xhr.responseText;
                     console.log(`HTML content successfully injected into element with ID ${elementId}`);
                     
-                    if (callback) {
-                        // Execute scripts and then run the callback
-                        executeScripts(element, callback);
-                    } else {
-                        // Just execute scripts
-                        executeScripts(element);
-                    }
+                    // Execute scripts after injecting the HTML
+                    executeScripts(element, callback);
                 } else {
                     console.error(`Element with ID ${elementId} not found.`);
                 }
@@ -35,25 +30,37 @@ function loadHTML(url, elementId, callback) {
 
 function executeScripts(element, callback) {
     var scripts = element.getElementsByTagName('script');
-    console.log(`Executing ${scripts.length} scripts in the loaded content`);
+    console.log(`Found ${scripts.length} scripts in the loaded content`);
+
+    var loadNextScript = function(index) {
+        if (index < scripts.length) {
+            var script = document.createElement('script');
+            script.type = 'text/javascript';
+            
+            if (scripts[index].src) {
+                script.src = scripts[index].src;
+                console.log(`Loading script from ${scripts[index].src}`);
+
+                // Ensure the next script runs after the current one loads
+                script.onload = function() {
+                    loadNextScript(index + 1);
+                };
+            } else {
+                script.innerHTML = scripts[index].innerHTML;
+                console.log('Executing inline script');
+                document.head.appendChild(script);
+                
+                // Move to the next script immediately
+                loadNextScript(index + 1);
+            }
+            
+            document.head.appendChild(script);
+        } else if (callback) {
+            console.log('All scripts executed, calling the callback');
+            callback();
+        }
+    };
     
-    for (var i = 0; i < scripts.length; i++) {
-        var script = document.createElement('script');
-        script.type = 'text/javascript';
-        
-        if (scripts[i].src) {
-            script.src = scripts[i].src;
-            console.log(`Loading script from ${scripts[i].src}`);
-        } else {
-            script.innerHTML = scripts[i].innerHTML;
-            console.log('Executing inline script');
-        }
-        
-        document.head.appendChild(script);
-        
-        // Once the script is appended and executed, you can call the callback
-        if (callback && i === scripts.length - 1) {
-            script.onload = callback;
-        }
-    }
+    // Start loading/executing scripts
+    loadNextScript(0);
 }
