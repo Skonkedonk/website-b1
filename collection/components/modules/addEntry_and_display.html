@@ -107,13 +107,13 @@
         addEntry();
     });
     entryGrid.appendChild(addNewCard);
-
+/*
     // Filter and add the rest of the entries
     const gridRow = document.createElement('div');
     gridRow.className = 'grid-row';
     gridRow.id= 'dynamic-cards'
     gridRow.innerHTML='';
-
+*/
     
     entries
         //.filter(entry => (entry.category === categoryFilter || entry.category === 'Default'))
@@ -138,9 +138,10 @@
                 document.getElementById('entryModal').style.display = 'block';
             });
 
-            gridRow.appendChild(gridItem);
+           // gridRow.appendChild(gridItem);
+           entryGrid.appendChild(gridItem);
         });
-    entryGrid.appendChild(gridRow);
+   
 }
 
 
