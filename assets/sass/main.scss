@@ -311,13 +311,13 @@
 		}
 
 		&.avatar48 {
-			width: 48px;
-			height: 48px;
+			width: 5em;
+			height: 5em;
 			background: #f00;
 
 			img {
-				width: 48px;
-				height: 48px;
+				width: inherit;
+				height: inherit;
 			}
 		}
 
@@ -667,7 +667,7 @@
 		}
 
 		.image {
-			position: absolute;
+			position: relative;
 			left: 0;
 			top: 0;
 		}
@@ -1286,7 +1286,7 @@
 .close {
     color: #aaa;
     float: right;
-    font-size: 28px;
+    font-size: 50px;
     font-weight: bold;
     cursor: pointer;
 
