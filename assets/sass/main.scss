@@ -1206,9 +1206,10 @@
         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
 		//grid-auto-rows: 250px;
 		background-color: lavender;
-        gap: 20px; 
-        padding-top: 20px;
-		padding-left: 20px; 
+        gap: 2em; 
+        padding-top: 2em;
+		padding-left: 2em;
+		padding-bottom: 20em; 
         align-items: stretch;
         justify-content: start;
     }
@@ -1235,10 +1236,10 @@
     
         img {
             width: 100%;
-            height: auto;
+            height: 75%;
             object-fit: cover;
-            border-radius: 10px;
-            margin-bottom: 10px;
+            border-radius: inherit;
+            margin-bottom: 1em;
         }
     
         h3 {
