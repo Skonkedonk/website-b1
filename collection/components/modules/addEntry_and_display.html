@@ -93,6 +93,7 @@
     }
 
     async function renderEntries(categoryFilter) {
+        console.log("Rendering");
     const entries = await fetchEntries();
     const entryGrid = document.getElementById('entryGrid');
     entryGrid.innerHTML = ''; // Clear the grid before rendering
@@ -107,13 +108,6 @@
         addEntry();
     }); 
     entryGrid.appendChild(addNewCard);
-/*
-    // Filter and add the rest of the entries
-    const gridRow = document.createElement('div');
-    gridRow.className = 'grid-row';
-    gridRow.id= 'dynamic-cards'
-    gridRow.innerHTML='';
-*/ 
 
     entries.forEach(preEntry => {console.log("ENTRYCAT: " + preEntry.category); console.log("CATFILTER: " + categoryFilter); console.log(categoryFilter===preEntry.category);});
     
@@ -148,7 +142,7 @@
 
 
     // Example: Render all entries or filtered by category
-    renderEntries('Default');
+    //renderEntries('Default');
 </script>
 
 
