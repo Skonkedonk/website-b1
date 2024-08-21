@@ -114,10 +114,11 @@
     gridRow.id= 'dynamic-cards'
     gridRow.innerHTML='';
 
-    console.log("Categoryfilter is = " + categoryFilter + " | Entry.cat = " + entry.category);
+    
     entries
         .filter(entry => (entry.category === categoryFilter || entry.category === 'Default'))
         .forEach(entry => {
+            console.log("Categoryfilter is = " + categoryFilter + " | Entry.cat = " + entry.category);
             const gridItem = document.createElement('div');
             gridItem.className = 'grid-item';
 
