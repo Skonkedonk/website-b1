@@ -114,6 +114,8 @@
     gridRow.id= 'dynamic-cards'
     gridRow.innerHTML='';
 */
+
+    entries.forEach(preEntry => {console.log("ENTRYCAT: " + preEntry.category);});
     
     entries
         .filter(entry => (entry.category === categoryFilter || entry.category === 'Default'))
