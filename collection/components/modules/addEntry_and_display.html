@@ -115,7 +115,7 @@
     gridRow.innerHTML='';
 */
 
-    entries.forEach(preEntry => {console.log("ENTRYCAT: " + preEntry.category);});
+    entries.forEach(preEntry => {console.log("ENTRYCAT: " + preEntry.category); console.log("CATFILTER: " + categoryFilter); console.log(categoryFilter===preEntry.category);});
     
     entries
         .filter(entry => (entry.category === categoryFilter || entry.category === 'Default'))
