@@ -68,7 +68,8 @@
         const editButton = document.getElementById('edit-btn');
 
         if (editButton) {
-            console.log("EDITING");
+            addEventListener('click', function () {
+                console.log("Edit button clicked");});
         }
     });
 
@@ -77,7 +78,8 @@
         const deleteButton = document.getElementById('delete-btn');
 
         if (deleteButton) {
-            console.log("DELETING");
+            addEventListener('click', function() {
+                console.log("Delete button clicked");});
         }
     });
 
