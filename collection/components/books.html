@@ -19,13 +19,11 @@
 		<div id="displayEntriesContainer"></div>
 
 	</div>
-	<!-- Include this in your entryForm.html or the main page where the form is loaded -->
 	<div id="output"></div>
-	</div>
-	</div>
+
 	<script>
 		loadHTML('modules/addEntry_and_display.html', 'displayEntriesContainer', function () {
-			renderEntries('Books'); 
+			renderEntries('Books');
 		});
 		loadHTML('modules/header.html', 'insertedHeader');
 	</script>

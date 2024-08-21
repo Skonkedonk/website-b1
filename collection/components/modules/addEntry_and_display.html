@@ -118,7 +118,7 @@
     entries.forEach(preEntry => {console.log("ENTRYCAT: " + preEntry.category); console.log("CATFILTER: " + categoryFilter); console.log(categoryFilter===preEntry.category);});
     
     entries
-        .filter(entry => (entry.category === categoryFilter || entry.category === 'Default'))
+        .filter(entry => (entry.category === categoryFilter))
         .forEach(entry => {
             console.log("Categoryfilter is = " + categoryFilter + " | Entry.cat = " + entry.category);
             const gridItem = document.createElement('div');

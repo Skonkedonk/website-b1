@@ -4,7 +4,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-	<title>Books</title>
+	<title>miscellaneous</title>
 	<script src="../js/loadcontent.js"></script>
 	<link rel="stylesheet" href="../../assets/css/main.css" />
 </head>
@@ -12,8 +12,8 @@
 <body class="is-preload">
 	<div id="insertedHeader"></div>
 	<div id="main">
-		<section id="top" class="computer dark cover">
-			<h1>Games</h1>
+		<section id="top" class="book dark cover">
+			<h1>Miscellaneous</h1>
 		</section>
 
 		<div id="displayEntriesContainer"></div>
@@ -23,7 +23,7 @@
 
 	<script>
 		loadHTML('modules/addEntry_and_display.html', 'displayEntriesContainer', function () {
-			renderEntries('Computer');
+			renderEntries('Default');
 		});
 		loadHTML('modules/header.html', 'insertedHeader');
 	</script>
