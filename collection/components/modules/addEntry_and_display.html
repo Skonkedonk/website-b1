@@ -36,7 +36,7 @@
 
                 <label for="file">Upload Image:</label>
                 <input type="file" id="file" name="image" accept=".jpg, .jpeg, .png">
-                
+
                 <button type="submit">Submit</button>
             </form>
         </div>
@@ -63,6 +63,24 @@
 
 
 <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const body = document.body;
+        const editButton = document.getElementById('edit-btn');
+
+        if (editButton) {
+            console.log("EDITING");
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const body = document.body;
+        const deleteButton = document.getElementById('delete-btn');
+
+        if (deleteButton) {
+            console.log("DELETING");
+        }
+    });
+
     function closeModal() {
         document.getElementById('entryModal').style.display = 'none';
     }
@@ -94,51 +112,51 @@
 
     async function renderEntries(categoryFilter) {
         console.log("Rendering");
-    const entries = await fetchEntries();
-    const entryGrid = document.getElementById('entryGrid');
-    entryGrid.innerHTML = ''; // Clear the grid before rendering
+        const entries = await fetchEntries();
+        const entryGrid = document.getElementById('entryGrid');
+        entryGrid.innerHTML = ''; // Clear the grid before rendering
 
-    // Add the "Add New" card
-    const addNewCard = document.createElement('div');
-    addNewCard.className = 'add-new-card';
-    addNewCard.innerHTML = `
+        // Add the "Add New" card
+        const addNewCard = document.createElement('div');
+        addNewCard.className = 'add-new-card';
+        addNewCard.innerHTML = `
         <span>New Entry</span>
     `;
-    addNewCard.addEventListener('click', () => { 
-        addEntry();
-    }); 
-    entryGrid.appendChild(addNewCard);
+        addNewCard.addEventListener('click', () => {
+            addEntry();
+        });
+        entryGrid.appendChild(addNewCard);
 
-    entries.forEach(preEntry => {console.log("ENTRYCAT: " + preEntry.category); console.log("CATFILTER: " + categoryFilter); console.log(categoryFilter===preEntry.category);});
-    
-    entries
-        .filter(entry => (entry.category === categoryFilter))
-        .forEach(entry => {
-            console.log("Categoryfilter is = " + categoryFilter + " | Entry.cat = " + entry.category);
-            const gridItem = document.createElement('div');
-            gridItem.className = 'grid-item';
+        entries.forEach(preEntry => { console.log("ENTRYCAT: " + preEntry.category); console.log("CATFILTER: " + categoryFilter); console.log(categoryFilter === preEntry.category); });
 
-            gridItem.innerHTML = `
+        entries
+            .filter(entry => (entry.category === categoryFilter))
+            .forEach(entry => {
+                console.log("Categoryfilter is = " + categoryFilter + " | Entry.cat = " + entry.category);
+                const gridItem = document.createElement('div');
+                gridItem.className = 'grid-item';
+
+                gridItem.innerHTML = `
                 <img src="https://skonkedonk.github.io/website-b1/${entry.filePath}" alt="${entry.title}">
                 <h3>${entry.title}</h3>
                 <p><strong>Category:</strong> ${entry.category}</p>
                 <p class="rating"><strong>Rating:</strong> ${entry.rating}/10</p>
             `;
 
-            gridItem.addEventListener('click', () => {
-                document.getElementById('modalTitle').textContent = entry.title;
-                document.getElementById('modalImage').src = "https://skonkedonk.github.io/website-b1/" + entry.filePath;
-                document.getElementById('modalDescription').textContent = entry.description;
-                document.getElementById('modalCategory').textContent = entry.category;
-                document.getElementById('modalRating').textContent = entry.rating;
-                document.getElementById('entryModal').style.display = 'block';
+                gridItem.addEventListener('click', () => {
+                    document.getElementById('modalTitle').textContent = entry.title;
+                    document.getElementById('modalImage').src = "https://skonkedonk.github.io/website-b1/" + entry.filePath;
+                    document.getElementById('modalDescription').textContent = entry.description;
+                    document.getElementById('modalCategory').textContent = entry.category;
+                    document.getElementById('modalRating').textContent = entry.rating;
+                    document.getElementById('entryModal').style.display = 'block';
+                });
+
+                // gridRow.appendChild(gridItem);
+                entryGrid.appendChild(gridItem);
             });
 
-           // gridRow.appendChild(gridItem);
-           entryGrid.appendChild(gridItem);
-        });
-   
-}
+    }
 
 
     // Example: Render all entries or filtered by category
@@ -189,7 +207,7 @@
                 file: null
             }
         };
-        
+
         const map = { '0': ['variables.file'] };
 
         formData.append('operations', JSON.stringify(operations));

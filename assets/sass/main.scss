@@ -511,7 +511,7 @@
     flex-direction: column;
     cursor: pointer;
     transition: box-shadow 0.3s ease, transform 0.3s ease;
-    font-size: 2em;
+    font-size: 1em;
 
     &:hover {
         box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
@@ -1273,11 +1273,11 @@
 
 .modal-content {
     background-color: whitesmoke; 
-    margin: 2% auto;
+    margin: 1% auto;
     padding: 5px;
     border: 5px solid lavender;
     width: 65%; /* Increased width */
-    max-width: 1200px; /* Increased max-width */
+    max-width: 24em; /* Increased max-width */
     height: auto; /* Ensure the height can expand with content */
     border-radius: 10px;
     text-align: center;
@@ -1321,8 +1321,8 @@
         background-color: #4CAF50;
         color: white;
         border: none;
-        border-radius: 5px;
-        padding: 10px 20px;
+        border-radius: 0.2em;
+        padding: 0.2em 0.2em;
         cursor: pointer;
         transition: background-color 0.3s ease;
 
