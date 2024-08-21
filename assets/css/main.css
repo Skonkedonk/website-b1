@@ -83,10 +83,10 @@ html {
 body {
   background: #fff;
   font-family: "Source Sans Pro", sans-serif;
-  font-size: 19pt;
+  font-size: 22pt;
   font-weight: 300;
   line-height: 1.75em;
-  color: #888;
+  color: black;
 }
 body.is-preload *, body.is-preload *:before, body.is-preload *:after {
   -moz-animation: none !important;
@@ -2183,11 +2183,11 @@ button span,
 }
 
 .modal-content {
-  background-color: blanchedalmond;
-  margin: 5% auto;
-  padding: 20px;
-  border: 1px solid #888;
-  width: 80%; /* Increased width */
+  background-color: whitesmoke;
+  margin: 2% auto;
+  padding: 5px;
+  border: 5px solid lavender;
+  width: 65%; /* Increased width */
   max-width: 1200px; /* Increased max-width */
   height: auto; /* Ensure the height can expand with content */
   border-radius: 10px;
@@ -2209,7 +2209,7 @@ button span,
 .modal-content h3 {
   margin-bottom: 10px;
   font-size: 2em;
-  border-bottom: 1px solid #ccc; /* Line under the title */
+  border-bottom: 1px solid black; /* Line under the title */
   padding-bottom: 10px;
   overflow-wrap: break-word;
 }
@@ -2223,7 +2223,7 @@ button span,
   justify-content: flex-end;
   gap: 10px;
   margin-top: 20px;
-  border-top: 1px solid #ccc; /* Line above the buttons */
+  border-top: 1px solid black; /* Line above the buttons */
   padding-top: 10px;
 }
 .card-buttons button {
