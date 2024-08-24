@@ -62,6 +62,10 @@ app.post('collection/uploads', upload.single('file'), (req, res) => {
 const typeDefs = gql`
   scalar Upload
 
+  type Mutation {
+    deleteEntry(id: ID!): Entry
+  }
+
   type Entry {
     id: ID!
     title: String!
@@ -90,19 +94,34 @@ const typeDefs = gql`
 
 const resolvers = {
   Upload,
-
   Query: {
     entries: async () => await Entry.find(),
   },
   Mutation: {
+    // Refactored deleteEntry mutation
+    deleteEntry: async (parent, { id }) => {
+      try {
+        const entry = await Entry.findById(id);
+        if (!entry) {
+          throw new Error(`Entry with ID ${id} not found.`);
+        }
+
+        await Entry.deleteOne({ _id: id });
+        return entry; // Return the deleted entry for confirmation
+      } catch (error) {
+        console.error('Error during deletion:', error);
+        throw new Error('Failed to delete entry');
+      }
+    },
+    // Existing uploadFile mutation with improvements
     uploadFile: async (parent, { title, description, category, rating, file }) => {
-      const defaultFilePath = path.join(__dirname, '/collection/images', 'placeholder_pika.jpg'); 
-      
+      const defaultFilePath = path.join(__dirname, '/collection/images', 'placeholder_pika.jpg');
+
       console.log("STARTED: " + __dirname + " default is: " + defaultFilePath);
 
-      filePath = 'collection/images/placeholder_pika.jpg';
-      fileType = 'image/jpeg';
-      fileSize = fs.statSync(defaultFilePath).size;
+      let filePath = 'collection/images/placeholder_pika.jpg';
+      let fileType = 'image/jpeg';
+      let fileSize = fs.statSync(defaultFilePath).size;
 
       try {
         if (file) {
@@ -168,6 +187,9 @@ const resolvers = {
     },
   },
 };
+
+module.exports = resolvers;
+
 
 
 async function startServer() {
