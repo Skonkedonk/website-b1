@@ -63,26 +63,6 @@
 
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const body = document.body;
-        const editButton = document.getElementById('edit-btn');
-
-        if (editButton) {
-            addEventListener('click', function () {
-                console.log("Edit button clicked");});
-        }
-    });
-
-    document.addEventListener('DOMContentLoaded', function () {
-        const body = document.body;
-        const deleteButton = document.getElementById('delete-btn');
-
-        if (deleteButton) {
-            addEventListener('click', function() {
-                console.log("Delete button clicked");});
-        }
-    });
-
     function closeModal() {
         document.getElementById('entryModal').style.display = 'none';
     }
@@ -121,30 +101,32 @@
         // Add the "Add New" card
         const addNewCard = document.createElement('div');
         addNewCard.className = 'add-new-card';
-        addNewCard.innerHTML = `
-        <span>New Entry</span>
-    `;
+        addNewCard.innerHTML = `<span>New Entry</span> `;
         addNewCard.addEventListener('click', () => {
             addEntry();
         });
         entryGrid.appendChild(addNewCard);
 
-        entries.forEach(preEntry => { console.log("ENTRYCAT: " + preEntry.category); console.log("CATFILTER: " + categoryFilter); console.log(categoryFilter === preEntry.category); });
-
         entries
             .filter(entry => (entry.category === categoryFilter))
             .forEach(entry => {
-                console.log("Categoryfilter is = " + categoryFilter + " | Entry.cat = " + entry.category);
                 const gridItem = document.createElement('div');
                 gridItem.className = 'grid-item';
+
+                gridItem.setAttribute('data-id', entry.id); // Set the unique ID for the card
 
                 gridItem.innerHTML = `
                 <img src="https://skonkedonk.github.io/website-b1/${entry.filePath}" alt="${entry.title}">
                 <h3>${entry.title}</h3>
                 <p><strong>Category:</strong> ${entry.category}</p>
                 <p class="rating"><strong>Rating:</strong> ${entry.rating}/10</p>
+                
+            <button class="delete-btn">Delete</button> <!-- Add delete button -->
             `;
-
+                gridItem.querySelector('.delete-btn').addEventListener('click', () => {
+                    const entryId = entry.id; // Get the ID of the entry
+                    deleteEntry(entryId); // Call the delete function
+                });
                 gridItem.addEventListener('click', () => {
                     document.getElementById('modalTitle').textContent = entry.title;
                     document.getElementById('modalImage').src = "https://skonkedonk.github.io/website-b1/" + entry.filePath;
@@ -157,11 +139,8 @@
                 // gridRow.appendChild(gridItem);
                 entryGrid.appendChild(gridItem);
             });
-
     }
 
-
-    // Example: Render all entries or filtered by category
     //renderEntries('Default');
 </script>
 
@@ -239,4 +218,43 @@
 
         closeForm();
     });
+
+    async function deleteEntry(entryId) {
+        const confirmed = confirm('Are you sure you want to delete this entry?'); // Optional: confirm deletion
+        if (!confirmed) return;
+
+        try {
+            const response = await fetch('http://127.0.0.1:4000/graphql', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    query: `
+                mutation deleteEntry($id: ID!) {
+                    deleteEntry(id: $id) {
+                        id
+                        title
+                    }
+                }
+            `,
+                    variables: {
+                        id: entryId
+                    }
+                })
+            });
+
+            const result = await response.json();
+            if (result.errors) {
+                throw new Error('Failed to delete entry');
+            }
+
+            alert(`Entry with ID ${entryId} deleted successfully!`);
+            renderEntries('Books'); // Re-render the entries after deletion to update the UI
+        } catch (error) {
+            console.error('Error during deletion:', error);
+            alert('An error occurred while deleting the entry.');
+        }
+    }
+
 </script>
