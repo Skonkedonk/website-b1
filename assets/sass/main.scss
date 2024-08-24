@@ -1243,16 +1243,6 @@
             border-radius: inherit;
             margin-bottom: 1em;
         }
-
-		img {
-			width: 100%;                 // Makes the image take the full width of the card
-			height: auto;                // Maintains aspect ratio
-			aspect-ratio: 2 / 3;         // Defines a consistent aspect ratio of 1:1.5
-			object-fit: cover;           // Ensures the image covers the entire space, maintaining the aspect ratio
-			object-position: center;     // Centers the image within the card
-			border-radius: 10px;         // Optional: add some border-radius for aesthetic consistency
-			margin-bottom: 10px;         // Space between the image and the rest of the content
-		}
     
         h3 {
             font-size: 1.5em;
