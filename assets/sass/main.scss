@@ -1290,7 +1290,7 @@
     padding: 5px;
     border: 5px solid lavender;
     width: 65%; /* Increased width */
-    max-width: 24em; /* Increased max-width */
+    max-width: 22em; /* Increased max-width */
     height: auto; /* Ensure the height can expand with content */
     border-radius: 10px;
     text-align: center;
@@ -1358,4 +1358,63 @@
     max-width: 100%;
     border-radius: 5px;
     margin-bottom: 10px;
+}
+
+/* Navbar Styling */
+.navbar-nav {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    .nav-item {
+        margin: 0; 
+        padding: 0;
+        position: relative; /* Ensure dropdown positions relative to parent */
+        
+        a {
+            display: block;
+            color: #aaa;
+            text-decoration: none;
+            padding: 10px 15px;
+            transition: color 0.3s;
+
+            &:hover {
+                color: #fff; /* Change color on hover */
+            }
+        }
+    }
+
+    /* Dropdown Menu */
+    .dropdown {
+        .dropbtn {
+            cursor: pointer;
+        }
+
+        .dropdown-content {
+            display: none; /* Hidden by default */
+            position: absolute;
+            left: 0;
+            background-color: #333; /* Background color of dropdown */
+            min-width: 200px; /* Minimum width of dropdown */
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+            z-index: 1000; /* Make sure it stays above other elements */
+            
+            a {
+                color: #aaa; /* Text color */
+                padding: 10px 15px;
+                text-decoration: none;
+                display: block;
+                transition: background-color 0.3s;
+
+                &:hover {
+                    background-color: #444; /* Background color on hover */
+                }
+            }
+        }
+
+        /* Show dropdown on hover */
+        &:hover .dropdown-content {
+            display: block; /* Show dropdown when hovering over parent */
+        }
+    }
 }

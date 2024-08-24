@@ -2127,7 +2127,7 @@ button span,
   gap: 2em;
   padding-top: 2em;
   padding-left: 2em;
-  padding-bottom: 20em;
+  padding-bottom: 30em;
   align-items: stretch;
   justify-content: start;
 }
@@ -2152,9 +2152,20 @@ button span,
 .grid-item img {
   width: 100%;
   height: 75%;
+  aspect-ratio: 2/3;
   object-fit: cover;
+  object-position: center;
   border-radius: inherit;
   margin-bottom: 1em;
+}
+.grid-item img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 2/3;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 10px;
+  margin-bottom: 10px;
 }
 .grid-item h3 {
   font-size: 1.5em;
@@ -2189,7 +2200,7 @@ button span,
   padding: 5px;
   border: 5px solid lavender;
   width: 65%; /* Increased width */
-  max-width: 24em; /* Increased max-width */
+  max-width: 22em; /* Increased max-width */
   height: auto; /* Ensure the height can expand with content */
   border-radius: 10px;
   text-align: center;
@@ -2251,6 +2262,57 @@ button span,
   max-width: 100%;
   border-radius: 5px;
   margin-bottom: 10px;
+}
+
+/* Navbar Styling */
+.navbar-nav {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  /* Dropdown Menu */
+}
+.navbar-nav .nav-item {
+  margin: 0;
+  padding: 0;
+  position: relative; /* Ensure dropdown positions relative to parent */
+}
+.navbar-nav .nav-item a {
+  display: block;
+  color: #aaa;
+  text-decoration: none;
+  padding: 10px 15px;
+  transition: color 0.3s;
+}
+.navbar-nav .nav-item a:hover {
+  color: #fff; /* Change color on hover */
+}
+.navbar-nav .dropdown {
+  /* Show dropdown on hover */
+}
+.navbar-nav .dropdown .dropbtn {
+  cursor: pointer;
+}
+.navbar-nav .dropdown .dropdown-content {
+  display: none; /* Hidden by default */
+  position: absolute;
+  left: 0;
+  background-color: #333; /* Background color of dropdown */
+  min-width: 200px; /* Minimum width of dropdown */
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+  z-index: 1000; /* Make sure it stays above other elements */
+}
+.navbar-nav .dropdown .dropdown-content a {
+  color: #aaa; /* Text color */
+  padding: 10px 15px;
+  text-decoration: none;
+  display: block;
+  transition: background-color 0.3s;
+}
+.navbar-nav .dropdown .dropdown-content a:hover {
+  background-color: #444; /* Background color on hover */
+}
+.navbar-nav .dropdown:hover .dropdown-content {
+  display: block; /* Show dropdown when hovering over parent */
 }
 
 /*# sourceMappingURL=main.css.map */
