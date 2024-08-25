@@ -174,69 +174,70 @@ const resolvers = {
       let filePath = 'collection/images/placeholder_pika.jpg';
       let fileType = 'image/jpeg';
       let fileSize = fs.statSync(defaultFilePath).size;
-
+  
       try {
-        // Apply defaults if the input is missing or invalid
-        title = title || "Entry";
-        description = description || "An incredible description!";
-        category = category || "Default";
-        rating = rating || "?"; // Adjust as needed for valid rating defaults
-
-        if (file) {
-          const resolvedFile = await file.promise;
-          if (resolvedFile && resolvedFile.createReadStream && resolvedFile.filename && resolvedFile.mimetype) {
-            const { createReadStream, filename, mimetype } = resolvedFile;
-
-            const uploadsDir = path.join(__dirname, '/collection/uploads/');
-            if (!fs.existsSync(uploadsDir)) {
-              fs.mkdirSync(uploadsDir, { recursive: true });
-              console.log('Uploads directory created:', uploadsDir);
-            }
-
-            const outputPath = path.join(uploadsDir, filename);
-            const stream = createReadStream();
-
-            await new Promise((resolve, reject) => {
-              const out = fs.createWriteStream(outputPath);
-              stream.pipe(out);
-              out.on('finish', resolve);
-              out.on('error', reject);
-            });
-
-            filePath = `collection/uploads/${filename}`;
-            fileType = mimetype;
-            fileSize = fs.statSync(outputPath).size;
-            console.log('File saved successfully:', { filePath, fileType, fileSize });
+          // Apply defaults if the input is missing or invalid
+          title = title || "Entry";
+          description = description || "An incredible description!";
+          category = category || "Default";
+          rating = rating || "?"; // Adjust as needed for valid rating defaults
+  
+          if (file) {
+              const resolvedFile = await file.promise;
+              if (resolvedFile && resolvedFile.createReadStream && resolvedFile.filename && resolvedFile.mimetype) {
+                  const { createReadStream, filename, mimetype } = resolvedFile;
+  
+                  const uploadsDir = path.join(__dirname, '/collection/uploads/');
+                  if (!fs.existsSync(uploadsDir)) {
+                      fs.mkdirSync(uploadsDir, { recursive: true });
+                      console.log('Uploads directory created:', uploadsDir);
+                  }
+  
+                  const outputPath = path.join(uploadsDir, filename);
+                  const stream = createReadStream();
+  
+                  await new Promise((resolve, reject) => {
+                      const out = fs.createWriteStream(outputPath);
+                      stream.pipe(out);
+                      out.on('finish', resolve);
+                      out.on('error', reject);
+                  });
+  
+                  filePath = `collection/uploads/${filename}`;
+                  fileType = mimetype;
+                  fileSize = fs.statSync(outputPath).size;
+                  console.log('File saved successfully:', { filePath, fileType, fileSize });
+              } else {
+                  console.log('File is present but missing necessary properties, using default file.');
+              }
           } else {
-            console.log('File is present but missing necessary properties, using default file.');
+              console.log('No file uploaded. Using default file.');
           }
-        } else {
-          console.log('No file uploaded. Using default file.');
-        }
       } catch (error) {
-        console.error("Error processing file upload:", error);
-        throw new Error("Failed to process file upload");
+          console.error("Error processing file upload:", error);
+          throw new Error("Failed to process file upload");
       }
-
+  
       const entry = new Entry({
-        title,
-        description,
-        category,
-        filePath,
-        fileType,
-        fileSize,
-        rating,
+          title,
+          description,
+          category,
+          filePath,
+          fileType,
+          fileSize,
+          rating,
       });
-
+  
       try {
-        const savedEntry = await entry.save();
-        console.log('Entry saved to MongoDB:', savedEntry);
-        return savedEntry;
+          const savedEntry = await entry.save();
+          console.log('Entry saved to MongoDB:', savedEntry);
+          return savedEntry;
       } catch (error) {
-        console.error("Error saving entry to MongoDB:", error);
-        throw new Error("Failed to save entry");
+          console.error("Error saving entry to MongoDB:", error);
+          throw new Error("Failed to save entry");
       }
-    }
+  }
+  
   },
 };
 
