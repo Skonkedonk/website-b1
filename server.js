@@ -65,11 +65,11 @@ mongoose.connect('mongodb://127.0.0.1:27017/graphql')
 
 // Simple file upload route for testing
 app.post('collection/uploads', upload.single('file'), (req, res) => {
-    if (req.file) {
-        res.json({ message: 'File uploaded successfully', file: req.file });
-    } else {
-        res.status(400).json({ message: 'No file uploaded' });
-    }
+  if (req.file) {
+    res.json({ message: 'File uploaded successfully', file: req.file });
+  } else {
+    res.status(400).json({ message: 'No file uploaded' });
+  }
 });
 
 // Define GraphQL schema
@@ -169,37 +169,27 @@ const resolvers = {
         throw new Error('Failed to update entry');
       }
     },
-    // Existing uploadFile mutation with improvements
     uploadFile: async (parent, { title, description, category, rating, file }) => {
       const defaultFilePath = path.join(__dirname, '/collection/images', 'placeholder_pika.jpg');
-
-      console.log("STARTED: " + __dirname + " default is: " + defaultFilePath);
-
       let filePath = 'collection/images/placeholder_pika.jpg';
       let fileType = 'image/jpeg';
       let fileSize = fs.statSync(defaultFilePath).size;
 
       try {
         if (file) {
-          // Resolve the file promise to get the actual file object
           const resolvedFile = await file.promise;
-
-          // Check if the resolved file has the necessary properties
           if (resolvedFile && resolvedFile.createReadStream && resolvedFile.filename && resolvedFile.mimetype) {
             const { createReadStream, filename, mimetype } = resolvedFile;
 
             const uploadsDir = path.join(__dirname, '/collection/uploads/');
-            console.log('File details:', { filename, mimetype } + " NEW UPLOADS at dir: " + uploadsDir);
-
             if (!fs.existsSync(uploadsDir)) {
               fs.mkdirSync(uploadsDir, { recursive: true });
               console.log('Uploads directory created:', uploadsDir);
             }
 
             const outputPath = path.join(uploadsDir, filename);
-            console.log('Output path for file:', outputPath);
-
             const stream = createReadStream();
+
             await new Promise((resolve, reject) => {
               const out = fs.createWriteStream(outputPath);
               stream.pipe(out);
@@ -210,7 +200,6 @@ const resolvers = {
             filePath = `collection/uploads/${filename}`;
             fileType = mimetype;
             fileSize = fs.statSync(outputPath).size;
-
             console.log('File saved successfully:', { filePath, fileType, fileSize });
           } else {
             console.log('File is present but missing necessary properties, using default file.');
@@ -220,6 +209,7 @@ const resolvers = {
         }
       } catch (error) {
         console.error("Error processing file upload:", error);
+        throw new Error("Failed to process file upload");
       }
 
       const entry = new Entry({
@@ -240,7 +230,8 @@ const resolvers = {
         console.error("Error saving entry to MongoDB:", error);
         throw new Error("Failed to save entry");
       }
-    },
+    }
+
   },
 };
 
