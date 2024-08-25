@@ -66,6 +66,11 @@
         document.getElementById('entryModal').style.display = 'none';
     }
 
+    function closeForm() {
+        console.log('Closing form modal');
+        document.getElementById('formModal').style.display = 'none';
+    }
+
     async function fetchEntries() {
         const response = await fetch('http://127.0.0.1:4000/graphql', {
             method: 'POST',
