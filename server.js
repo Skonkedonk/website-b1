@@ -41,8 +41,12 @@ app.use(graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 100 })); // Adju
 // Enable CORS for all origins or restrict it to specific origins
 const cors = require('cors');
 app.use(cors({
-  origin: 'https://skonkedonk.github.io', // Replace with your frontend origin
+  origin: 'https://skonkedonk.github.io', // Allow only this origin
+  methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE'], // Allowed HTTP methods
+  allowedHeaders: ['Content-Type', 'Authorization'], // Headers allowed in requests
+  credentials: false, // If you want to allow cookies or other credentials
 }));
+
 
 // Connect to MongoDB
 mongoose.connect('mongodb://127.0.0.1:27017/graphql')
