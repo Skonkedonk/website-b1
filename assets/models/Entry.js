@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const entrySchema = new mongoose.Schema({
   title: { type: String, required: true, default: "Entry" },
   description: { type: String, required: true, default: "An incredible description!"},
-  category: { type: String, required: true },
+  category: { type: String, required: true, default: "Default"},
   filePath: { type: String, default: null }, 
   fileType: { type: String, default: null }, 
   fileSize: { type: Number, default: null }, 

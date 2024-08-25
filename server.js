@@ -176,6 +176,12 @@ const resolvers = {
       let fileSize = fs.statSync(defaultFilePath).size;
 
       try {
+        // Apply defaults if the input is missing or invalid
+        title = title || "Entry";
+        description = description || "An incredible description!";
+        category = category || "Default";
+        rating = rating || "?"; // Adjust as needed for valid rating defaults
+
         if (file) {
           const resolvedFile = await file.promise;
           if (resolvedFile && resolvedFile.createReadStream && resolvedFile.filename && resolvedFile.mimetype) {
@@ -231,7 +237,6 @@ const resolvers = {
         throw new Error("Failed to save entry");
       }
     }
-
   },
 };
 
