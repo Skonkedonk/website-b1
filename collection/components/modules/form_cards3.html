@@ -243,7 +243,7 @@
 
     async function saveNewEntry() {
     const formData = new FormData();
-    formData.append('operations', JSON.stringify({
+    const operations = JSON.stringify({
         query: `
             mutation uploadFile($title: String!, $description: String!, $category: String!, $rating: String!, $file: Upload) {
                 uploadFile(title: $title, description: $description, category: $category, rating: $rating, file: $file) {
@@ -261,13 +261,18 @@
             description: document.getElementById('description').value,
             category: document.getElementById('category').value,
             rating: document.getElementById('rating').value,
-            file: null
+            file: null  // Placeholder for file upload
         }
-    }));
-    formData.append('map', JSON.stringify({ '0': ['variables.file'] }));
+    });
+
+    formData.append('operations', operations); // Correctly adding the 'operations' field
+
+    const map = { '0': ['variables.file'] };
+    formData.append('map', JSON.stringify(map)); // Mapping the file to the variables
+
     const file = document.getElementById('file').files[0];
     if (file) {
-        formData.append('0', file);
+        formData.append('0', file); // Adding the actual file with the key matching the map
     }
 
     const response = await fetch('http://127.0.0.1:4000/graphql', {
