@@ -1340,6 +1340,7 @@
                 background-color: #e53935;
             }
         }
+		
     }
 }
 
@@ -1408,3 +1409,29 @@
         }
     }
 }
+
+/*.modal-content .card-buttons {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.modal-content .delete-btn,
+.modal-content .edit-btn {
+    margin: 5px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.modal-content .delete-btn {
+    background-color: red;
+    color: white;
+}
+
+.modal-content .edit-btn {
+    background-color: green;
+    color: white;
+}
+*/
