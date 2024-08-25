@@ -1,4 +1,4 @@
-function simpleLoad(url, elementId, callback) {
+function loadHTML(url, elementId, callback) {
     console.log(`Loading HTML from ${url} into element with ID ${elementId}`);
     
     var xhr = new XMLHttpRequest();
