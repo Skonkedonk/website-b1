@@ -8,6 +8,7 @@ const { GraphQLScalarType } = require('graphql');
 const { Kind } = require('graphql/language');
 const { graphqlUploadExpress } = require('graphql-upload'); // Import graphql-upload
 const Entry = require('./assets/models/Entry');
+const cors = require('cors');
 
 
 // Define the Upload scalar type
@@ -34,18 +35,27 @@ const upload = multer({ dest: 'collection/uploads/' });
 // Set up Express app
 const app = express();
 
+const allowedOrigins = [
+  'https://skonkedonk.github.io'
+];
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (allowedOrigins.indexOf(origin?.trim()) !== -1 || !origin) {
+      callback(null, true); // Allow request
+    } else {
+      callback(new Error('Not allowed by CORS')); // Reject request
+    }
+  },
+  credentials: true, // Allow credentials (cookies, headers)
+};
+
+app.use(cors(corsOptions));
+
+
 
 // Apply the graphql-upload middleware BEFORE graphql or express-graphql middlewares
 app.use(graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 100 })); // Adjust the file size and file limits as needed
-
-// Enable CORS for all origins or restrict it to specific origins
-const cors = require('cors');
-app.use(cors({
-  origin: 'https://skonkedonk.github.io', // Allow only this origin
-  methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE'], // Allowed HTTP methods
-  allowedHeaders: ['Content-Type', 'Authorization'], // Headers allowed in requests
-  credentials: false, // If you want to allow cookies or other credentials
-}));
 
 
 // Connect to MongoDB
