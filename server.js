@@ -62,10 +62,6 @@ app.post('collection/uploads', upload.single('file'), (req, res) => {
 const typeDefs = gql`
   scalar Upload
 
-  type Mutation {
-    deleteEntry(id: ID!): Entry
-  }
-
   type Entry {
     id: ID!
     title: String!
@@ -89,6 +85,17 @@ const typeDefs = gql`
       rating: String!,
       file: Upload
     ): Entry!
+
+    deleteEntry(id: ID!): Entry
+
+    updateEntry(
+      id: ID!,
+      title: String,
+      description: String,
+      category: String,
+      rating: String,
+      file: Upload
+    ): Entry
   }
 `;
 
@@ -111,6 +118,41 @@ const resolvers = {
       } catch (error) {
         console.error('Error during deletion:', error);
         throw new Error('Failed to delete entry');
+      }
+    },
+    updateEntry: async (parent, { id, title, description, category, rating, file }) => {
+      try {
+        const updates = {};
+        if (title) updates.title = title;
+        if (description) updates.description = description;
+        if (category) updates.category = category;
+        if (rating) updates.rating = rating;
+
+        // If a new file is uploaded, handle it
+        if (file) {
+          const { createReadStream, filename, mimetype } = await file.promise;
+          const uploadsDir = path.join(__dirname, '/collection/uploads/');
+          const outputPath = path.join(uploadsDir, filename);
+
+          const stream = createReadStream();
+          await new Promise((resolve, reject) => {
+            const out = fs.createWriteStream(outputPath);
+            stream.pipe(out);
+            out.on('finish', resolve);
+            out.on('error', reject);
+          });
+
+          updates.filePath = `collection/uploads/${filename}`;
+          updates.fileType = mimetype;
+          updates.fileSize = fs.statSync(outputPath).size;
+        }
+
+        const updatedEntry = await Entry.findByIdAndUpdate(id, updates, { new: true });
+        if (!updatedEntry) throw new Error('Entry not found');
+        return updatedEntry;
+      } catch (error) {
+        console.error('Error updating entry:', error);
+        throw new Error('Failed to update entry');
       }
     },
     // Existing uploadFile mutation with improvements
