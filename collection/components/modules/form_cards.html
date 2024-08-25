@@ -152,7 +152,7 @@
         submitButton.onclick = async (event) => {
             event.preventDefault();
             await updateEntry(entry.id);
-            renderEntries(entry.category); // Refresh entries after update
+           // renderEntries(entry.category); // Refresh entries after update
             closeForm();
         };
     }
@@ -236,6 +236,7 @@
         submitButton.onclick = async (event) => {
             event.preventDefault();
             await saveNewEntry();
+            // renderEntries(entry.category); // Refresh entries after update
             closeForm();
         };
     }
