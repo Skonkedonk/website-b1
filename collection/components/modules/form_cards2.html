@@ -1,0 +1,265 @@
+<div>
+    <div id="formModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeForm()">&times;</span>
+            <form id="entryForm">
+                <label for="title">Title:</label>
+                <input type="text" id="title" name="title" placeholder="Title..." required>
+
+                <label for="category">Category:</label>
+                <select id="category" name="category" required>
+                    <option value="Default">Choose a category</option>
+                    <option value="Books">Books</option>
+                    <option value="Music">Music</option>
+                    <option value="Computer">Computer</option>
+                    <option value="Tabletop">Tabletop</option>
+                </select>
+
+                <label for="description">Description:</label>
+                <textarea id="description" name="description" rows="4" placeholder="Description..." required></textarea>
+
+                <label for="rating">Rating:</label>
+                <select id="rating" name="rating" required>
+                    <option value="?">?</option>
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                </select>
+
+                <label for="file">Upload Image:</label>
+                <input type="file" id="file" name="image" accept=".jpg, .jpeg, .png">
+
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- displayEntries.html -->
+<div id="entryGrid" class="grid-container"></div>
+
+<div id="entryModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h3 id="modalTitle"></h3>
+        <p id="modalDescription"></p>
+        <p><strong>Category:</strong> <span id="modalCategory"></span></p>
+        <p><strong>Rating:</strong> <span id="modalRating"></span>/10</p>
+        <img id="modalImage" style="max-width: 100%;" alt="Image">
+        <div class="card-buttons">
+            <button class="edit-btn">Edit</button>
+            <button class="delete-btn">Delete</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function closeModal() {
+        document.getElementById('entryModal').style.display = 'none';
+    }
+
+    async function fetchEntries() {
+        const response = await fetch('http://127.0.0.1:4000/graphql', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                query: `
+                query {
+                    entries {
+                        id
+                        title
+                        description
+                        category
+                        rating
+                        filePath
+                    }
+                }
+            `
+            })
+        });
+        const result = await response.json();
+        return result.data.entries;
+    }
+
+    async function renderEntries(categoryFilter) {
+        const entries = await fetchEntries();
+        const entryGrid = document.getElementById('entryGrid');
+        entryGrid.innerHTML = ''; // Clear the grid before rendering
+
+        // Add the "Add New" card
+        const addNewCard = document.createElement('div');
+        addNewCard.className = 'add-new-card';
+        addNewCard.innerHTML = `<span>New Entry</span>`;
+        addNewCard.addEventListener('click', addEntry);
+        entryGrid.appendChild(addNewCard);
+
+        entries
+            .filter(entry => entry.category === categoryFilter)
+            .forEach(entry => {
+                const gridItem = document.createElement('div');
+                gridItem.className = 'grid-item';
+                gridItem.setAttribute('data-id', entry.id);
+
+                gridItem.innerHTML = `
+                    <img src="https://skonkedonk.github.io/website-b1/${entry.filePath}" alt="${entry.title}">
+                    <h3>${entry.title}</h3>
+                    <p><strong>Category:</strong> ${entry.category}</p>
+                    <p class="rating"><strong>Rating:</strong> ${entry.rating}/10</p>
+                `;
+                gridItem.addEventListener('click', () => openCardModal(entry));
+
+                entryGrid.appendChild(gridItem);
+            });
+    }
+
+    function openCardModal(entry) {
+        document.getElementById('modalTitle').textContent = entry.title;
+        document.getElementById('modalImage').src = "https://skonkedonk.github.io/website-b1/" + entry.filePath;
+        document.getElementById('modalDescription').textContent = entry.description;
+        document.getElementById('modalCategory').textContent = entry.category;
+        document.getElementById('modalRating').textContent = entry.rating;
+        document.querySelector('.delete-btn').onclick = () => deleteEntry(entry.id);
+        document.querySelector('.edit-btn').onclick = () => openEditForm(entry);
+        document.getElementById('entryModal').style.display = 'block';
+    }
+
+    function openEditForm(entry) {
+        closeModal(); // Close the current modal
+        document.getElementById('formModal').style.display = 'block';
+
+        document.getElementById('title').value = entry.title;
+        document.getElementById('description').value = entry.description;
+        document.getElementById('category').value = entry.category;
+        document.getElementById('rating').value = entry.rating;
+
+        const submitButton = document.querySelector('#entryForm button[type="submit"]');
+        submitButton.textContent = 'Update';
+        submitButton.onclick = async (event) => {
+            event.preventDefault();
+            await updateEntry(entry.id);
+            renderEntries(entry.category); // Refresh entries after update
+            closeForm();
+        };
+    }
+
+    async function updateEntry(id) {
+        const formData = new FormData();
+        formData.append('id', id);
+        formData.append('title', document.getElementById('title').value);
+        formData.append('description', document.getElementById('description').value);
+        formData.append('category', document.getElementById('category').value);
+        formData.append('rating', document.getElementById('rating').value);
+        const file = document.getElementById('file').files[0];
+        if (file) {
+            formData.append('file', file);
+        }
+
+        const response = await fetch('http://127.0.0.1:4000/graphql', {
+            method: 'POST',
+            body: formData,
+        });
+
+        const result = await response.json();
+        if (result.errors) {
+            console.error('Failed to update entry');
+            return;
+        }
+        alert('Entry updated successfully!');
+    }
+
+    async function deleteEntry(entryId) {
+        const confirmed = confirm('Are you sure you want to delete this entry?');
+        if (!confirmed) return;
+
+        try {
+            const response = await fetch('http://127.0.0.1:4000/graphql', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    query: `
+                mutation deleteEntry($id: ID!) {
+                    deleteEntry(id: $id) {
+                        id
+                        title
+                    }
+                }
+            `,
+                    variables: {
+                        id: entryId
+                    }
+                })
+            });
+
+            const result = await response.json();
+            if (result.errors) {
+                throw new Error('Failed to delete entry');
+            }
+
+            alert(`Entry with ID ${entryId} deleted successfully!`);
+            renderEntries('Books'); // Re-render the entries after deletion to update the UI
+        } catch (error) {
+            console.error('Error during deletion:', error);
+            alert('An error occurred while deleting the entry.');
+        }
+    }
+
+    function addEntry() {
+        console.log('Opening form modal');
+        document.getElementById('formModal').style.display = 'block';
+        // Clear previous data
+        document.getElementById('title').value = '';
+        document.getElementById('description').value = '';
+        document.getElementById('category').value = 'Default';
+        document.getElementById('rating').value = '?';
+        document.getElementById('file').value = '';
+
+        // Set up the submit button for adding a new entry
+        const submitButton = document.querySelector('#entryForm button[type="submit"]');
+        submitButton.textContent = 'Submit';
+        submitButton.onclick = async (event) => {
+            event.preventDefault();
+            await saveNewEntry();
+            renderEntries('Books'); // Refresh entries after adding new entry
+            closeForm();
+        };
+    }
+
+    async function saveNewEntry() {
+        const formData = new FormData();
+        formData.append('title', document.getElementById('title').value);
+        formData.append('description', document.getElementById('description').value);
+        formData.append('category', document.getElementById('category').value);
+        formData.append('rating', document.getElementById('rating').value);
+        const file = document.getElementById('file').files[0];
+        if (file) {
+            formData.append('file', file);
+        }
+
+        const response = await fetch('http://127.0.0.1:4000/graphql', {
+            method: 'POST',
+            body: formData,
+        });
+
+        const result = await response.json();
+        if (result.errors) {
+            console.error('Failed to save new entry');
+            return;
+        }
+        alert('New entry added successfully!');
+    }
+
+    // Initial call to render entries
+    renderEntries('Books');
+</script>
