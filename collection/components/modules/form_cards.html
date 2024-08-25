@@ -253,7 +253,8 @@ async function fetchEntries() {
     // Initial call to render entries
    // renderEntries('Books');
 });
-/* 
+</Script>
+<!-- 
 // Function to show the modal with the card details
 function showCardDetails(entry) {
     document.getElementById('modalTitle').textContent = entry.title;
@@ -372,7 +373,7 @@ async function renderEntries(categoryFilter) {
                 <p><strong>Category:</strong> ${entry.category}</p>
                 <p class="rating"><strong>Rating:</strong> ${entry.rating}/10</p>
                 
-            <button class="delete-btn">Delete</button> <!-- Add delete button -->
+            <button class="delete-btn">Delete</button>
             `;
                 gridItem.querySelector('.delete-btn').addEventListener('click', () => {
                     const entryId = entry.id; // Get the ID of the entry
@@ -391,10 +392,7 @@ async function renderEntries(categoryFilter) {
                 entryGrid.appendChild(gridItem);
             });
     }
-*/
-</script>
-
-<!--
+            
 <script>
     function addEntry() {
         console.log('Opening form modal');
@@ -507,12 +505,7 @@ async function renderEntries(categoryFilter) {
         }
     }
 
-</script>
--->
-
-
-<!--Old
-async function renderEntries(categoryFilter) {
+    <async function renderEntries(categoryFilter) {
         console.log("Rendering");
         const entries = await fetchEntries();
         const entryGrid = document.getElementById('entryGrid');
@@ -559,6 +552,7 @@ async function renderEntries(categoryFilter) {
                 // gridRow.appendChild(gridItem);
                 entryGrid.appendChild(gridItem);
             });
-    }
+}
 
+</script>
 -->
